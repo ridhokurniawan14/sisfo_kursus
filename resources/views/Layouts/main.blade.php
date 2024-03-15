@@ -163,8 +163,8 @@
                     </p>
                 </a>
             </li>
-            <li class="nav-item {{ Request::is('jam*','program-pilihan*','program-paket*') ? 'menu-open' : ''  }}">
-                <a href="#" class="nav-link {{ Request::is('jam*','program-pilihan*','program-paket*') ? 'active' : ''  }}">
+            <li class="nav-item {{ Request::is('jam*','program-pilihan*','program-paket*','user-category*','user/create') ? 'menu-open' : ''  }}">
+                <a href="#" class="nav-link {{ Request::is('jam*','program-pilihan*','program-paket*','user-category*','user/create') ? 'active' : ''  }}">
                     <i class="nav-icon fas fa-database"></i>
                     <p>Data Master <i class="right fas fa-angle-left"></i></p>
                 </a>
@@ -177,18 +177,24 @@
                     </li>
                     <li class="nav-item">
                         <a href="/program-pilihan" class="nav-link {{ Request::is('program-pilihan*') ? 'active' : ''  }}">
-                            <i class="far fa-chart-bar nav-icon"></i>
+                            <i class="fa fa-tag nav-icon"></i>
                             <p>Program Pilihan</p>
                         </a>
                     </li>
                     <li class="nav-item">
                         <a href="/program-paket" class="nav-link {{ Request::is('program-paket*') ? 'active' : ''  }}">
-                            <i class="far fa-chart-bar nav-icon"></i>
+                            <i class="fa fa-tags nav-icon"></i>
                             <p>Program Paket</p>
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a href="/personalia" class="nav-link">
+                        <a href="/user-category" class="nav-link {{ Request::is('user-category*') ? 'active' : ''  }}">
+                            <i class="fa fa-key nav-icon"></i>
+                            <p>Hak Akses</p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/user/create" class="nav-link {{ Request::is('user/create') ? 'active' : ''  }}">
                             <i class="far fa-user nav-icon"></i>
                             <p>Personalia</p>
                         </a>
@@ -220,14 +226,14 @@
                 </a>
             </li>
             <li class="nav-header">REPORT</li>
-            <li class="nav-item">
-                <a href="#" class="nav-link">
+            <li class="nav-item {{ Request::is('user', 'user/*', 'user/*/edit', 'user/*/') && !Request::is('user/create') ? 'menu-open' : ''  }}">
+                <a href="#" class="nav-link {{ Request::is('user', 'user/*', 'user/*/edit', 'user/*/') && !Request::is('user/create') ? 'active' : ''  }}">
                     <i class="nav-icon fas fa-landmark"></i>
                     <p>Data Lembaga <i class="right fas fa-angle-left"></i></p>
                 </a>
                 <ul class="nav nav-treeview">
                     <li class="nav-item">
-                        <a href="/data-personalia" class="nav-link">
+                        <a href="/user" class="nav-link {{ Request::is('user', 'user/*', 'user/*/edit', 'user/*/') && !Request::is('user/create') ? 'active' : '' }}">
                             <i class="far fa-user nav-icon"></i>
                             <p>Data Personalia</p>
                         </a>
@@ -391,6 +397,25 @@
 <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
 {{-- <script src="js/pages/dashboard.js"></script> --}}
 <!-- Page specific script -->
+<script>
+  function previewImage(inputId) {
+      const input = document.querySelector(`#${inputId}`);
+      const imgPreview = document.querySelector('.img-preview');
+      imgPreview.style.display = 'block';
+      const oFReader = new FileReader();
+      oFReader.readAsDataURL(input.files[0]);
+      oFReader.onload = function (oFREvent) {
+          imgPreview.src = oFREvent.target.result;
+      }
+  }
+  function checkMaxLength(input) {
+      const maxLength = 16; // Panjang maksimum NIK
+      if (input.value.length > maxLength) {
+          input.value = input.value.slice(0, maxLength);
+      }
+  }
+</script>
+
 <script>
   function formatRupiah(input) {
       // Menghilangkan semua karakter kecuali angka

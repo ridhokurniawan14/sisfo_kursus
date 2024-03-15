@@ -8,19 +8,20 @@
           <!-- left column -->
           <div class="col-md-6">
             <!-- general form elements -->
-            <div class="card card-primary">
+            <div class="card card-warning">
               <div class="card-header">
                 <h3 class="card-title">Silahkan Masukkan Data</h3>
               </div>
               <!-- /.card-header -->
               <!-- form start -->
-              <form method="POST" action="/jam">
+              <form method="POST" action="/user-category/{{ $cari->id }}">
+                @method('put')
                 @csrf
                 <div class="card-body">
                   <div class="form-group">
-                    <label for="jam">Jam <span class="text-danger">*</span></label>
-                    <input autofocus autocomplete="off" value="{{ old('jam') }}" required type="text" name="jam" class="form-control @error('jam') is-invalid @enderror" id="jam" placeholder="Masukkan Jam (07.xx Pagi/Malam)">
-                    @error('jam')
+                    <label for="hak_akses">Hak Akses <span class="text-danger">*</span></label>
+                    <input autofocus autocomplete="off" value="{{ old('hak_akses', (ucwords($cari->hak_akses))) }}" required type="text" name="hak_akses" class="form-control @error('hak_akses') is-invalid @enderror" id="hak_akses" placeholder="Masukkan Hak Akses">
+                    @error('hak_akses')
                       <div class="invalid-feedback">
                         {{ $message }}
                       </div>
@@ -30,8 +31,8 @@
                 <!-- /.card-body -->
 
                 <div class="card-footer">
-                  <button type="submit" class="btn btn-primary">Save</button>
-                  <button type="reset" class="btn btn-secondary">Reset</button>
+                  <button type="submit" class="btn btn-warning">Update</button>
+                  <a href="/user-category"><button type="button" class="btn btn-secondary">Kembali</button></a>
                 </div>
               </form>
             </div>
@@ -52,7 +53,7 @@
                   <thead>
                   <tr>
                     <th>No</th>
-                    <th>Jam</th>
+                    <th>Hak Akses</th>
                     <th></th>
                   </tr>
                   </thead>
@@ -60,9 +61,9 @@
                     @foreach ($datas as $data)                   
                   <tr>
                     <td>{{ $loop->iteration }}</td>
-                    <td>{{ strtoupper($data->jam) }}</td>
+                    <td>{{ ucwords($data->hak_akses) }}</td>
                     <td>
-                      <a href="/jam/{{ $data->id }}/edit" class="badge bg-warning"><span class="fas fa-pen"></span></a>
+                      <a href="/user-category/{{ $data->id }}/edit" class="badge bg-warning"><span class="fas fa-pen"></span></a>
                       <button class="badge bg-danger border-0" data-toggle="modal" data-target="#modal-delete{{ $data->id }}"><span class="fas fa-trash"></span></button>
                     </td>
                   </tr>
@@ -76,10 +77,10 @@
                           </button>
                         </div>
                         <div class="modal-body">
-                          <p>Apakah yakin Jam <b>{{ strtoupper($data->jam) }}</b> dihapus?</p>
+                          <p>Apakah yakin Hak Akses <b>{{ ucwords($data->hak_akses) }}</b> dihapus?</p>
                         </div>
                         <div class="modal-footer justify-content-between">
-                          <form action="{{ route('jam.destroy', ['jam' => $data->id]) }}" method="post" class="d-inline">
+                          <form action="{{ route('user-category.destroy', ['user_category' => $data->id]) }}" method="post" class="d-inline">
                             @method('delete')
                             @csrf
                             <button type="button" class="btn btn-default ml-auto" data-dismiss="modal">Close</button>
@@ -96,7 +97,7 @@
                   <tfoot>
                   <tr>
                     <th>No</th>
-                    <th>Jam</th>
+                    <th>Hak Akses</th>
                     <th></th>
                   </tr>
                   </tfoot>

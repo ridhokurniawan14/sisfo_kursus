@@ -19,7 +19,7 @@
                 @csrf
                 <div class="card-body">
                   <div class="form-group">
-                    <label for="program">Program Baru</label>
+                    <label for="program">Program Baru <span class="text-danger">*</span></label>
                     <input autofocus autocomplete="off" value="{{ old('program', ucwords($cari->program)) }}" required type="text" name="program" class="form-control @error('program') is-invalid @enderror" id="program" placeholder="Masukkan Program">
                     @error('program')
                       <div class="invalid-feedback">
@@ -28,7 +28,7 @@
                     @enderror
                   </div>
                   <div class="form-group">
-                    <label for="harga">Biaya Kursus</label>
+                    <label for="harga">Biaya Kursus <span class="text-danger">*</span></label>
                     <input autocomplete="off" value="{{ old('harga', $cari->harga) }}" required type="text" name="harga" class="form-control @error('harga') is-invalid @enderror" id="harga" placeholder="Masukkan biaya kursus" onkeyup="formatRupiah(this)">
                     @error('harga')
                       <div class="invalid-feedback">

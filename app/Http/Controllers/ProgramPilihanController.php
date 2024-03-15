@@ -102,7 +102,7 @@ class ProgramPilihanController extends Controller
         // Catat aktivitas dalam log
         // ActivityLogger::logActivity('create', 'Kategori Kode Surat Masuk dengan deskripsi '.ucwords($request->ket), '');
     
-        return redirect('/program-pilihan')->with('message', 'Data berhasil disimpan!');
+        return redirect('/program-pilihan')->with('message', 'Data berhasil diupdate!');
     }
 
     /**

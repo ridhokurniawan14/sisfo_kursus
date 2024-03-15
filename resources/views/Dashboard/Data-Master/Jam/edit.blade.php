@@ -19,7 +19,7 @@
                 @csrf
                 <div class="card-body">
                   <div class="form-group">
-                    <label for="jam">Jam</label>
+                    <label for="jam">Jam <span class="text-danger">*</span></label>
                     <input autocomplete="off" value="{{ old('jam', strtoupper($cari->jam)) }}" required type="text" name="jam" class="form-control @error('jam') is-invalid @enderror" id="jam" placeholder="Masukkan Jam (07.xx Pagi/Malam)">
                     @error('jam')
                       <div class="invalid-feedback">

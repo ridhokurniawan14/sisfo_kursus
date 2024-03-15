@@ -18,7 +18,7 @@
                 @csrf
                 <div class="card-body">
                   <div class="form-group">
-                    <label for="kode">Paket</label>
+                    <label for="kode">Paket <span class="text-danger">*</span></label>
                     <input autofocus autocomplete="off" value="{{ old('kode') }}" required type="text" name="kode" class="form-control @error('kode') is-invalid @enderror" id="kode" placeholder="Masukkan Paket (1/2/3/dst)">
                     @error('kode')
                       <div class="invalid-feedback">
@@ -27,7 +27,7 @@
                     @enderror
                   </div>
                   <div class="form-group">
-                    <label for="program_pilihan">Masukkan Program Kursus</label>
+                    <label for="program_pilihan">Masukkan Program Kursus <span class="text-danger">*</span></label>
                     <input autofocus autocomplete="off" value="{{ old('program_pilihan') }}" required type="text" name="program_pilihan" class="form-control @error('program_pilihan') is-invalid @enderror" id="program_pilihan" placeholder="Masukkan Program Pilihan (Microsoft Word, Excel, dst)">
                     @error('program_pilihan')
                       <div class="invalid-feedback">
@@ -36,7 +36,7 @@
                     @enderror
                   </div>
                   <div class="form-group">
-                    <label for="harga">Biaya Kursus</label>
+                    <label for="harga">Biaya Kursus <span class="text-danger">*</span></label>
                     <input autocomplete="off" value="{{ old('harga') }}" required type="text" name="harga" class="form-control @error('harga') is-invalid @enderror" id="harga" placeholder="Masukkan biaya kursus" onkeyup="formatRupiah(this)">
                     @error('harga')
                       <div class="invalid-feedback">

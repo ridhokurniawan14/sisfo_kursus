@@ -1,10 +1,12 @@
 <?php
 
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\HakAksesController;
 use App\Http\Controllers\JamController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\ProgramPaketController;
 use App\Http\Controllers\ProgramPilihanController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -43,3 +45,11 @@ Route::resource('program-pilihan', ProgramPilihanController::class);
 // HALAMAN PROGRAM-PAKET
 // Route::resource('/data-master/kode-surat', KodeSuratController::class)->middleware('auth');
 Route::resource('program-paket', ProgramPaketController::class);
+
+// HALAMAN access
+// Route::resource('/data-master/kode-surat', KodeSuratController::class)->middleware('auth');
+Route::resource('user-category', HakAksesController::class);
+
+// HALAMAN PERSONALIA / PENDIDIK
+// Route::resource('/data-master/kode-surat', KodeSuratController::class)->middleware('auth');
+Route::resource('user', UserController::class);

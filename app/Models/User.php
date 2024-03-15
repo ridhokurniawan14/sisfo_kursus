@@ -11,16 +11,32 @@ use Laravel\Sanctum\HasApiTokens;
 class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
-
+    protected $table = 'tb_pendidik'; // Ganti 'nama_tabel_anda' dengan nama tabel yang sebenarnya
+    protected $primaryKey = 'id';
     /**
      * The attributes that are mass assignable.
      *
      * @var array<int, string>
      */
     protected $fillable = [
-        'name',
+        'nm_lengkap',
+        'gender',
+        'tmp_lahir',
+        'tgl_lahir',
+        'agama',
+        'status',
+        'alamat',
+        'pend_akhir',
+        'jurusan',
         'email',
+        'no_hp',
+        'posisi',
+        'tgl_masuk',
+        'username',
         'password',
+        'nik',
+        'nm_ibu',
+        'foto',
     ];
 
     /**
@@ -42,4 +58,8 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+    public function getRouteKeyName()
+    {
+        return 'email';
+    }
 }

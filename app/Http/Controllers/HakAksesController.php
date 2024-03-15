@@ -2,22 +2,22 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Jam;
+use App\Models\HakAkses;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
-class JamController extends Controller
+class HakAksesController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        return view('dashboard.data-master.jam.index', [
-            "halaman" => "Jam Kursus",
+        return view('dashboard.data-master.hak-akses.index', [
+            "halaman" => "Hak Akses",
             "title" => "Data Master",
-            "tab_title" => "Jam",
-            "datas" => DB::table('tb_jam')
+            "tab_title" => "Data Hak Akses",
+            "datas" => DB::table('tb_hak_akses')
                         ->orderBy('id') // Mengurutkan berdasarkan kolom 'id', yang mungkin merupakan kolom yang menunjukkan urutan data yang pertama dimasukkan
                         ->get()
         ]);
@@ -37,24 +37,24 @@ class JamController extends Controller
     public function store(Request $request)
     {
         $validateData = $request->validate([
-            'jam'  => ['required', 'unique:tb_jam'],
+            'hak_akses'  => ['required', 'unique:tb_hak_akses'],
         ]);
         
-        // Mengonversi 'jam' menjadi huruf kecil sebelum disimpan
-        $validateData['jam'] = strtolower($validateData['jam']);
+        // Mengonversi 'hak_akses' menjadi huruf kecil sebelum disimpan
+        $validateData['hak_akses'] = strtolower($validateData['hak_akses']);
 
-        Jam::create($validateData);
+        HakAkses::create($validateData);
 
         // Catat aktivitas dalam log
         // ActivityLogger::logActivity('create', 'Kategori Kode Surat Masuk dengan deskripsi '.ucwords($request->ket), '');
 
-        return redirect('/jam')->with('message', 'Data berhasil disimpan!');
+        return redirect('/user-category')->with('message', 'Data berhasil disimpan!');
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Jam $jam)
+    public function show(HakAkses $userCategory)
     {
         //
     }
@@ -62,59 +62,59 @@ class JamController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Jam $jam)
+    public function edit(HakAkses $userCategory)
     {
-        return view('dashboard.data-master.jam.edit', [
-            "halaman" => "Jam Kursus",
+        return view('dashboard.data-master.hak-akses.edit', [
+            "halaman" => "Hak Akses",
             "title" => "Data Master",
-            "tab_title" => "Jam",
-            "datas" => DB::table('tb_jam')
+            "tab_title" => "Data Hak Akses",
+            "datas" => DB::table('tb_hak_akses')
                         ->orderBy('id') // Mengurutkan berdasarkan kolom 'id', yang mungkin merupakan kolom yang menunjukkan urutan data yang pertama dimasukkan
                         ->get(),
-            "cari" => $jam,
+            "cari" => $userCategory,
         ]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Jam $jam)
+    public function update(Request $request, HakAkses $userCategory)
     {
         $validateData = $request->validate([
-            'jam'  => ['required'],
+            'hak_akses'  => ['required', 'unique:tb_hak_akses'],
         ]);
         
-        // Mengonversi 'jam' menjadi huruf kecil sebelum disimpan
-        $validateData['jam'] = strtolower($validateData['jam']);
+        // Mengonversi 'hak_akses' menjadi huruf kecil sebelum disimpan
+        $validateData['hak_akses'] = strtolower($validateData['hak_akses']);
 
-        if($request->jam != $jam->jam) {
-            $rules['jam'] = ['required', 'unique:tb_jam'];
+        if($request->hak_akses != $userCategory->hak_akses) {
+            $rules['hak_akses'] = ['required', 'unique:tb_hak_akses'];
         }
 
         $validateData = $request->validate($rules);
         
         // Perbarui data menggunakan instance model yang telah ditemukan
-        $jam->update($validateData);
+        $userCategory->update($validateData);
 
         // Catat aktivitas dalam log
         // ActivityLogger::logActivity('create', 'Kategori Kode Surat Masuk dengan deskripsi '.ucwords($request->ket), '');
 
-        return redirect('/jam')->with('message', 'Data berhasil diupdate!');
+        return redirect('/user-category')->with('message', 'Data berhasil diupdate!');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Jam $jam)
+    public function destroy(HakAkses $userCategory)
     {
-        if($jam) {
-            $jam->delete();
+        if($userCategory) {
+            $userCategory->delete();
             // Catat aktivitas dalam log
-            // ActivityLogger::logActivity('delete', 'Kode Surat Masuk dengan kode '.ucwords($jam->kode).' -> '.ucwords($jam->ket), '');
+            // ActivityLogger::logActivity('delete', 'Kode Surat Masuk dengan kode '.ucwords($userCategory->kode).' -> '.ucwords($jam->ket), '');
 
-            return redirect('jam')->with('message', 'Data Berhasil Dihapus!');
+            return redirect('user-category')->with('message', 'Data Berhasil Dihapus!');
         } else {
-            return redirect('jam')->with('error', 'Data Tidak Ditemukan!');
+            return redirect('user-category')->with('error', 'Data Tidak Ditemukan!');
         }
     }
 }

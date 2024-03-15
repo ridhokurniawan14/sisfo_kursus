@@ -14,22 +14,31 @@
               </div>
               <!-- /.card-header -->
               <!-- form start -->
-              <form method="POST" action="/program-pilihan/{{ $cari->id }}">
+              <form method="POST" action="/program-paket/{{ $cari->id }}">
                 @method('put')
                 @csrf
                 <div class="card-body">
                   <div class="form-group">
-                    <label for="program">Program Baru</label>
-                    <input autofocus autocomplete="off" value="{{ old('program', ucwords($cari->program)) }}" required type="text" name="program" class="form-control @error('program') is-invalid @enderror" id="program" placeholder="Masukkan Program">
-                    @error('program')
+                    <label for="kode">Paket <span class="text-danger">*</span></label>
+                    <input autofocus autocomplete="off" value="{{ old('kode', ($cari->kode)) }}" required type="text" name="kode" class="form-control @error('kode') is-invalid @enderror" id="kode" placeholder="Masukkan Paket (1/2/3/dst)">
+                    @error('kode')
                       <div class="invalid-feedback">
                         {{ $message }}
                       </div>
                     @enderror
                   </div>
                   <div class="form-group">
-                    <label for="harga">Biaya Kursus</label>
-                    <input autocomplete="off" value="{{ old('harga', $cari->harga) }}" required type="text" name="harga" class="form-control @error('harga') is-invalid @enderror" id="harga" placeholder="Masukkan biaya kursus" onkeyup="formatRupiah(this)">
+                    <label for="program_pilihan">Masukkan Program Kursus <span class="text-danger">*</span></label>
+                    <input autofocus autocomplete="off" value="{{ old('program_pilihan', (ucwords($cari->program_pilihan))) }}" required type="text" name="program_pilihan" class="form-control @error('program_pilihan') is-invalid @enderror" id="program_pilihan" placeholder="Masukkan Program Pilihan (Microsoft Word, Excel, dst)">
+                    @error('program_pilihan')
+                      <div class="invalid-feedback">
+                        {{ $message }}
+                      </div>
+                    @enderror
+                  </div>
+                  <div class="form-group">
+                    <label for="harga">Biaya Kursus <span class="text-danger">*</span></label>
+                    <input autocomplete="off" value="{{ old('harga', ($cari->harga)) }}" required type="text" name="harga" class="form-control @error('harga') is-invalid @enderror" id="harga" placeholder="Masukkan biaya kursus" onkeyup="formatRupiah(this)">
                     @error('harga')
                       <div class="invalid-feedback">
                         {{ $message }}
@@ -41,7 +50,7 @@
 
                 <div class="card-footer">
                   <button type="submit" class="btn btn-warning">Update</button>
-                  <a href="/program-pilihan"><button type="button" class="btn btn-secondary">Kembali</button></a>
+                  <a href="/program-paket"><button type="button" class="btn btn-secondary">Kembali</button></a>
                 </div>
               </form>
             </div>
@@ -62,8 +71,9 @@
                   <thead>
                   <tr>
                     <th>No</th>
-                    <th>Program Komputer</th>
-                    <th>Biaya</th>
+                    <th>Paket</th>
+                    <th>Program</th>
+                    <th>Harga</th>
                     <th></th>
                   </tr>
                   </thead>
@@ -71,10 +81,11 @@
                     @foreach ($datas as $data)                   
                   <tr>
                     <td>{{ $loop->iteration }}</td>
-                    <td>{{ ucwords($data->program) }}</td>
+                    <td>{{ $data->kode }}</td>
+                    <td>{{ ucwords($data->program_pilihan) }}</td>
                     <td>Rp. {{ number_format($data->harga, 0, ',', '.') }}</td>
                     <td>
-                      <a href="/jam/{{ $data->id }}/edit" class="badge bg-warning"><span class="fas fa-pen"></span></a>
+                      <a href="/program-paket/{{ $data->id }}/edit" class="badge bg-warning"><span class="fas fa-pen"></span></a>
                       <button class="badge bg-danger border-0" data-toggle="modal" data-target="#modal-delete{{ $data->id }}"><span class="fas fa-trash"></span></button>
                     </td>
                   </tr>
@@ -88,10 +99,10 @@
                           </button>
                         </div>
                         <div class="modal-body">
-                          <p>Apakah yakin Program <b>{{ ucwords($data->program) }}</b> dihapus?</p>
+                          <p>Apakah yakin Paket <b>{{ ucwords($data->kode) }}</b> dihapus?</p>
                         </div>
                         <div class="modal-footer justify-content-between">
-                          <form action="{{ route('program-pilihan.destroy', ['program_pilihan' => $data->id]) }}" method="post" class="d-inline">
+                          <form action="{{ route('program-paket.destroy', ['program_paket' => $data->id]) }}" method="post" class="d-inline">
                             @method('delete')
                             @csrf
                             <button type="button" class="btn btn-default ml-auto" data-dismiss="modal">Close</button>
@@ -108,8 +119,9 @@
                   <tfoot>
                   <tr>
                     <th>No</th>
-                    <th>Program Komputer</th>
-                    <th>Biaya</th>
+                    <th>Paket</th>
+                    <th>Program</th>
+                    <th>Harga</th>
                     <th></th>
                   </tr>
                   </tfoot>
