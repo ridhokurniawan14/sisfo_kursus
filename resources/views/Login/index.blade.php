@@ -25,6 +25,7 @@
 <!--===============================================================================================-->
 	<link rel="stylesheet" type="text/css" href="/css/util.css">
 	<link rel="stylesheet" type="text/css" href="/css/main.css">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
 <!--===============================================================================================-->
 </head>
 <body>
@@ -32,17 +33,23 @@
 	<div class="limiter">
 		<div class="container-login100">
 			<div class="wrap-login100">
-                <form class="login100-form validate-form">
-                    <span class="login100-form-title p-b-48">
-                        <img src="/img/Logo-PTCC.webp" width="20%">
+                <form action="/login" method="POST" class="login100-form validate-form">
+					@csrf
+                    <span class="login100-form-title p-b-20">
+                        <img src="/img/Logo-PTCC.webp" width="25%">
                     </span>
-					<span class="login100-form-title p-b-26">
+					<span class="login100-form-title p-b-30">
 						<h4>Sistem Informasi Manajemen</h4>
 					</span>
 
 					<div class="wrap-input100 validate-input" data-validate = "Valid email is: a@b.c">
-						<input autofocus autocomplete="off" class="input100" type="text" name="email">
+						<input autofocus autocomplete="off" class="input100 @error('email') is-invalid @enderror" value="{{ old('email') }}" type="email" name="email">
 						<span class="focus-input100" data-placeholder="Email"></span>
+						@error('email')
+							<div class="invalid-feedback">
+								{{ $message }}
+							</div>
+						@enderror
 					</div>
 
 					<div class="wrap-input100 validate-input" data-validate="Enter password">
@@ -62,7 +69,7 @@
 						</div>
 					</div>
 
-					<div class="text-center p-t-115">
+					<div class="text-center p-t-15">
 						<span class="txt1">
 							Lupa Password?
 						</span>
@@ -70,6 +77,7 @@
 						<a class="txt2" href="#">
 							<a href="https://api.whatsapp.com/send/?phone=6289682154449&text=Assalamualaikum,%20Mas%20lupa%20password,%20bisa%20kirim%20password%20baru?" target="_blank">Bantuan</a>
 						</a>
+						<p class="mt-1 text-muted">Copyright &copy; 2017–<?= date("Y") ?><br><b><a target="_blank" href="https://www.instagram.com/ridhoo_kurniawaan/">Ridho Kurniawan</a></b>. All rights reserved </p>
 					</div>
 				</form>
 			</div>
@@ -95,6 +103,19 @@
 	<script src="/vendor/countdowntime/countdowntime.js"></script>
 <!--===============================================================================================-->
 	<script src="/js/main.js"></script>
-
+<!--===============================================================================================-->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<!--===============================================================================================-->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+<!--===============================================================================================-->
+	@if (session('error'))
+    <script>
+        toastr.options = {
+            "progressBar": true,
+            "closeButton": true
+        };
+        toastr.error('{{ session('error') }}', 'Failed!', { timeOut: 5000 });
+    </script>
+	@endif
 </body>
 </html>

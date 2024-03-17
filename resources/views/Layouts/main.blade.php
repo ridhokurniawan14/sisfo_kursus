@@ -36,12 +36,6 @@
 </head>
 <body class="hold-transition sidebar-mini layout-fixed">
 <div class="wrapper">
-
-  <!-- Preloader -->
-  {{-- <div class="preloader flex-column justify-content-center align-items-center">
-    <img class="animation__shake" src="img/GrisaSip.png" alt="AdminLTELogo" height="60" width="60">
-  </div> --}}
-
   <!-- Navbar -->
   <nav class="main-header navbar navbar-expand navbar-white navbar-light">
     <!-- Left navbar links -->
@@ -88,8 +82,7 @@
       </li>
       {{-- @auth --}}
         <li class="nav-item dropdown">
-          {{-- <a id="dropdownSubMenu1" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="nav-link dropdown-toggle">Selamat Datang, {{ ucwords(auth()->user()->name) }}</a> --}}
-          <a id="dropdownSubMenu1" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="nav-link dropdown-toggle">Selamat Datang, Ridho Kurniawan</a>
+          <a id="dropdownSubMenu1" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="nav-link dropdown-toggle">Selamat Datang, {{ ucwords(auth()->user()->nm_lengkap) }}</a>
           <ul aria-labelledby="dropdownSubMenu1" class="dropdown-menu dropdown-menu-right border-0 shadow">
             <li><a href="/ganti-password" class="dropdown-item"><i class="nav-icon fas fa-key"></i> Ganti Password </a></li>
             <li class="dropdown-divider"></li>
@@ -124,11 +117,11 @@
       <!-- Sidebar user panel (optional) -->
       <div class="user-panel mt-3 pb-3 mb-3 d-flex">
         <div class="image">
-          {{-- @if (auth()->user()->foto) --}}
-            {{-- <img src="{{ asset('storage/' . auth()->user()->foto) }}" class="img-circle elevation-2" alt="User Image"> --}}
-          {{-- @else --}}
+          @if (auth()->user()->foto)
+            <img src="{{ asset('storage/' . auth()->user()->foto) }}" class="img-circle elevation-2" alt="User Image">
+          @else
             <img src="/img/user.png" class="img-circle elevation-2" alt="User Image">
-          {{-- @endif --}}
+          @endif
         </div>
         <div class="info">
           {{-- <a href="#" class="d-block">{{ ucwords(auth()->user()->name) }}</a> --}}
@@ -200,7 +193,7 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a href="/sarana-prasarana" class="nav-link">
+                        <a href="/sarana-prasarana/create" class="nav-link {{ Request::is('sarana-prasarana/create') ? 'active' : ''  }}">
                             <i class="far fa-building nav-icon"></i>
                             <p>Sarana dan Prasarana</p>
                         </a>
@@ -245,7 +238,7 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a href="/data-sarana-prasarana" class="nav-link">
+                        <a href="/data-sarana-prasarana" class="nav-link {{ Request::is('sarana-prasarana', 'sarana-prasarana/*', 'sarana-prasarana/*/edit', 'sarana-prasarana/*/') && !Request::is('sarana-prasarana/create') ? 'active' : '' }}">
                             <i class="far fa-building nav-icon"></i>
                             <p>Sarana dan Prasarana</p>
                         </a>
@@ -415,7 +408,26 @@
       }
   }
 </script>
+<script>
+  document.querySelectorAll('.toggle-password').forEach(function(button) {
+      button.addEventListener('click', function() {
+          var targetId = this.dataset.target;
+          var input = document.getElementById(targetId);
+          var icon = this.querySelector('i');
+          var type = input.getAttribute('type') === 'password' ? 'text' : 'password';
+          input.setAttribute('type', type);
 
+          // Toggle kelas ikon
+          if (type === 'password') {
+              icon.classList.remove('fa-eye-slash');
+              icon.classList.add('fa-eye');
+          } else {
+              icon.classList.remove('fa-eye');
+              icon.classList.add('fa-eye-slash');
+          }
+      });
+  });
+</script>
 <script>
   function formatRupiah(input) {
       // Menghilangkan semua karakter kecuali angka

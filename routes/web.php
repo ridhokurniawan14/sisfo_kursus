@@ -23,33 +23,30 @@ use Illuminate\Support\Facades\Route;
 // Route::get('/', function () {
 //     return view('/Login');
 // });
-Route::get('/',[LoginController::class, 'index']); 
+Route::get('/',[LoginController::class, 'index'])->name('login')->middleware('guest');
 
 // HALAMAN LOGIN
-Route::resource('login', LoginController::class);
-// Route::get('/Login/',[LoginController::class, 'index'])->name('login')->middleware('guest'); 
-// Route::post('/Login/',[LoginController::class, 'authenticate']); 
+// Define login route
+Route::get('/login', [LoginController::class, 'index'])->name('login')->middleware('guest');
+Route::post('/login', [LoginController::class, 'authenticate'])->name('login');
+Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
+Route::get('/logout', [LoginController::class, 'logout'])->name('logout');
 
-// HALAMAN DASHBOARD
-// Route::middleware(['auth', 'check.surat'])->resource('/dashboard', DashboardController::class);
-Route::resource('dashboard', DashboardController::class);
+Route::middleware('auth')->group(function () {
+    // HALAMAN DASHBOARD
+    Route::resource('dashboard', DashboardController::class);
+    // HALAMAN JAM
+    Route::resource('jam', JamController::class);
+    // HALAMAN PROGRAM PILIHAN
+    Route::resource('program-pilihan', ProgramPilihanController::class);
+    // HALAMAN PROGRAM PAKET
+    Route::resource('program-paket', ProgramPaketController::class);
+    // HALAMAN USER CATEGORY
+    Route::resource('user-category', HakAksesController::class);
+    // HALAMAN USER
+    Route::resource('user', UserController::class);
+    // HALAMAN GANTI PASSWORD
+    Route::get('ganti-password', [UserController::class, 'gantipassword']);
+    Route::put('/ganti-password/{id}', [UserController::class, 'updatepassword']);
 
-// HALAMAN JAM
-// Route::resource('/data-master/kode-surat', KodeSuratController::class)->middleware('auth');
-Route::resource('jam', JamController::class);
-
-// HALAMAN PROGRAM-PILIHAN
-// Route::resource('/data-master/kode-surat', KodeSuratController::class)->middleware('auth');
-Route::resource('program-pilihan', ProgramPilihanController::class);
-
-// HALAMAN PROGRAM-PAKET
-// Route::resource('/data-master/kode-surat', KodeSuratController::class)->middleware('auth');
-Route::resource('program-paket', ProgramPaketController::class);
-
-// HALAMAN access
-// Route::resource('/data-master/kode-surat', KodeSuratController::class)->middleware('auth');
-Route::resource('user-category', HakAksesController::class);
-
-// HALAMAN PERSONALIA / PENDIDIK
-// Route::resource('/data-master/kode-surat', KodeSuratController::class)->middleware('auth');
-Route::resource('user', UserController::class);
+});

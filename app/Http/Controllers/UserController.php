@@ -99,11 +99,24 @@ class UserController extends Controller
      */
     public function show(User $user)
     {
+        $userData = User::select(
+            'tb_pendidik.nm_lengkap', 'tb_pendidik.gender', 'tb_pendidik.tmp_lahir',
+            'tb_pendidik.tgl_lahir', 'tb_pendidik.agama', 'tb_pendidik.status',
+            'tb_pendidik.alamat', 'tb_pendidik.pend_akhir', 'tb_pendidik.jurusan',
+            'tb_pendidik.email', 'tb_pendidik.no_hp', 'tb_pendidik.posisi',
+            'tb_pendidik.tgl_masuk', 'tb_pendidik.username', 'tb_pendidik.password',
+            'tb_pendidik.nik', 'tb_pendidik.nm_ibu', 'tb_pendidik.foto',
+            'tb_hak_akses.hak_akses'
+        )
+        ->join('tb_hak_akses', 'tb_pendidik.posisi', '=', 'tb_hak_akses.id')
+        ->where('tb_pendidik.email', $user->email)
+        ->first();
+
         return view('dashboard.data-master.personalia.show', [
-            "halaman" => "Personalia",
+            "halaman" => "Profile Personalia",
             "title" => "Data Lembaga",
             "tab_title" => "Profile Personalia",
-            "data" => $user,
+            "data" => $userData,
         ]);
     }
 
@@ -209,5 +222,33 @@ class UserController extends Controller
             // Redirect dengan pesan error jika pengguna tidak ditemukan
             return redirect('/user')->with('error', 'Data tidak ditemukan!');
         }
+    }
+    public function gantipassword()
+    {
+        return view('dashboard.data-master.personalia.gantipassword', [
+            "halaman" => "Ganti Password",
+            "title" => "Personalia",
+            "tab_title" => "Ganti Password User"
+        ]);
+    }
+    public function updatepassword(Request $request)
+    {
+        $request->validate([
+            'oldpassword' => ['required', 'min:6'],
+            'newpassword' => ['required', 'min:6', 'different:oldpassword'],
+            'verpassword' => ['required', 'same:newpassword'],
+        ]);
+
+        // Periksa apakah password lama cocok dengan password pengguna
+        if (!Hash::check($request->oldpassword, auth()->user()->password)) {
+            return back()->withErrors(['oldpassword' => 'Password lama tidak cocok!!'])->withInput();
+        }
+
+        // Update password pengguna
+        auth()->user()->update([
+            'password' => Hash::make($request->newpassword)
+        ]);
+
+        return redirect('/ganti-password')->with('message', 'Password berhasil Diperbarui!');
     }
 }
