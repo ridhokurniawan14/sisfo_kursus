@@ -4,8 +4,10 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\HakAksesController;
 use App\Http\Controllers\JamController;
 use App\Http\Controllers\LoginController;
+use App\Http\Controllers\PengumumanController;
 use App\Http\Controllers\ProgramPaketController;
 use App\Http\Controllers\ProgramPilihanController;
+use App\Http\Controllers\SaranaPrasaranaController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -48,5 +50,8 @@ Route::middleware('auth')->group(function () {
     // HALAMAN GANTI PASSWORD
     Route::get('ganti-password', [UserController::class, 'gantipassword']);
     Route::put('/ganti-password/{id}', [UserController::class, 'updatepassword']);
-
+    // HALAMAN SARPRAS
+    Route::resource('sarana-prasarana', SaranaPrasaranaController::class);
+    // HALAMAN PENGUMUMAN
+    Route::resource('pengumuman', PengumumanController::class);
 });

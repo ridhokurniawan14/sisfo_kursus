@@ -11,7 +11,7 @@
             <div class="card">
               <div class="card-header d-flex align-items-center">
                 <h3 class="card-title">{{ $tab_title }}</h3>
-                <a href="/user/create" class="btn btn-primary ml-3 col-sm-2 float-right"><i class="fas fa-pen nav-icon mr-2"></i>Tambah Admin</a>
+                <a href="/sarana-prasarana/create" class="btn btn-primary ml-3 col-sm-2 float-right"><i class="fas fa-pen nav-icon mr-2"></i>Tambah SarPras</a>
               </div>
               <!-- /.card-header -->
               <div class="card-body">
@@ -19,9 +19,11 @@
                   <thead>
                   <tr>
                     <th>No</th>
-                    <th>Nama</th>
-                    <th>No. HP</th>
-                    <th>Email</th>
+                    <th>Jenis</th>
+                    <th>Status</th>
+                    <th>Nama SarPras</th>
+                    <th>Banyak</th>
+                    <th>Ket.</th>
                     <th></th>
                   </tr>
                   </thead>
@@ -29,12 +31,13 @@
                   @foreach ($datas as $data)
                     <tr>
                       <td>{{ $loop->iteration }}</td>
-                      <td>{{ ucwords($data->nm_lengkap) }}</td>
-                      <td>{{ $data->no_hp }}</td>
-                      <td>{{ $data->email }}</td>
+                      <td>{{ ucwords($data->jenis) }}</td>
+                      <td>{{ ucwords($data->status) }}</td>
+                      <td>{{ ucwords($data->nm_sarpras) }}</td>
+                      <td>{{ $data->banyak }}</td>
+                      <td>{{ ucwords($data->ket) }}</td>
                       <td>
-                        <a href="/user/{{ $data->email }}" class="badge bg-info"><span class="fas fa-eye"></span></a>
-                        <a href="/user/{{ $data->email }}/edit" class="badge bg-warning"><span class="fas fa-pen"></span></a>
+                        <a href="/sarana-prasarana/{{ $data->id }}/edit" class="badge bg-warning"><span class="fas fa-pen"></span></a>
                         <button class="badge bg-danger border-0" data-toggle="modal" data-target="#modal-delete{{ $data->id }}"><span class="fas fa-trash"></span></button>
                       </td>
                     </tr>
@@ -48,10 +51,10 @@
                             </button>
                           </div>
                           <div class="modal-body">
-                            <p>Apakah yakin Admin <b>{{ $data->nm_lengkap }}</b> dihapus?</p>
+                            <p>Apakah yakin <b>{{ ucwords($data->nm_sarpras) }}</b> dihapus?</p>
                           </div>
                           <div class="modal-footer justify-content-between">
-                            <form action="{{ route('user.destroy', ['user' => $data->email]) }}" method="post" class="d-inline">
+                            <form action="{{ route('sarana-prasarana.destroy', ['sarana_prasarana' => $data->id]) }}" method="post" class="d-inline">
                               @method('DELETE')
                               @csrf
                               <button type="button" class="btn btn-default ml-auto" data-dismiss="modal">Close</button>
@@ -68,9 +71,11 @@
                   <tfoot>
                   <tr>
                     <th>No</th>
-                    <th>Nama</th>
-                    <th>No. HP</th>
-                    <th>Email</th>
+                    <th>Jenis</th>
+                    <th>Status</th>
+                    <th>Nama SarPras</th>
+                    <th>Banyak</th>
+                    <th>Ket.</th>
                     <th></th>
                   </tr>
                   </tfoot>

@@ -29,7 +29,7 @@ class ProgramPaketController extends Controller
      */
     public function create()
     {
-        //
+        abort(404);
     }
 
     /**
@@ -65,7 +65,7 @@ class ProgramPaketController extends Controller
      */
     public function show(ProgramPaket $programPaket)
     {
-        //
+        abort(404);
     }
 
     /**

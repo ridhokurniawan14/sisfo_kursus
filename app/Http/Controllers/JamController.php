@@ -28,7 +28,7 @@ class JamController extends Controller
      */
     public function create()
     {
-        //
+        abort(404);
     }
 
     /**
@@ -56,7 +56,7 @@ class JamController extends Controller
      */
     public function show(Jam $jam)
     {
-        //
+        abort(404);
     }
 
     /**

@@ -28,7 +28,7 @@ class HakAksesController extends Controller
      */
     public function create()
     {
-        //
+        abort(404);
     }
 
     /**
@@ -56,7 +56,7 @@ class HakAksesController extends Controller
      */
     public function show(HakAkses $userCategory)
     {
-        //
+        abort(404);
     }
 
     /**

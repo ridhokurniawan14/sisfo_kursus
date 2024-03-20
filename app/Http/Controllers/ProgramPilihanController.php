@@ -29,7 +29,7 @@ class ProgramPilihanController extends Controller
      */
     public function create()
     {
-        //
+        abort(404);
     }
 
     /**
@@ -61,7 +61,7 @@ class ProgramPilihanController extends Controller
      */
     public function show(ProgramPilihan $programPilihan)
     {
-        //
+        abort(404);
     }
 
     /**

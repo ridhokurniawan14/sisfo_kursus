@@ -156,8 +156,8 @@
                     </p>
                 </a>
             </li>
-            <li class="nav-item {{ Request::is('jam*','program-pilihan*','program-paket*','user-category*','user/create') ? 'menu-open' : ''  }}">
-                <a href="#" class="nav-link {{ Request::is('jam*','program-pilihan*','program-paket*','user-category*','user/create') ? 'active' : ''  }}">
+            <li class="nav-item {{ Request::is('jam*','program-pilihan*','program-paket*','user-category*','user/create', 'sarana-prasarana/create', 'pengumuman*') ? 'menu-open' : ''  }}">
+                <a href="#" class="nav-link {{ Request::is('jam*','program-pilihan*','program-paket*','user-category*','user/create', 'sarana-prasarana/create', 'pengumuman*') ? 'active' : ''  }}">
                     <i class="nav-icon fas fa-database"></i>
                     <p>Data Master <i class="right fas fa-angle-left"></i></p>
                 </a>
@@ -199,7 +199,7 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a href="/pengumuman" class="nav-link">
+                        <a href="/pengumuman" class="nav-link {{ Request::is('pengumuman*') ? 'active' : ''  }}">
                             <i class="nav-icon fas fa-bullhorn"></i>
                             <p>Pengumuman</p>
                         </a>
@@ -219,8 +219,8 @@
                 </a>
             </li>
             <li class="nav-header">REPORT</li>
-            <li class="nav-item {{ Request::is('user', 'user/*', 'user/*/edit', 'user/*/') && !Request::is('user/create') ? 'menu-open' : ''  }}">
-                <a href="#" class="nav-link {{ Request::is('user', 'user/*', 'user/*/edit', 'user/*/') && !Request::is('user/create') ? 'active' : ''  }}">
+            <li class="nav-item {{ Request::is('user', 'user/*', 'user/*/edit', 'user/*/', 'sarana-prasarana', 'sarana-prasarana/*', 'sarana-prasarana/*/edit', 'sarana-prasarana/*/') && !Request::is('sarana-prasarana/create') && !Request::is('user/create') ? 'menu-open' : ''  }}">
+                <a href="#" class="nav-link {{ Request::is('user', 'user/*', 'user/*/edit', 'user/*/', 'sarana-prasarana', 'sarana-prasarana/*', 'sarana-prasarana/*/edit', 'sarana-prasarana/*/') && !Request::is('sarana-prasarana/create') && !Request::is('user/create') ? 'active' : ''  }}">
                     <i class="nav-icon fas fa-landmark"></i>
                     <p>Data Lembaga <i class="right fas fa-angle-left"></i></p>
                 </a>
@@ -238,7 +238,7 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a href="/data-sarana-prasarana" class="nav-link {{ Request::is('sarana-prasarana', 'sarana-prasarana/*', 'sarana-prasarana/*/edit', 'sarana-prasarana/*/') && !Request::is('sarana-prasarana/create') ? 'active' : '' }}">
+                        <a href="/sarana-prasarana" class="nav-link {{ Request::is('sarana-prasarana', 'sarana-prasarana/*', 'sarana-prasarana/*/edit', 'sarana-prasarana/*/') && !Request::is('sarana-prasarana/create') ? 'active' : '' }}">
                             <i class="far fa-building nav-icon"></i>
                             <p>Sarana dan Prasarana</p>
                         </a>

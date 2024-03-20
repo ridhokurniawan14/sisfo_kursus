@@ -65,11 +65,11 @@
                   <div class="row">
                     <div class="col-sm-3">
                       <div class="form-group">
-                        <label for="nik" class="col-sm-12 col-form-label">Jenis Kelamin <span class="text-danger">*</span></label>
+                        <label for="gender" class="col-sm-12 col-form-label">Jenis Kelamin <span class="text-danger">*</span></label>
                         <select name="gender" id="gender" class="form-control @error('gender') is-invalid @enderror" required>
                           <option value="">Pilih Jenis Kelamin</option>
-                          <option value="l" {{ old('gender') == 'p' ? 'selected' : '' }}>Laki-laki</option>
-                          <option value="p" {{ old('gender') == 'l' ? 'selected' : '' }}>Perempuan</option>
+                          <option value="l" {{ old('gender') == 'l' ? 'selected' : '' }}>Laki-laki</option>
+                          <option value="p" {{ old('gender') == 'p' ? 'selected' : '' }}>Perempuan</option>
                         </select>
                         @error('gender')
                             <div class="invalid-feedback">{{ $message }}</div>
