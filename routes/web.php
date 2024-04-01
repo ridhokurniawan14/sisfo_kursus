@@ -1,10 +1,12 @@
 <?php
 
+use App\Http\Controllers\BerkasPendukungController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\HakAksesController;
 use App\Http\Controllers\JamController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\PengumumanController;
+use App\Http\Controllers\ProfilLembagaController;
 use App\Http\Controllers\ProgramPaketController;
 use App\Http\Controllers\ProgramPilihanController;
 use App\Http\Controllers\SaranaPrasaranaController;
@@ -54,4 +56,8 @@ Route::middleware('auth')->group(function () {
     Route::resource('sarana-prasarana', SaranaPrasaranaController::class);
     // HALAMAN PENGUMUMAN
     Route::resource('pengumuman', PengumumanController::class);
+    // HALAMAN PROFIL LEMBAGA
+    Route::resource('profil-lembaga', ProfilLembagaController::class);
+    // HALAMAN BERKAS PENDUKUNG
+    Route::resource('berkas-pendukung', BerkasPendukungController::class);
 });

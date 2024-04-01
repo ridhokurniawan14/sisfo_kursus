@@ -124,8 +124,7 @@
           @endif
         </div>
         <div class="info">
-          {{-- <a href="#" class="d-block">{{ ucwords(auth()->user()->name) }}</a> --}}
-          <a href="#" class="d-block">Ridho Kurniawan</a>
+          <a href="#" class="d-block">{{ ucwords(auth()->user()->nm_lengkap) }}</a>
         </div>
       </div>
 
@@ -212,15 +211,9 @@
                     <p>Pendaftaran</p>
                 </a>
             </li>
-            <li class="nav-item">
-                <a href="/kalender-pendidikan" class="nav-link">
-                    <i class="nav-icon far fa-calendar-alt"></i>
-                    <p>Kalender Pendidikan</p>
-                </a>
-            </li>
             <li class="nav-header">REPORT</li>
-            <li class="nav-item {{ Request::is('user', 'user/*', 'user/*/edit', 'user/*/', 'sarana-prasarana', 'sarana-prasarana/*', 'sarana-prasarana/*/edit', 'sarana-prasarana/*/') && !Request::is('sarana-prasarana/create') && !Request::is('user/create') ? 'menu-open' : ''  }}">
-                <a href="#" class="nav-link {{ Request::is('user', 'user/*', 'user/*/edit', 'user/*/', 'sarana-prasarana', 'sarana-prasarana/*', 'sarana-prasarana/*/edit', 'sarana-prasarana/*/') && !Request::is('sarana-prasarana/create') && !Request::is('user/create') ? 'active' : ''  }}">
+            <li class="nav-item {{ Request::is('user', 'user/*', 'user/*/edit', 'user/*/', 'sarana-prasarana', 'sarana-prasarana/*', 'sarana-prasarana/*/edit', 'sarana-prasarana/*/', 'profil-lembaga*') && !Request::is('sarana-prasarana/create') && !Request::is('user/create') ? 'menu-open' : ''  }}">
+                <a href="#" class="nav-link {{ Request::is('user', 'user/*', 'user/*/edit', 'user/*/', 'sarana-prasarana', 'sarana-prasarana/*', 'sarana-prasarana/*/edit', 'sarana-prasarana/*/', 'profil-lembaga*') && !Request::is('sarana-prasarana/create') && !Request::is('user/create') ? 'active' : ''  }}">
                     <i class="nav-icon fas fa-landmark"></i>
                     <p>Data Lembaga <i class="right fas fa-angle-left"></i></p>
                 </a>
@@ -232,7 +225,7 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a href="/profil-lembaga" class="nav-link">
+                        <a href="/profil-lembaga" class="nav-link {{ Request::is('profil-lembaga*') ? 'active' : ''  }}">
                             <i class="far fa-id-card nav-icon"></i>
                             <p>Profil Lembaga</p>
                         </a>
