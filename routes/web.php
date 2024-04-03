@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\BerkasPendukungController;
+use App\Http\Controllers\BerkasAkreditasiController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\HakAksesController;
 use App\Http\Controllers\JamController;
@@ -59,5 +59,5 @@ Route::middleware('auth')->group(function () {
     // HALAMAN PROFIL LEMBAGA
     Route::resource('profil-lembaga', ProfilLembagaController::class);
     // HALAMAN BERKAS PENDUKUNG
-    Route::resource('berkas-pendukung', BerkasPendukungController::class);
+    Route::resource('berkas-akreditasi', BerkasAkreditasiController::class);
 });

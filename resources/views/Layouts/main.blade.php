@@ -212,8 +212,8 @@
                 </a>
             </li>
             <li class="nav-header">REPORT</li>
-            <li class="nav-item {{ Request::is('user', 'user/*', 'user/*/edit', 'user/*/', 'sarana-prasarana', 'sarana-prasarana/*', 'sarana-prasarana/*/edit', 'sarana-prasarana/*/', 'profil-lembaga*') && !Request::is('sarana-prasarana/create') && !Request::is('user/create') ? 'menu-open' : ''  }}">
-                <a href="#" class="nav-link {{ Request::is('user', 'user/*', 'user/*/edit', 'user/*/', 'sarana-prasarana', 'sarana-prasarana/*', 'sarana-prasarana/*/edit', 'sarana-prasarana/*/', 'profil-lembaga*') && !Request::is('sarana-prasarana/create') && !Request::is('user/create') ? 'active' : ''  }}">
+            <li class="nav-item {{ Request::is('user', 'user/*', 'user/*/edit', 'user/*/', 'sarana-prasarana', 'sarana-prasarana/*', 'sarana-prasarana/*/edit', 'sarana-prasarana/*/', 'profil-lembaga*', 'berkas-akreditasi*') && !Request::is('sarana-prasarana/create') && !Request::is('user/create') ? 'menu-open' : ''  }}">
+                <a href="#" class="nav-link {{ Request::is('user', 'user/*', 'user/*/edit', 'user/*/', 'sarana-prasarana', 'sarana-prasarana/*', 'sarana-prasarana/*/edit', 'sarana-prasarana/*/', 'profil-lembaga*', 'berkas-akreditasi*') && !Request::is('sarana-prasarana/create') && !Request::is('user/create') ? 'active' : ''  }}">
                     <i class="nav-icon fas fa-landmark"></i>
                     <p>Data Lembaga <i class="right fas fa-angle-left"></i></p>
                 </a>
@@ -237,9 +237,9 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a href="/berkas-pendukung" class="nav-link">
+                        <a href="/berkas-akreditasi" class="nav-link {{ Request::is('berkas-akreditasi*') ? 'active' : ''  }}">
                             <i class="far fa-file-alt nav-icon"></i>
-                            <p>Berkas Pendukung Lembaga</p>
+                            <p>Berkas Akreditasi</p>
                         </a>
                     </li>
                     <li class="nav-item">
@@ -422,6 +422,23 @@
   });
 </script>
 <script>
+  function previewPdf(input) {
+    const file = input.files[0];
+
+    // Pastikan file yang dipilih adalah PDF
+    if (file && file.type === 'application/pdf') {
+        const reader = new FileReader();
+
+        reader.onload = function(e) {
+            const pdfViewer = document.getElementById('pdfViewer');
+            pdfViewer.innerHTML = '<object data="' + e.target.result + '" type="application/pdf" width="100%" height="500px"></object>';
+        }
+
+        reader.readAsDataURL(file);
+    } else {
+        alert('Pilih file PDF.');
+    }
+  }
   function formatRupiah(input) {
       // Menghilangkan semua karakter kecuali angka
       var angka = input.value.replace(/[^0-9]/g, '');
