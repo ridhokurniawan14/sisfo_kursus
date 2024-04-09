@@ -212,8 +212,8 @@
                 </a>
             </li>
             <li class="nav-header">REPORT</li>
-            <li class="nav-item {{ Request::is('user', 'user/*', 'user/*/edit', 'user/*/', 'sarana-prasarana', 'sarana-prasarana/*', 'sarana-prasarana/*/edit', 'sarana-prasarana/*/', 'profil-lembaga*', 'berkas-akreditasi*') && !Request::is('sarana-prasarana/create') && !Request::is('user/create') ? 'menu-open' : ''  }}">
-                <a href="#" class="nav-link {{ Request::is('user', 'user/*', 'user/*/edit', 'user/*/', 'sarana-prasarana', 'sarana-prasarana/*', 'sarana-prasarana/*/edit', 'sarana-prasarana/*/', 'profil-lembaga*', 'berkas-akreditasi*') && !Request::is('sarana-prasarana/create') && !Request::is('user/create') ? 'active' : ''  }}">
+            <li class="nav-item {{ Request::is('user', 'user/*', 'user/*/edit', 'user/*/', 'sarana-prasarana', 'sarana-prasarana/*', 'sarana-prasarana/*/edit', 'sarana-prasarana/*/', 'profil-lembaga*', 'berkas-akreditasi*', 'angket-peserta-didik-baru*') && !Request::is('sarana-prasarana/create') && !Request::is('user/create') ? 'menu-open' : ''  }}">
+                <a href="#" class="nav-link {{ Request::is('user', 'user/*', 'user/*/edit', 'user/*/', 'sarana-prasarana', 'sarana-prasarana/*', 'sarana-prasarana/*/edit', 'sarana-prasarana/*/', 'profil-lembaga*', 'berkas-akreditasi*', 'angket-peserta-didik-baru*') && !Request::is('sarana-prasarana/create') && !Request::is('user/create') ? 'active' : ''  }}">
                     <i class="nav-icon fas fa-landmark"></i>
                     <p>Data Lembaga <i class="right fas fa-angle-left"></i></p>
                 </a>
@@ -243,7 +243,7 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a href="/data-angket-peserta" class="nav-link">
+                        <a href="/angket-peserta-didik-baru" class="nav-link {{ Request::is('angket-peserta-didik-baru*') ? 'active' : ''  }}">
                             <i class="far fa-edit nav-icon"></i>
                             <p>Data Angket Peserta Didik</p>
                         </a>
