@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AngketPenilaianController;
 use App\Http\Controllers\AngketPesertaDidikBaruController;
 use App\Http\Controllers\BerkasAkreditasiController;
 use App\Http\Controllers\DashboardController;
@@ -63,7 +64,9 @@ Route::middleware('auth')->group(function () {
     Route::resource('berkas-akreditasi', BerkasAkreditasiController::class);
     // HALAMAN DATA ANGKET PESERTA DIDIK BARU
     Route::resource('angket-peserta-didik-baru', AngketPesertaDidikBaruController::class);
-    Route::get('/export', [AngketPesertaDidikBaruController::class, 'exportExcel'])->name('exportExcel');
-
-
+    Route::get('/export-peserta-didik-baru/{type}', [AngketPesertaDidikBaruController::class, 'exportExcel'])->name('exportExcelPesertaDidikBaru');
+    // HALAMAN DATA ANGKET PENILAIAN
+    Route::resource('angket-penilaian', AngketPenilaianController::class);
+    Route::get('/export-penilaian/excel/{type}', [AngketPenilaianController::class, 'exportExcel'])->name('exportExcelPenilaian');
+    Route::get('/export-penilaian/peserta/{type}', [AngketPenilaianController::class, 'exportPeserta'])->name('exportExcelPeserta');
 });

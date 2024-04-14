@@ -11,7 +11,7 @@
             <div class="card">
               <div class="card-header d-flex align-items-center">
                 <h3 class="card-title">{{ $tab_title }}</h3>
-                <a href="{{ route('exportExcel') }}" class="btn btn-info ml-3 col-sm-2 float-right"><i class="fas fa-download nav-icon mr-2"></i>Download Data</a>
+                <a href="{{ route('exportExcelPesertaDidikBaru', ['type' => 'angket_peserta_didik_baru']) }}" class="btn btn-info ml-3 col-sm-2 float-right"><i class="fas fa-download nav-icon mr-2"></i>Download Data</a>
               </div>
               <!-- /.card-header -->
               <div class="card-body">
@@ -31,14 +31,14 @@
                       <td>{{ $loop->iteration }}</td>
                       <td>{{ $data->no_induk }}</td>
                       <td>{{ ucwords($data->Nama) }}</td>
-                      <td>{{ $data->Tanggal }}</td>
+                      <td>{{ \Carbon\Carbon::parse($data->Tanggal)->isoFormat('D MMMM YYYY') }}</td>
                       <td>
                         <a class="btn btn-info badge bg-info" data-toggle="modal" data-target="#fotoModal{{$data->id}}"><span class="fas fa-eye"></span></a>
                         <div class="modal fade" id="fotoModal{{$data->id}}" tabindex="-1" aria-labelledby="fotoModalLabel{{$data->id}}" aria-hidden="true">
                           <div class="modal-dialog modal-lg">
                             <div class="modal-content">
                               <div class="modal-header">
-                                  <h5 class="modal-title" id="fotoModalLabel{{$data->id}}">Informasi Angket <b>{{ ucwords($data->Nama) }}</b> ({{ ucfirst($data->Tanggal) }})</h5>
+                                  <h5 class="modal-title" id="fotoModalLabel{{$data->id}}">Informasi Angket <b>{{ ucwords($data->Nama) }}</b> ({{ \Carbon\Carbon::parse($data->Tanggal)->isoFormat('D MMMM YYYY') }})</h5>
                                   <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                       <span aria-hidden="true">&times;</span>
                                   </button>

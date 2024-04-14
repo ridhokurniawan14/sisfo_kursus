@@ -25,12 +25,12 @@ class AngketPesertaDidikBaruController extends Controller
                         ->get()
         ]);
     }
-    public function exportExcel()
+    public function exportExcel($type)
     {
-        $timestamp = Carbon::now()->format('Ymd_His');
-        $fileName = 'data-angket-peserta-didik-baru_' . $timestamp . '.xlsx';
+        $timestamp = now()->format('Ymd_His');
+        $fileName = 'data-' . $type . '_' . $timestamp . '.xlsx';
 
-        return Excel::download(new DataExport, $fileName);
+        return Excel::download(new DataExport($type), $fileName);
     }
     /**
      * Show the form for creating a new resource.
