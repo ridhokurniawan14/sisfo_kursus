@@ -263,7 +263,7 @@
                 </a>
             </li>
             <li class="nav-item">
-                <a href="/pendaftar-online" class="nav-link">
+                <a href="/pendaftar-online" class="nav-link {{ Request::is('pendaftar-online*') ? 'active' : ''  }}">
                     <i class="nav-icon fas fa-user-check"></i>
                     <p>Pendaftar Online</p>
                 </a>

@@ -7,6 +7,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\HakAksesController;
 use App\Http\Controllers\JamController;
 use App\Http\Controllers\LoginController;
+use App\Http\Controllers\PendaftarOnlineController;
 use App\Http\Controllers\PengumumanController;
 use App\Http\Controllers\ProfilLembagaController;
 use App\Http\Controllers\ProgramPaketController;
@@ -69,4 +70,7 @@ Route::middleware('auth')->group(function () {
     Route::resource('angket-penilaian', AngketPenilaianController::class);
     Route::get('/export-penilaian/excel/{type}', [AngketPenilaianController::class, 'exportExcel'])->name('exportExcelPenilaian');
     Route::get('/export-penilaian/peserta/{type}', [AngketPenilaianController::class, 'exportPeserta'])->name('exportExcelPeserta');
+    // HALAMAN DATA PENDAFTAR ONLINE
+    Route::resource('pendaftar-online', PendaftarOnlineController::class);
+    Route::get('pendaftar-online/{pendaftarOnline}/generate-pdf', [PendaftarOnlineController::class, 'generatePDF'])->name('pendaftar-online.pdf');
 });
