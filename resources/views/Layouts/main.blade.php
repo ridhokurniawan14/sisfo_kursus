@@ -257,7 +257,7 @@
                 </ul>
             </li>
             <li class="nav-item">
-                <a href="/data-peserta-didik" class="nav-link">
+                <a href="/pendaftaran" class="nav-link">
                     <i class="nav-icon fas fa-users"></i>
                     <p>Data Peserta Didik</p>
                 </a>
@@ -270,9 +270,10 @@
             </li>
             <li class="nav-header">INFORMATION</li>
             <li class="nav-item">
-                <a href="/information" class="nav-link">
+                <a href="/information" class="nav-link {{ Request::is('information*') ? 'active' : ''  }}">
                     <i class="nav-icon fas fa-info-circle"></i>
                     <p>Information</p>
+                    <span class="right badge badge-warning">PENTING!!</span>
                 </a>
             </li>
             <li class="nav-item">

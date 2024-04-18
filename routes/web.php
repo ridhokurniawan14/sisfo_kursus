@@ -5,8 +5,10 @@ use App\Http\Controllers\AngketPesertaDidikBaruController;
 use App\Http\Controllers\BerkasAkreditasiController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\HakAksesController;
+use App\Http\Controllers\InformationController;
 use App\Http\Controllers\JamController;
 use App\Http\Controllers\LoginController;
+use App\Http\Controllers\PendaftarController;
 use App\Http\Controllers\PendaftarOnlineController;
 use App\Http\Controllers\PengumumanController;
 use App\Http\Controllers\ProfilLembagaController;
@@ -73,4 +75,8 @@ Route::middleware('auth')->group(function () {
     // HALAMAN DATA PENDAFTAR ONLINE
     Route::resource('pendaftar-online', PendaftarOnlineController::class);
     Route::get('pendaftar-online/{pendaftarOnline}/generate-pdf', [PendaftarOnlineController::class, 'generatePDF'])->name('pendaftar-online.pdf');
+    // HALAMAN INFORMATION
+    Route::get('/information', [InformationController::class, 'index']);
+    // HALAMAN PENDAFTARAN MAUPUN DATA PESERTA DIDIK
+    Route::get('/pendaftaran', [PendaftarController::class, 'index']);
 });
