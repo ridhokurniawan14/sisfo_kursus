@@ -33,6 +33,8 @@
   <link rel="stylesheet" href="/plugins/summernote/summernote-bs4.min.css">
   <!-- Toastr -->
   <link rel="stylesheet" href="/plugins/toastr/toastr.min.css">
+  @livewireStyles
+  @stack('styles')
 </head>
 <body class="hold-transition sidebar-mini layout-fixed">
 <div class="wrapper">
@@ -257,7 +259,7 @@
                 </ul>
             </li>
             <li class="nav-item">
-                <a href="/pendaftaran" class="nav-link">
+                <a href="/pendaftaran" class="nav-link {{ Request::is('pendaftaran*') ? 'active' : ''  }}">
                     <i class="nav-icon fas fa-users"></i>
                     <p>Data Peserta Didik</p>
                 </a>
@@ -460,7 +462,16 @@
       // "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"], // yg sebelumnya
     }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
   });
-</script>
+  // $(function () {
+  //   $("#datapesertadidik").DataTable({
+  //     "responsive": true, "lengthChange": true, "autoWidth": false,
+  //     "processing": true,
+  //     "buttons": ["copy", "csv", "excel", "pdf", "print"],
+  //     "paging": false, 
+  //     "info": false,
+  //   }).buttons().container().appendTo('#datapesertadidik_wrapper .col-md-6:eq(0)');
+  // });
+</script>  
 @if(Session::has('message'))
 <script>
     toastr.options = {
@@ -490,5 +501,7 @@
     @endforeach
   </script>
 @endif
+@livewireScripts
+@stack('scripts')
 </body>
 </html>
