@@ -6,15 +6,28 @@
       <div class="container-fluid">
         <div class="row">
           <!-- right column -->
-          <div class="col-md-12">
+          <div class="col-md-12">        
             {{-- Data Tabel --}}
             <div class="card">
               <div class="card-header d-flex align-items-center">
                 <h3 class="card-title">{{ $tab_title }}</h3>
+                <a href="/pendaftaran/create" class="btn btn-primary ml-3 col-sm-2 float-right"><i class="fas fa-pen nav-icon mr-2"></i>Tambah Pendaftar</a>
+                {{-- Tombol Download --}}
+                <a href="{{ route('pendaftaran.export') }}" class="btn btn-info ml-3 col-sm-2 float-right"><i class="fas fa-download nav-icon mr-2"></i>Download Data</a>
               </div>
               <!-- /.card-header -->
               <div class="card-body">
-                <table id="example1" class="table table-bordered table-striped">
+                {{-- Form Pencarian --}}
+                <form method="GET" action="{{ route('pendaftaran.index') }}">
+                    <div class="input-group mb-3">
+                        <input type="text" name="search" autofocus autocomplete="off" class="form-control" placeholder="Cari Nama atau NIS" value="{{ request('search') }}">
+                        <div class="input-group-append">
+                            <button class="btn btn-outline-secondary" type="submit">Cari</button>
+                            <a href="{{ route('pendaftaran.index') }}" class="btn btn-outline-secondary">Reset</a>
+                        </div>
+                    </div>
+                </form>  
+                <table id="datapesertadidik" class="table table-bordered table-striped">
                     <thead>
                         <tr>
                             <th>No</th>

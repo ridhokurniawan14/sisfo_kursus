@@ -78,6 +78,7 @@ Route::middleware('auth')->group(function () {
     // HALAMAN INFORMATION
     Route::get('/information', [InformationController::class, 'index']);
     // HALAMAN PENDAFTARAN MAUPUN DATA PESERTA DIDIK
-    Route::get('/pendaftaran', [PendaftarController::class, 'index']);
+    Route::get('pendaftaran/export', [PendaftarController::class, 'export'])->name('pendaftaran.export');
+    Route::resource('pendaftaran', PendaftarController::class);
     // Route::get('/data-pendaftar', [PendaftarController::class, 'getDatas'])->name('datas'); // Route untuk mengambil data
 });
