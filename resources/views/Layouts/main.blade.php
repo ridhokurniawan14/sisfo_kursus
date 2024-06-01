@@ -15,6 +15,8 @@
   <link rel="stylesheet" href="/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
   <link rel="stylesheet" href="/plugins/datatables-responsive/css/responsive.bootstrap4.min.css">
   <link rel="stylesheet" href="/plugins/datatables-buttons/css/buttons.bootstrap4.min.css">
+  <!-- Select2 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet">
   <!-- Ionicons -->
   <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
   <!-- Tempusdominus Bootstrap 4 -->
@@ -157,8 +159,8 @@
                     </p>
                 </a>
             </li>
-            <li class="nav-item {{ Request::is('jam*','program-pilihan*','program-paket*','user-category*','user/create', 'sarana-prasarana/create', 'pengumuman*') ? 'menu-open' : ''  }}">
-                <a href="#" class="nav-link {{ Request::is('jam*','program-pilihan*','program-paket*','user-category*','user/create', 'sarana-prasarana/create', 'pengumuman*') ? 'active' : ''  }}">
+            <li class="nav-item {{ Request::is('jam*','biaya-pendaftaran*','program-pilihan*','program-paket*','user-category*','user/create', 'sarana-prasarana/create', 'pengumuman*') ? 'menu-open' : ''  }}">
+                <a href="#" class="nav-link {{ Request::is('jam*','biaya-pendaftaran*','program-pilihan*','program-paket*','user-category*','user/create', 'sarana-prasarana/create', 'pengumuman*') ? 'active' : ''  }}">
                     <i class="nav-icon fas fa-database"></i>
                     <p>Data Master <i class="right fas fa-angle-left"></i></p>
                 </a>
@@ -169,6 +171,12 @@
                             <p>Jam</p>
                         </a>
                     </li>
+                    <li class="nav-item">
+                      <a href="/biaya-pendaftaran" class="nav-link {{ Request::is('biaya-pendaftaran*') ? 'active' : ''  }}">
+                          <i class="fas fa-dollar-sign nav-icon"></i>
+                          <p>Biaya Pendaftaran</p>
+                      </a>
+                  </li>
                     <li class="nav-item">
                         <a href="/program-pilihan" class="nav-link {{ Request::is('program-pilihan*') ? 'active' : ''  }}">
                             <i class="fa fa-tag nav-icon"></i>
@@ -259,7 +267,7 @@
                 </ul>
             </li>
             <li class="nav-item">
-                <a href="/pendaftaran" class="nav-link {{ Request::is('pendaftaran*') ? 'active' : ''  }}">
+                <a href="/pendaftaran" class="nav-link {{ Request::is('pendaftaran*') && !Request::is('pendaftaran/create') ? 'active' : ''  }}">
                     <i class="nav-icon fas fa-users"></i>
                     <p>Data Peserta Didik</p>
                 </a>
@@ -357,6 +365,7 @@
 <script src="/plugins/datatables-buttons/js/buttons.html5.min.js"></script>
 <script src="/plugins/datatables-buttons/js/buttons.print.min.js"></script>
 <script src="/plugins/datatables-buttons/js/buttons.colVis.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 <!-- ChartJS -->
 <script src="/plugins/chart.js/Chart.min.js"></script>
 <!-- Sparkline -->
@@ -403,6 +412,30 @@
           input.value = input.value.slice(0, maxLength);
       }
   }
+  $(document).ready(function() {
+        $('#nexthome').on('click', function() {
+            $('#custom-tabs-two-home-tab').tab('show'); // Menggunakan Bootstrap tab method untuk menampilkan tab "Alamat"
+          });
+        $('#nextalamat').on('click', function() {
+            $('#custom-tabs-two-profile-tab').tab('show'); // Menggunakan Bootstrap tab method untuk menampilkan tab "Alamat"
+        });
+        $('#nextkeluarga').on('click', function() {
+            $('#custom-tabs-two-messages-tab').tab('show'); // Menggunakan Bootstrap tab method untuk menampilkan tab "Alamat"
+        });
+        $('#nextwali').on('click', function() {
+            $('#custom-tabs-two-settings-tab').tab('show'); // Menggunakan Bootstrap tab method untuk menampilkan tab "Alamat"
+        });
+        $('#prevalamat').on('click', function() {
+            $('#custom-tabs-two-profile-tab').tab('show'); // Menggunakan Bootstrap tab method untuk menampilkan tab "Alamat" atau sebelumnya
+        });
+        $('#prevkeluarga').on('click', function() {
+            $('#custom-tabs-two-messages-tab').tab('show'); // Menggunakan Bootstrap tab method untuk menampilkan tab "Alamat" atau sebelumnya
+        });
+        $('#provinsi').select2({
+            placeholder: "Pilih Provinsi",
+            allowClear: true
+        });
+  });
 </script>
 <script>
   document.querySelectorAll('.toggle-password').forEach(function(button) {
@@ -454,6 +487,80 @@
   }
 </script>
 <script>
+  let angsuranCount = 1;
+  const maxAngsuran = 5;
+
+  document.getElementById('addAngsuranButton').addEventListener('click', function() {
+      if (angsuranCount >= maxAngsuran) return;
+
+      angsuranCount++;
+
+      const tableBody = document.getElementById('angsuranTableBody');
+      const newRow = document.createElement('tr');
+      newRow.id = `angsuranRow${angsuranCount}`;
+
+      newRow.innerHTML = `
+          <td>${angsuranCount + 4}</td>
+          <td>Angsuran ke ${angsuranCount} <span class="text-danger">*</span></td>
+          <td>
+              <input value="{{ old('tgl_angsuran${angsuranCount}') }}" required type="date" name="tgl_angsuran${angsuranCount}" class="form-control form-control-sm @error('tgl_angsuran${angsuranCount}') is-invalid @enderror" id="tgl_angsuran${angsuranCount}" placeholder="Tanggal Lahir">
+              @error('tgl_angsuran${angsuranCount}')
+                <div class="invalid-feedback">
+                  {{ $message }}
+                </div>
+              @enderror
+          </td>
+          <td>
+              <input value="0" required type="text" name="angsuran${angsuranCount}" class="form-control form-control-sm @error('angsuran${angsuranCount}') is-invalid @enderror" id="angsuran${angsuranCount}" placeholder="Pembayaran Awal">
+              @error('angsuran${angsuranCount}')
+                <div class="invalid-feedback">
+                  {{ $message }}
+                </div>
+              @enderror
+          </td>
+          <td>
+            <button type="button" class="btn btn-danger btn-sm" onclick="removeAngsuran(${angsuranCount})"><i class="fas fa-trash"></i></button>
+          </td>
+      `;
+
+      tableBody.appendChild(newRow);
+
+      if (angsuranCount === maxAngsuran) {
+          document.getElementById('addAngsuranButton').style.display = 'none';
+      }
+  });
+
+  function removeAngsuran(count) {
+      const row = document.getElementById(`angsuranRow${count}`);
+      if (row) {
+          row.remove();
+          angsuranCount--;
+
+          if (angsuranCount < maxAngsuran) {
+              document.getElementById('addAngsuranButton').style.display = 'block';
+          }
+
+          // Reorder the remaining rows
+          reorderAngsuranRows();
+      }
+  }
+
+  function reorderAngsuranRows() {
+      const rows = document.querySelectorAll('#angsuranTableBody tr');
+      let number = 5;
+      rows.forEach((row, index) => {
+          if (index >= 4) { // Start from the 5th row which is the first angsuran
+              row.cells[0].innerText = number++;
+              row.cells[1].innerHTML = `Angsuran ke ${index - 3} <span class="text-danger">*</span>`;
+              row.id = `angsuranRow${index - 3}`;
+              row.querySelector('input[type="date"]').name = `tgl_angsuran${index - 3}`;
+              row.querySelector('input[type="text"]').name = `angsuran${index - 3}`;
+              row.querySelector('button').setAttribute('onclick', `removeAngsuran(${index - 3})`);
+          }
+      });
+  }
+</script>
+<script>
   $(function () {
     $("#example1").DataTable({
       "responsive": true, "lengthChange": true, "autoWidth": false,
@@ -472,6 +579,15 @@
       "searching":false,
     }).buttons().container().appendTo('#datapesertadidik_wrapper .col-md-6:eq(0)');
   });
+  function toggleProgram(value) {
+      if (value === "pilihan") {
+          document.getElementById("program-pilihan").style.display = "block";
+          document.getElementById("program-paket").style.display = "none";
+      } else if (value === "paket") {
+          document.getElementById("program-pilihan").style.display = "none";
+          document.getElementById("program-paket").style.display = "block";
+      }
+  }
 </script>  
 @if(Session::has('message'))
 <script>

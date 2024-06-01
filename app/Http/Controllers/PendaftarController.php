@@ -3,7 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Exports\DataPendaftarExport;
+use App\Models\Jam;
 use App\Models\Pendaftar;
+use App\Models\ProgramPaket;
+use App\Models\ProgramPilihan;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
@@ -31,9 +34,9 @@ class PendaftarController extends Controller
         $datas = $query->paginate(10);
 
         return view('dashboard.pendaftaran.offline.index', [
-            "halaman" => "Data Pendaftar Online",
-            "title" => "Pendaftar Online",
-            "tab_title" => "Data Pendaftar",
+            "halaman" => "Data Peserta Didik",
+            "title" => "Data",
+            "tab_title" => "Data Peserta Didik",
             "datas" => $datas
         ]);
     }
@@ -41,12 +44,58 @@ class PendaftarController extends Controller
     {
         return Excel::download(new DataPendaftarExport, 'data_pendaftar.xlsx');
     }
+
     /**
      * Show the form for creating a new resource.
      */
     public function create()
     {
-        //
+        // Ambil data pendaftar yang tidak ada di tabel verifikasi
+        $query = DB::table('tb_pendaftar')
+            ->leftJoin('tb_pendaftar_verifikasi', 'tb_pendaftar.no_induk', '=', 'tb_pendaftar_verifikasi.no_induk')
+            ->whereNull('tb_pendaftar_verifikasi.no_induk')
+            ->orderByDesc('tb_pendaftar.id')
+            ->select('tb_pendaftar.no_induk', 'tb_pendaftar.nm_lengkap', 'tb_pendaftar.gender', 'tb_pendaftar.no_hp')
+            ->get();
+
+        // Jika ada data yang perlu diverifikasi
+        if (!$query->isEmpty()) {
+            // Ambil no_induk dari salah satu hasil kueri
+            $noInduk = $query->first()->no_induk;
+
+            // Redirect ke halaman verifikasi dengan parameter no_induk
+            return redirect()->route('pendaftaran.verifikasi', ['no_induk' => $noInduk])->with('info', 'Silahkan memverifikasi pendaftar');
+        } else {
+            // Mendapatkan NIS terakhir dari tabel pendaftar
+            $lastStudent = DB::table('tb_pendaftar')->orderBy('no_induk', 'desc')->first();
+            $lastNIS = $lastStudent ? $lastStudent->no_induk : 0;
+            $newNIS = $lastNIS + 1;
+
+            // Kembali ke halaman pendaftaran
+            return view('dashboard.pendaftaran.offline.create', [
+                "halaman" => "Pendaftaran Peserta Didik",
+                "title" => "Pendaftaran",
+                "tab_title" => "Tambah Peserta Didik",
+                "newNIS" => $newNIS,
+            ]);
+        }
+    }
+
+
+
+    public function verifikasi($no_induk)
+    {
+        $pendaftar = Pendaftar::where('no_induk', $no_induk)->firstOrFail();
+        $data = [
+            "halaman" => "Verifikasi Peserta Didik",
+            "title" => "Pendaftaran",
+            "tab_title" => "Verifikasi Peserta Didik",
+            "pendaftar" => $pendaftar,
+            "categories" => Jam::orderBy('id')->get(),
+            "program_pilihan" => ProgramPilihan::orderBy('id')->get(),
+            "program_paket" => ProgramPaket::orderBy('id')->get(),
+        ];
+        return view('dashboard.pendaftaran.offline.verifikasi', $data);
     }
 
     /**
@@ -54,7 +103,63 @@ class PendaftarController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        // Validasi data input
+        $validatedData = $request->validate([
+            'no_induk' => 'required|unique:tb_pendaftar,no_induk',
+            'nm_lengkap' => 'required|string|max:255',
+            'tmp_lahir' => 'required|string|max:255',
+            'tgl_lahir' => 'required|date',
+            'gender' => 'required|string|max:1',
+            'nisn' => 'nullable|numeric',
+            'nik' => 'required|numeric',
+            'agama' => 'required|string|max:255',
+            'kewarganegaraan' => 'required|string|max:255',
+            'pend_akhir' => 'required|string|max:255',
+            'email' => 'required|email|max:255',
+            'no_hp' => 'required|numeric',
+            'status_pekerjaan' => 'required|string|max:255',
+            'tgl_masuk' => 'required|date',
+            'alamat' => 'required|string|max:255',
+            'rt' => 'required|numeric',
+            'rw' => 'required|numeric',
+            'kel' => 'required|string|max:255',
+            'kec' => 'required|string|max:255',
+            'kd_pos' => 'required|numeric',
+            'kab' => 'required|string|max:255',
+            'provinsi' => 'required|string|max:255',
+            'jns_tinggal' => 'required|string|max:255',
+            'nm_ayah' => 'nullable|string|max:255',
+            'nik_ayah' => 'nullable|numeric',
+            'tgl_ayah' => 'nullable|date',
+            'pend_ayah' => 'nullable|string|max:255',
+            'pek_ayah' => 'nullable|string|max:255',
+            'nm_ibu' => 'nullable|string|max:255',
+            'nik_ibu' => 'nullable|numeric',
+            'tgl_ibu' => 'nullable|date',
+            'pend_ibu' => 'nullable|string|max:255',
+            'pek_ibu' => 'nullable|string|max:255',
+            'alamat_ortu' => 'nullable|string|max:255',
+            'hp_ortu' => 'nullable|numeric',
+            'telepon_ortu' => 'nullable|numeric',
+            'anak_ke' => 'nullable|numeric',
+            'nm_wali' => 'nullable|string|max:255',
+            'nik_wali' => 'nullable|numeric',
+            'tgl_wali' => 'nullable|date',
+            'pend_wali' => 'nullable|string|max:255',
+            'pek_wali' => 'nullable|string|max:255',
+            'alamat_wali' => 'nullable|string|max:255',
+            'hp_wali' => 'nullable|numeric',
+        ]);
+
+        // Tambahkan password yang sama dengan tanggal lahir
+        $validatedData['password'] = $request->tgl_lahir;
+        
+        // Simpan data ke database
+        $pendaftar = Pendaftar::create($validatedData);
+
+        // Redirect ke halaman verifikasi
+        return redirect()->route('verifikasi.pendaftaran', ['no_induk' => $pendaftar->no_induk])
+        ->with('success', 'Data pendaftar berhasil disimpan.');
     }
 
     /**

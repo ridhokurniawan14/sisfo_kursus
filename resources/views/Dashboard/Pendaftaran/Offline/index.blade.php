@@ -69,7 +69,7 @@
                                 </td>                            
                                 <td>
                                     @if(!empty($data->no_hp))
-                                        <a href="https://wa.me/{{ $data->no_hp }}?text=Hai%20{{ ucwords($data->nm_lengkap) }},%20Terima%20Kasih%20sudah%20mendaftar%20online.%20Ditunggu%20kehadirannya%20untuk%20melakukan%20Administrasi%20di%20kantor%20LKP%20PTCC%20ya%20Kak%20:-)" target="_blank">{{ $data->no_hp }}</a>
+                                        <a href="https://wa.me/{{ $data->no_hp }}?text=Hai%20{{ ucwords($data->nm_lengkap) }}, Kami dari LKP PTCC.+Ada+yang+perlu+Kami+sampaikan+terkait+.......&type=phone_number&app_absent=0" target="_blank">{{ $data->no_hp }}</a>
                                     @else
                                         <span class="right badge badge-warning">MOHON DIISI‼️</span>
                                     @endif

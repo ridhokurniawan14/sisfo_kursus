@@ -3,6 +3,7 @@
 use App\Http\Controllers\AngketPenilaianController;
 use App\Http\Controllers\AngketPesertaDidikBaruController;
 use App\Http\Controllers\BerkasAkreditasiController;
+use App\Http\Controllers\BiayaDaftarController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\HakAksesController;
 use App\Http\Controllers\InformationController;
@@ -46,6 +47,8 @@ Route::middleware('auth')->group(function () {
     Route::resource('dashboard', DashboardController::class);
     // HALAMAN JAM
     Route::resource('jam', JamController::class);
+    // HALAMAN BIAYA PENDAFTARAN
+    Route::resource('biaya-pendaftaran', BiayaDaftarController::class);
     // HALAMAN PROGRAM PILIHAN
     Route::resource('program-pilihan', ProgramPilihanController::class);
     // HALAMAN PROGRAM PAKET
@@ -80,5 +83,7 @@ Route::middleware('auth')->group(function () {
     // HALAMAN PENDAFTARAN MAUPUN DATA PESERTA DIDIK
     Route::get('pendaftaran/export', [PendaftarController::class, 'export'])->name('pendaftaran.export');
     Route::resource('pendaftaran', PendaftarController::class);
+    Route::get('pendaftaran/verifikasi/{no_induk}', [PendaftarController::class, 'verifikasi'])->name('pendaftaran.verifikasi');
+
     // Route::get('/data-pendaftar', [PendaftarController::class, 'getDatas'])->name('datas'); // Route untuk mengambil data
 });
