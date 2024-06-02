@@ -6,6 +6,8 @@
       <div class="container-fluid">
         <div class="row">
           <!-- left column -->
+          
+          @if ($datas->isEmpty())
           <div class="col-md-6">
             <!-- general form elements -->
             <div class="card card-primary">
@@ -33,14 +35,18 @@
                   <button type="submit" class="btn btn-primary">Save</button>
                   <button type="reset" class="btn btn-secondary">Reset</button>
                 </div>
-              </form>
+              </form>    
             </div>
             <!-- /.card -->
-
           </div>
+          @endif
           <!--/.col (left) -->
           <!-- right column -->
-          <div class="col-md-6">
+          @if ($datas->isEmpty())
+            <div class="col-md-6">  
+          @else
+            <div class="col-md-12">  
+          @endif
             {{-- Data Tabel --}}
             <div class="card">
               <div class="card-header">
@@ -53,7 +59,7 @@
                   <tr>
                     <th>No</th>
                     <th>Biaya Pendaftaran</th>
-                    <th>Tanggal Input</th>
+                    <th>Tanggal Update</th>
                     <th></th>
                   </tr>
                   </thead>
@@ -63,44 +69,18 @@
                     <td>{{ $loop->iteration }}</td>
                     <td>{{ strtoupper($data->biaya_daftar) }}</td>
                     {{-- <td>{{ strtoupper($data->created_at) }}</td> --}}
-                    <td>{{ \Carbon\Carbon::parse($data->created_at)->translatedFormat('j F Y') }}</td>
+                    <td>{{ \Carbon\Carbon::parse($data->updated_at)->translatedFormat('j F Y') }}</td>
                     <td>
                       <a href="/biaya-pendaftaran/{{ $data->id }}/edit" class="badge bg-warning"><span class="fas fa-pen"></span></a>
-                      <button class="badge bg-danger border-0" data-toggle="modal" data-target="#modal-delete{{ $data->id }}"><span class="fas fa-trash"></span></button>
                     </td>
                   </tr>
-                  <div class="modal fade" id="modal-delete{{ $data->id }}">
-                    <div class="modal-dialog">
-                      <div class="modal-content">
-                        <div class="modal-header">
-                          <h4 class="modal-title">Konfirmasi Hapus Data</h4>
-                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                          </button>
-                        </div>
-                        <div class="modal-body">
-                          <p>Apakah yakin data Rp. <b>{{ strtoupper($data->biaya_daftar) }}</b> dihapus?</p>
-                        </div>
-                        <div class="modal-footer justify-content-between">
-                          <form action="{{ route('biaya-pendaftaran.destroy', ['biaya_pendaftaran' => $data->id]) }}" method="post" class="d-inline">
-                            @method('delete')
-                            @csrf
-                            <button type="button" class="btn btn-default ml-auto" data-dismiss="modal">Close</button>
-                            <button type="submit" class="btn btn-primary">Yakin</button>
-                          </form>
-                        </div>
-                      </div>
-                      <!-- /.modal-content -->
-                    </div>
-                    <!-- /.modal-dialog -->
-                  </div> 
                   @endforeach                 
                   </tbody>
                   <tfoot>
                   <tr>
                     <th>No</th>
                     <th>Biaya Pendaftaran</th>
-                    <th>Tanggal Input</th>
+                    <th>Tanggal Update</th>
                     <th></th>
                   </tr>
                   </tfoot>

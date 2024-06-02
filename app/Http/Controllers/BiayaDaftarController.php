@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\BiayaDaftar;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class BiayaDaftarController extends Controller
 {
@@ -19,7 +20,7 @@ class BiayaDaftarController extends Controller
             "tab_title" => "Biaya Pendaftaran",
             "datas" => DB::table('tb_biaya_pendaftaran')
                         ->orderBy('id') // Mengurutkan berdasarkan kolom 'id', yang mungkin merupakan kolom yang menunjukkan urutan data yang pertama dimasukkan
-                        ->get()
+                        ->get(),
         ]);
     }
 
@@ -61,53 +62,43 @@ class BiayaDaftarController extends Controller
         abort(404);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
+    // Method untuk menampilkan form edit
     public function edit($id)
     {
-        // Mencoba mengambil data dengan ID yang diberikan
-        $biayaDaftar = DB::table('tb_biaya_pendaftaran')
-                        ->where('id', $id)
-                        ->orderBy('id')
-                        ->first();
+        $cari = BiayaDaftar::findOrFail($id);
+        $datas = DB::table('tb_biaya_pendaftaran')
+                    ->orderBy('id')
+                    ->get();
 
-        // Debugging untuk memastikan data ditemukan
-        // dd($id);
         return view('dashboard.data-master.biaya-pendaftaran.edit', [
-            "halaman" => "Setting Biaya Pendaftaran",
-            "title" => "Data Master",
-            "tab_title" => "Biaya Pendaftaran",
-            "datas" => DB::table('tb_biaya_pendaftaran')
-                        ->orderBy('id') // Mengurutkan berdasarkan kolom 'id', yang mungkin merupakan kolom yang menunjukkan urutan data yang pertama dimasukkan
-                        ->get(),
-            "cari" => $biayaDaftar,
-        ]);        
+            'halaman' => 'Edit Biaya Pendaftaran',
+            'title' => 'Data Master',
+            'tab_title' => 'Edit Biaya Pendaftaran',
+            'datas' => $datas,
+            'cari' => $cari,
+        ]);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, BiayaDaftar $biayaDaftar)
+    // Method untuk mengupdate data
+    public function update(Request $request, $id)
     {
-        // Aturan dasar validasi
-        $rules = [
-            'biaya_daftar' => ['required', 'numeric'], // Assuming 'biaya_daftar' should be numeric
-        ];
+        // Validasi input
+        $request->validate([
+            'biaya_daftar' => 'required|string|max:255',
+        ]);
 
-        // Validasi tambahan jika 'biaya_daftar' diubah
-        if ($request->biaya_daftar != $biayaDaftar->biaya_daftar) {
-            $rules['biaya_daftar'][] = 'unique:tb_biaya_pendaftaran';
-        }
+        // Mencari data berdasarkan ID
+        $biayaDaftar = BiayaDaftar::findOrFail($id);
 
-        // Validasi data berdasarkan aturan yang telah dibuat
-        $validateData = $request->validate($rules);
-        
-        // Perbarui data menggunakan instance model yang telah ditemukan
-        $biayaDaftar->update($validateData);
+        // Mengupdate data
+        $biayaDaftar->update([
+            'biaya_daftar' => $request->biaya_daftar,
+            'active' => $request->has('active') ? 1 : 0,
+        ]);
 
-        // Redirect dengan pesan sukses
-        return redirect('/biaya-pendaftaran')->with('message', 'Data berhasil diupdate!');
+        // Redirect setelah update
+        return redirect('/biaya-pendaftaran')->with('message', 'Data berhasil disimpan!');
+        // return redirect()->route('biaya-pendaftaran.index')->with('success', 'Data berhasil diupdate');
     }
 
     /**

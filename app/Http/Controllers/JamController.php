@@ -80,19 +80,25 @@ class JamController extends Controller
      */
     public function update(Request $request, Jam $jam)
     {
+        // Validasi data awal
         $validateData = $request->validate([
-            'jam'  => ['required'],
+            'jam' => ['required'],
         ]);
-        
+
         // Mengonversi 'jam' menjadi huruf kecil sebelum disimpan
         $validateData['jam'] = strtolower($validateData['jam']);
 
-        if($request->jam != $jam->jam) {
-            $rules['jam'] = ['required', 'unique:tb_jam'];
+        // Definisikan variabel rules dengan nilai awal
+        $rules = ['jam' => ['required']];
+
+        // Tambahkan aturan 'unique' jika 'jam' berubah
+        if ($request->jam != $jam->jam) {
+            $rules['jam'][] = 'unique:tb_jam';
         }
 
+        // Validasi data dengan rules yang sudah didefinisikan
         $validateData = $request->validate($rules);
-        
+
         // Perbarui data menggunakan instance model yang telah ditemukan
         $jam->update($validateData);
 
@@ -101,6 +107,7 @@ class JamController extends Controller
 
         return redirect('/jam')->with('message', 'Data berhasil diupdate!');
     }
+
 
     /**
      * Remove the specified resource from storage.

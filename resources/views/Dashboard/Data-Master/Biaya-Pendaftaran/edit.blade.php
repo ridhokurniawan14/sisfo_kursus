@@ -10,36 +10,31 @@
             <!-- general form elements -->
             <div class="card card-warning">
               <div class="card-header">
-                <h3 class="card-title">Silahkan Masukkan Data</h3>
+                <h3 class="card-title">{{ $halaman }}</h3>
               </div>
               <!-- /.card-header -->
               <!-- form start -->
-              <form method="POST" action="/biaya-pendaftaran/{{ $cari->id }}">
-                @method('put')
+              <form method="POST" action="{{ route('biaya-pendaftaran.update', $cari->id) }}">
+                @method('PUT')
                 @csrf
                 <div class="card-body">
-                  <div class="form-group">
-                    <label for="biaya_daftar">Biaya Pendaftaran <span class="text-danger">*</span></label>
-                    <input autocomplete="off"autofocus value="{{ old('biaya_daftar', $cari->biaya_daftar) }}" required type="text" name="biaya_daftar" class="form-control @error('biaya_daftar') is-invalid @enderror" id="biaya_daftar" placeholder="Masukkan Biaya Daftar" onkeyup="formatRupiah(this)">
-
-                    {{-- <input autocomplete="off" value="{{ old('biaya_daftar', strtoupper($cari->biaya_daftar)) }}" required type="text" name="biaya_daftar" class="form-control @error('biaya_daftar') is-invalid @enderror" id="biaya_daftar" placeholder="Masukkan Biaya Daftar" onkeyup="formatRupiah(this)"> --}}
-                    @error('biaya_daftar')
-                      <div class="invalid-feedback">
-                        {{ $message }}
-                      </div>
-                    @enderror
-                  </div>
+                    <div class="form-group">
+                        <label for="biaya_daftar">Biaya Pendaftaran <span class="text-danger">*</span></label>
+                        <input autocomplete="off" autofocus value="{{ old('biaya_daftar', $cari->biaya_daftar) }}" required type="text" name="biaya_daftar" class="form-control @error('biaya_daftar') is-invalid @enderror" id="biaya_daftar" placeholder="Masukkan Biaya Daftar">
+                        @error('biaya_daftar')
+                            <div class="invalid-feedback">
+                                {{ $message }}
+                            </div>
+                        @enderror
+                    </div>
                 </div>
-                <!-- /.card-body -->
-
                 <div class="card-footer">
-                  <button type="submit" class="btn btn-warning">Update</button>
-                  <a href="/biaya-pendaftaran"><button type="button" class="btn btn-secondary">Kembali</button></a>
+                    <button type="submit" class="btn btn-warning">Update</button>
+                    <a href="{{ route('biaya-pendaftaran.index') }}"><button type="button" class="btn btn-secondary">Kembali</button></a>
                 </div>
-              </form>
+              </form>         
             </div>
             <!-- /.card -->
-
           </div>
           <!--/.col (left) -->
           <!-- right column -->
@@ -56,8 +51,7 @@
                   <tr>
                     <th>No</th>
                     <th>Biaya Pendaftaran</th>
-                    <th>Tanggal Input</th>
-                    <th></th>
+                    <th>Tanggal Update</th>
                   </tr>
                   </thead>
                   <tbody>
@@ -65,46 +59,15 @@
                   <tr>
                     <td>{{ $loop->iteration }}</td>
                     <td>{{ strtoupper($data->biaya_daftar) }}</td>
-                    {{-- <td>{{ strtoupper($data->created_at) }}</td> --}}
                     <td>{{ \Carbon\Carbon::parse($data->created_at)->translatedFormat('j F Y') }}</td>
-                    <td>
-                      <a href="/biaya-pendaftaran/{{ $data->id }}/edit" class="badge bg-warning"><span class="fas fa-pen"></span></a>
-                      <button class="badge bg-danger border-0" data-toggle="modal" data-target="#modal-delete{{ $data->id }}"><span class="fas fa-trash"></span></button>
-                    </td>
                   </tr>
-                  <div class="modal fade" id="modal-delete{{ $data->id }}">
-                    <div class="modal-dialog">
-                      <div class="modal-content">
-                        <div class="modal-header">
-                          <h4 class="modal-title">Konfirmasi Hapus Data</h4>
-                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                          </button>
-                        </div>
-                        <div class="modal-body">
-                          <p>Apakah yakin data Rp. <b>{{ strtoupper($data->biaya_daftar) }}</b> dihapus?</p>
-                        </div>
-                        <div class="modal-footer justify-content-between">
-                          <form action="{{ route('biaya-pendaftaran.destroy', ['biaya_pendaftaran' => $data->id]) }}" method="post" class="d-inline">
-                            @method('delete')
-                            @csrf
-                            <button type="button" class="btn btn-default ml-auto" data-dismiss="modal">Close</button>
-                            <button type="submit" class="btn btn-primary">Yakin</button>
-                          </form>
-                        </div>
-                      </div>
-                      <!-- /.modal-content -->
-                    </div>
-                    <!-- /.modal-dialog -->
-                  </div> 
                   @endforeach                 
                   </tbody>
                   <tfoot>
                   <tr>
                     <th>No</th>
                     <th>Biaya Pendaftaran</th>
-                    <th>Tanggal Input</th>
-                    <th></th>
+                    <th>Tanggal Update</th>
                   </tr>
                   </tfoot>
                 </table>
@@ -119,4 +82,3 @@
     </section>
     <!-- /.content -->
 @endsection
- 

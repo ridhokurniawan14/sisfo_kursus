@@ -8,18 +8,17 @@ use Illuminate\Database\Eloquent\Model;
 class BiayaDaftar extends Model
 {
     use HasFactory;
-    protected $table = 'tb_biaya_pendaftaran'; // Ganti 'nama_tabel_anda' dengan nama tabel yang sebenarnya
+    
+    protected $table = 'tb_biaya_pendaftaran'; // Nama tabel
     protected $primaryKey = 'id';
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array<int, string>
-     */
+
+    // Daftar atribut yang bisa diisi secara massal
     protected $fillable = [
         'biaya_daftar',
         'active',
     ];
-    
+
+    // Menambahkan event listener untuk event 'creating' dan 'saving'
     protected static function boot()
     {
         parent::boot();
