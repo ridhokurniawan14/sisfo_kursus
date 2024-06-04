@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Exports\DataPendaftarExport;
+use App\Models\BiayaDaftar;
 use App\Models\Jam;
 use App\Models\Pendaftar;
 use App\Models\ProgramPaket;
@@ -81,21 +82,26 @@ class PendaftarController extends Controller
         }
     }
 
-
-
     public function verifikasi($no_induk)
     {
-        $pendaftar = Pendaftar::where('no_induk', $no_induk)->firstOrFail();
-        $data = [
-            "halaman" => "Verifikasi Peserta Didik",
-            "title" => "Pendaftaran",
-            "tab_title" => "Verifikasi Peserta Didik",
-            "pendaftar" => $pendaftar,
-            "categories" => Jam::orderBy('id')->get(),
-            "program_pilihan" => ProgramPilihan::orderBy('id')->get(),
-            "program_paket" => ProgramPaket::orderBy('id')->get(),
-        ];
-        return view('dashboard.pendaftaran.offline.verifikasi', $data);
+        
+        $CostRegistration = BiayaDaftar::latest()->first();
+        if (is_null($CostRegistration)) {
+            return redirect('/biaya-pendaftaran')->with('info', 'Silahkan mengisi biaya pendaftaran');
+        } else {
+            $pendaftar = Pendaftar::where('no_induk', $no_induk)->firstOrFail();
+            $data = [
+                "halaman" => "Verifikasi Peserta Didik",
+                "title" => "Pendaftaran",
+                "tab_title" => "Verifikasi Peserta Didik",
+                "pendaftar" => $pendaftar,
+                "categories" => Jam::orderBy('id')->get(),
+                "program_pilihan" => ProgramPilihan::orderBy('id')->get(),
+                "program_paket" => ProgramPaket::orderBy('id')->get(),
+                "biaya_daftar" => $CostRegistration,
+            ];
+            return view('dashboard.pendaftaran.offline.verifikasi', $data);
+        }
     }
 
     /**

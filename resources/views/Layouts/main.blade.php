@@ -561,6 +561,20 @@
   }
 </script>
 <script>
+  function hitungBiaya() {
+  const prices = [];
+  const selects = document.querySelectorAll('select[id^="kd_pilihan"]');
+  selects.forEach((select) => {
+    const selectedOption = select.options[select.selectedIndex];
+    if (selectedOption.value!== 'Pilih Program') {
+      prices.push(parseFloat(selectedOption.getAttribute('data-price')));
+    }
+  });
+  const totalBiaya = prices.reduce((a, b) => a + b, 0);
+  document.getElementById('biaya_kursus').value = totalBiaya;
+}
+</script>
+<script>
   $(function () {
     $("#example1").DataTable({
       "responsive": true, "lengthChange": true, "autoWidth": false,

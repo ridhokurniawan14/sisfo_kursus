@@ -39,8 +39,11 @@ class BiayaDaftarController extends Controller
     {
         // Validasi data yang diterima
         $validatedData = $request->validate([
-            'biaya_daftar' => 'required|numeric',
+            'biaya_daftar' => 'required',
         ]);
+
+        // Menghapus tanda titik dari harga sebelum disimpan
+        $validatedData['biaya_daftar'] = str_replace('.', '', $validatedData['biaya_daftar']);
 
         // Buat dan simpan data ke dalam model
         $biayaPendaftaran = BiayaDaftar::create($validatedData);
@@ -83,16 +86,19 @@ class BiayaDaftarController extends Controller
     public function update(Request $request, $id)
     {
         // Validasi input
-        $request->validate([
-            'biaya_daftar' => 'required|string|max:255',
+        $validatedData = $request->validate([
+            'biaya_daftar' => 'required',
         ]);
+
+         // Menghapus tanda titik dari harga sebelum disimpan
+        $validatedData['biaya_daftar'] = str_replace(['.', ','], '', $validatedData['biaya_daftar']);
 
         // Mencari data berdasarkan ID
         $biayaDaftar = BiayaDaftar::findOrFail($id);
-
+        
         // Mengupdate data
         $biayaDaftar->update([
-            'biaya_daftar' => $request->biaya_daftar,
+            'biaya_daftar' => $validatedData['biaya_daftar'],
             'active' => $request->has('active') ? 1 : 0,
         ]);
 

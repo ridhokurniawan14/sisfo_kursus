@@ -67,7 +67,7 @@
                     @foreach ($datas as $data)                   
                   <tr>
                     <td>{{ $loop->iteration }}</td>
-                    <td>{{ strtoupper($data->biaya_daftar) }}</td>
+                    <td>{{ number_format($data->biaya_daftar) }}</td>
                     {{-- <td>{{ strtoupper($data->created_at) }}</td> --}}
                     <td>{{ \Carbon\Carbon::parse($data->updated_at)->translatedFormat('j F Y') }}</td>
                     <td>

@@ -87,10 +87,10 @@
                     <div class="col-sm-2"> 
                       <div class="form-group">
                         <label for="kd_pilihan1" class="col-sm-12 col-form-label">Program Pilihan 1<span class="text-danger">*</span></label>
-                          <select autofocus name="kd_pilihan1" class="custom-select">
+                          <select autofocus name="kd_pilihan1" class="custom-select" id="kd_pilihan1" onchange="hitungBiaya()">
                             <option>Pilih Program</option>
                             @foreach ($program_pilihan as $prog_pil)
-                              <option required value="{{ $prog_pil->id }}" {{ old('kd_pilihan1') == $prog_pil->id ? 'selected' : '' }}>
+                              <option data-price="{{ $prog_pil->harga }}" required value="{{ $prog_pil->id }}" {{ old('kd_pilihan1') == $prog_pil->id ? 'selected' : '' }}>
                                   {{ ucwords($prog_pil->program) }} - (Rp. {{ number_format($prog_pil->harga) }})</option>
                             @endforeach
                           </select>
@@ -104,10 +104,10 @@
                     <div class="col-sm-2"> 
                       <div class="form-group">
                         <label for="kd_pilihan2" class="col-sm-12 col-form-label">Program Pilihan 2</label>
-                          <select name="kd_pilihan2" class="custom-select">
+                          <select name="kd_pilihan2" class="custom-select" id="kd_pilihan2" onchange="hitungBiaya()">
                             <option>Pilih Program</option>
                             @foreach ($program_pilihan as $prog_pil)
-                              <option required value="{{ $prog_pil->id }}" {{ old('kd_pilihan2') == $prog_pil->id ? 'selected' : '' }}>
+                              <option data-price="{{ $prog_pil->harga }}" required value="{{ $prog_pil->id }}" {{ old('kd_pilihan2') == $prog_pil->id ? 'selected' : '' }}>
                                   {{ ucwords($prog_pil->program) }} - (Rp. {{ number_format($prog_pil->harga) }})</option>
                             @endforeach
                           </select>
@@ -121,10 +121,10 @@
                     <div class="col-sm-2"> 
                       <div class="form-group">
                         <label for="kd_pilihan3" class="col-sm-12 col-form-label">Program Pilihan 3</label>
-                          <select name="kd_pilihan3" class="custom-select">
+                          <select name="kd_pilihan3" class="custom-select" id="kd_pilihan3" onchange="hitungBiaya()">
                             <option>Pilih Program</option>
                             @foreach ($program_pilihan as $prog_pil)
-                              <option required value="{{ $prog_pil->id }}" {{ old('kd_pilihan3') == $prog_pil->id ? 'selected' : '' }}>
+                              <option data-price="{{ $prog_pil->harga }}" required value="{{ $prog_pil->id }}" {{ old('kd_pilihan3') == $prog_pil->id ? 'selected' : '' }}>
                                   {{ ucwords($prog_pil->program) }} - (Rp. {{ number_format($prog_pil->harga) }})</option>
                             @endforeach
                           </select>
@@ -138,10 +138,10 @@
                     <div class="col-sm-2"> 
                       <div class="form-group">
                         <label for="kd_pilihan4" class="col-sm-12 col-form-label">Program Pilihan 4</label>
-                          <select name="kd_pilihan4" class="custom-select">
+                          <select name="kd_pilihan4" class="custom-select" id="kd_pilihan4" onchange="hitungBiaya()">
                             <option>Pilih Program</option>
                             @foreach ($program_pilihan as $prog_pil)
-                              <option required value="{{ $prog_pil->id }}" {{ old('kd_pilihan4') == $prog_pil->id ? 'selected' : '' }}>
+                              <option data-price="{{ $prog_pil->harga }}" required value="{{ $prog_pil->id }}" {{ old('kd_pilihan4') == $prog_pil->id ? 'selected' : '' }}>
                                   {{ ucwords($prog_pil->program) }} - (Rp. {{ number_format($prog_pil->harga) }})</option>
                             @endforeach
                           </select>
@@ -155,10 +155,10 @@
                     <div class="col-sm-2"> 
                       <div class="form-group">
                         <label for="kd_pilihan5" class="col-sm-12 col-form-label">Program Pilihan 5</label>
-                          <select name="kd_pilihan5" class="custom-select">
+                          <select name="kd_pilihan5" class="custom-select" id="kd_pilihan5" onchange="hitungBiaya()">
                             <option>Pilih Program</option>
                             @foreach ($program_pilihan as $prog_pil)
-                              <option required value="{{ $prog_pil->id }}" {{ old('kd_pilihan5') == $prog_pil->id ? 'selected' : '' }}>
+                              <option data-price="{{ $prog_pil->harga }}" required value="{{ $prog_pil->id }}" {{ old('kd_pilihan5') == $prog_pil->id ? 'selected' : '' }}>
                                   {{ ucwords($prog_pil->program) }} - (Rp. {{ number_format($prog_pil->harga) }})</option>
                             @endforeach
                           </select>
@@ -172,10 +172,10 @@
                     <div class="col-sm-2"> 
                       <div class="form-group">
                         <label for="kd_pilihan6" class="col-sm-12 col-form-label">Program Pilihan 6</label>
-                          <select name="kd_pilihan6" class="custom-select">
+                          <select name="kd_pilihan6" class="custom-select" id="kd_pilihan6" onchange="hitungBiaya()">
                             <option>Pilih Program</option>
                             @foreach ($program_pilihan as $prog_pil)
-                              <option required value="{{ $prog_pil->id }}" {{ old('kd_pilihan6') == $prog_pil->id ? 'selected' : '' }}>
+                              <option data-price="{{ $prog_pil->harga }}" required value="{{ $prog_pil->id }}" {{ old('kd_pilihan6') == $prog_pil->id ? 'selected' : '' }}>
                                   {{ ucwords($prog_pil->program) }} - (Rp. {{ number_format($prog_pil->harga) }})</option>
                             @endforeach
                           </select>
@@ -316,7 +316,7 @@
                             <td>Biaya Kursus</td>
                             <td></td>
                             <td colspan="2">
-                                <input value="" readonly required type="number" name="biaya_kursus" class="form-control form-control-sm @error('biaya_kursus') is-invalid @enderror" id="biaya_kursus" placeholder="Otomatis">
+                                <input value="" readonly required type="number" name="biaya_kursus" class="form-control form-control-sm" id="biaya_kursus" placeholder="Otomatis">
                                 @error('biaya_kursus')
                                 <div class="invalid-feedback">
                                     {{ $message }}
@@ -329,7 +329,7 @@
                             <td>Biaya Pendaftaran</td>
                             <td></td>
                             <td colspan="2">
-                                <input value="" readonly required type="text" name="biaya_pendaftaran" class="form-control form-control-sm @error('biaya_pendaftaran') is-invalid @enderror" id="biaya_pendaftaran" placeholder="Otomatis">
+                                <input value="{{ $biaya_daftar->biaya_daftar }}" readonly required type="text" name="biaya_pendaftaran" class="form-control form-control-sm @error('biaya_pendaftaran') is-invalid @enderror" id="biaya_pendaftaran" placeholder="Otomatis">
                                 @error('biaya_pendaftaran')
                                 <div class="invalid-feedback">
                                     {{ $message }}

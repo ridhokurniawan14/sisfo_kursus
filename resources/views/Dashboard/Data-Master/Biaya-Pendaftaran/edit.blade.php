@@ -20,7 +20,7 @@
                 <div class="card-body">
                     <div class="form-group">
                         <label for="biaya_daftar">Biaya Pendaftaran <span class="text-danger">*</span></label>
-                        <input autocomplete="off" autofocus value="{{ old('biaya_daftar', $cari->biaya_daftar) }}" required type="text" name="biaya_daftar" class="form-control @error('biaya_daftar') is-invalid @enderror" id="biaya_daftar" placeholder="Masukkan Biaya Daftar">
+                        <input autocomplete="off" autofocus value="{{ old('biaya_daftar', number_format($cari->biaya_daftar)) }}" required type="text" name="biaya_daftar" class="form-control @error('biaya_daftar') is-invalid @enderror" id="biaya_daftar" placeholder="Masukkan Biaya Daftar">
                         @error('biaya_daftar')
                             <div class="invalid-feedback">
                                 {{ $message }}
@@ -58,7 +58,7 @@
                     @foreach ($datas as $data)                   
                   <tr>
                     <td>{{ $loop->iteration }}</td>
-                    <td>{{ strtoupper($data->biaya_daftar) }}</td>
+                    <td>{{ number_format($data->biaya_daftar) }}</td>
                     <td>{{ \Carbon\Carbon::parse($data->created_at)->translatedFormat('j F Y') }}</td>
                   </tr>
                   @endforeach                 
