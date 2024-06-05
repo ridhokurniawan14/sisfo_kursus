@@ -50,16 +50,19 @@
                                 <td>{{ $data->no_induk }}</td>
                                 <td>{{ ucwords($data->nm_lengkap) }}</td>
                                 <td>
-                                    @if($data->gender == 'L')
-                                        Laki-Laki
-                                    @elseif($data->gender == 'P')
-                                        Perempuan
-                                    @else
-                                        Tidak Valid
-                                    @endif
+                                  @switch(strtolower($data->gender))
+                                      @case('l')
+                                          Laki-Laki
+                                          @break
+                                      @case('p')
+                                          Perempuan
+                                          @break
+                                      @default
+                                          Tidak Valid
+                                  @endswitch
                                 </td>
                                 <td>{{ ucwords($data->pil_prog) }}</td>
-                                <td>{{ 'Rp '. number_format($data->biaya_kursus, 0, ',', '.') }}</td>
+                                <td>{{ 'Rp ' . number_format(($data->biaya_kursus ?? 0) + ($data->biaya_daftar ?? 0), 0, ',', '.') }}</td>
                                 <td>
                                     @if($data->kekurangan == 0)
                                         <span class="right badge badge-success">✅ LUNAS</span>

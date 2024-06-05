@@ -84,6 +84,7 @@ Route::middleware('auth')->group(function () {
     Route::get('pendaftaran/export', [PendaftarController::class, 'export'])->name('pendaftaran.export');
     Route::resource('pendaftaran', PendaftarController::class);
     Route::get('pendaftaran/verifikasi/{no_induk}', [PendaftarController::class, 'verifikasi'])->name('pendaftaran.verifikasi');
+    Route::post('pendaftaran/verifikasi/{no_induk}', [PendaftarController::class, 'SaveVerifikasi'])->name('pendaftaran.SaveVerifikasi');
 
     // Route::get('/data-pendaftar', [PendaftarController::class, 'getDatas'])->name('datas'); // Route untuk mengambil data
 });

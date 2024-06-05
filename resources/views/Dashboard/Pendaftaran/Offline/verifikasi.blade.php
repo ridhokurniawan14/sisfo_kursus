@@ -11,7 +11,7 @@
     </style>
     <!-- Main content -->
     <section class="content">
-      <form method="POST" action="/user" class="form-horizontal" enctype="multipart/form-data">
+      <form method="POST" action="{{ route('pendaftaran.SaveVerifikasi', ['no_induk' => $no_induk]) }}" class="form-horizontal" enctype="multipart/form-data">
       @csrf
       <div class="container-fluid">
         <div class="row">
@@ -67,12 +67,12 @@
                     <div class="form-group">
                         <label for="pil_prog" class="col-sm-12 col-form-label">Program <span class="text-danger">*</span></label>
                         <div class="custom-control custom-radio">
-                            <input class="custom-control-input custom-control-input-danger" type="radio" value="pilihan" id="customRadio4" name="pil_prog" onclick="toggleProgram(this.value)">
-                            <label for="customRadio4" class="custom-control-label">Pilihan</label>
-                        </div>
-                        <div class="custom-control custom-radio">
                             <input class="custom-control-input custom-control-input-danger" type="radio" value="paket" id="customRadio5" name="pil_prog" onclick="toggleProgram(this.value)">
                             <label for="customRadio5" class="custom-control-label">Paket</label>
+                        </div>
+                        <div class="custom-control custom-radio">
+                            <input class="custom-control-input custom-control-input-danger" type="radio" value="pilihan" id="customRadio4" name="pil_prog" onclick="toggleProgram(this.value)">
+                            <label for="customRadio4" class="custom-control-label">Pilihan</label>
                         </div>
                         @error('pil_prog')
                         <div class="invalid-feedback">
@@ -88,7 +88,7 @@
                       <div class="form-group">
                         <label for="kd_pilihan1" class="col-sm-12 col-form-label">Program Pilihan 1<span class="text-danger">*</span></label>
                           <select autofocus name="kd_pilihan1" class="custom-select" id="kd_pilihan1" onchange="hitungBiaya()">
-                            <option>Pilih Program</option>
+                            <option value="0">Pilih Program</option>
                             @foreach ($program_pilihan as $prog_pil)
                               <option data-price="{{ $prog_pil->harga }}" required value="{{ $prog_pil->id }}" {{ old('kd_pilihan1') == $prog_pil->id ? 'selected' : '' }}>
                                   {{ ucwords($prog_pil->program) }} - (Rp. {{ number_format($prog_pil->harga) }})</option>
@@ -105,7 +105,7 @@
                       <div class="form-group">
                         <label for="kd_pilihan2" class="col-sm-12 col-form-label">Program Pilihan 2</label>
                           <select name="kd_pilihan2" class="custom-select" id="kd_pilihan2" onchange="hitungBiaya()">
-                            <option>Pilih Program</option>
+                            <option value="0">Pilih Program</option>
                             @foreach ($program_pilihan as $prog_pil)
                               <option data-price="{{ $prog_pil->harga }}" required value="{{ $prog_pil->id }}" {{ old('kd_pilihan2') == $prog_pil->id ? 'selected' : '' }}>
                                   {{ ucwords($prog_pil->program) }} - (Rp. {{ number_format($prog_pil->harga) }})</option>
@@ -122,7 +122,7 @@
                       <div class="form-group">
                         <label for="kd_pilihan3" class="col-sm-12 col-form-label">Program Pilihan 3</label>
                           <select name="kd_pilihan3" class="custom-select" id="kd_pilihan3" onchange="hitungBiaya()">
-                            <option>Pilih Program</option>
+                            <option value="0">Pilih Program</option>
                             @foreach ($program_pilihan as $prog_pil)
                               <option data-price="{{ $prog_pil->harga }}" required value="{{ $prog_pil->id }}" {{ old('kd_pilihan3') == $prog_pil->id ? 'selected' : '' }}>
                                   {{ ucwords($prog_pil->program) }} - (Rp. {{ number_format($prog_pil->harga) }})</option>
@@ -139,7 +139,7 @@
                       <div class="form-group">
                         <label for="kd_pilihan4" class="col-sm-12 col-form-label">Program Pilihan 4</label>
                           <select name="kd_pilihan4" class="custom-select" id="kd_pilihan4" onchange="hitungBiaya()">
-                            <option>Pilih Program</option>
+                            <option value="0">Pilih Program</option>
                             @foreach ($program_pilihan as $prog_pil)
                               <option data-price="{{ $prog_pil->harga }}" required value="{{ $prog_pil->id }}" {{ old('kd_pilihan4') == $prog_pil->id ? 'selected' : '' }}>
                                   {{ ucwords($prog_pil->program) }} - (Rp. {{ number_format($prog_pil->harga) }})</option>
@@ -156,7 +156,7 @@
                       <div class="form-group">
                         <label for="kd_pilihan5" class="col-sm-12 col-form-label">Program Pilihan 5</label>
                           <select name="kd_pilihan5" class="custom-select" id="kd_pilihan5" onchange="hitungBiaya()">
-                            <option>Pilih Program</option>
+                            <option value="0">Pilih Program</option>
                             @foreach ($program_pilihan as $prog_pil)
                               <option data-price="{{ $prog_pil->harga }}" required value="{{ $prog_pil->id }}" {{ old('kd_pilihan5') == $prog_pil->id ? 'selected' : '' }}>
                                   {{ ucwords($prog_pil->program) }} - (Rp. {{ number_format($prog_pil->harga) }})</option>
@@ -173,7 +173,7 @@
                       <div class="form-group">
                         <label for="kd_pilihan6" class="col-sm-12 col-form-label">Program Pilihan 6</label>
                           <select name="kd_pilihan6" class="custom-select" id="kd_pilihan6" onchange="hitungBiaya()">
-                            <option>Pilih Program</option>
+                            <option value="0">Pilih Program</option>
                             @foreach ($program_pilihan as $prog_pil)
                               <option data-price="{{ $prog_pil->harga }}" required value="{{ $prog_pil->id }}" {{ old('kd_pilihan6') == $prog_pil->id ? 'selected' : '' }}>
                                   {{ ucwords($prog_pil->program) }} - (Rp. {{ number_format($prog_pil->harga) }})</option>
@@ -192,87 +192,82 @@
                   <div class="row">
                     <div class="col-sm-2"> 
                       <div class="form-group">
-                        <label for="kd_paket" class="col-sm-12 col-form-label">Program Paket 1<span class="text-danger">*</span></label>
-                          <select autofocus name="kd_paket" class="custom-select">
-                            <option>Pilih Program</option>
-                            @foreach ($program_paket as $prog_pak)
-                              <option required value="{{ $prog_pak->id }}" {{ old('kd_paket') == $prog_pak->id ? 'selected' : '' }}>
-                                  {{ ucwords($prog_pak->program_pilihan) }} - (Rp. {{ number_format($prog_pak->harga) }})</option>
-                            @endforeach
-                          </select>
-                          @error('kd_paket')
-                            <div class="invalid-feedback">
-                              {{ $message }}
-                            </div>
-                          @enderror
+                        <label for="kd_paket" class="col-sm-12 col-form-label">Program Paket <span class="text-danger">*</span></label>
+                        <select id="kd_paket" name="kd_paket" class="custom-select">
+                          <option value="0">Pilih Program</option>
+                          @foreach ($program_paket as $prog_pak)
+                            <option data-price="{{ $prog_pak->harga }}" value="{{ $prog_pak->id }}" {{ old('kd_paket') == $prog_pak->id ? 'selected' : '' }}>
+                              {{ ucwords($prog_pak->program_pilihan) }} - (Rp. {{ number_format($prog_pak->harga) }})
+                            </option>
+                          @endforeach
+                        </select>
+                        @error('kd_paket')
+                          <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
                       </div>
                     </div>
                     <div class="col-sm-2"> 
                       <div class="form-group">
                         <label for="kd_tambahan" class="col-sm-12 col-form-label">Program Tambahan 1</label>
-                          <select autofocus name="kd_tambahan" class="custom-select">
-                            <option>Pilih Program</option>
-                            @foreach ($program_paket as $prog_pak)
-                              <option required value="{{ $prog_pak->id }}" {{ old('kd_tambahan') == $prog_pak->id ? 'selected' : '' }}>
-                                  {{ ucwords($prog_pak->program_pilihan) }} - (Rp. {{ number_format($prog_pak->harga) }})</option>
-                            @endforeach
-                          </select>
-                          @error('kd_tambahan')
-                            <div class="invalid-feedback">
-                              {{ $message }}
-                            </div>
-                          @enderror
+                        <select id="kd_tambahan" name="kd_tambahan" class="custom-select">
+                          <option value="0">Pilih Program</option>
+                          @foreach ($program_pilihan as $prog_pil)
+                            <option data-price="{{ $prog_pil->harga }}" value="{{ $prog_pil->id }}" {{ old('kd_tambahan') == $prog_pil->id ? 'selected' : '' }}>
+                              {{ ucwords($prog_pil->program) }} - (Rp. {{ number_format($prog_pil->harga) }})
+                            </option>
+                          @endforeach
+                        </select>
+                        @error('kd_tambahan')
+                          <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
                       </div>
                     </div>
                     <div class="col-sm-2"> 
                       <div class="form-group">
                         <label for="kd_tambahan2" class="col-sm-12 col-form-label">Program Tambahan 2</label>
-                          <select name="kd_tambahan2" class="custom-select">
-                            <option>Pilih Program</option>
-                            @foreach ($program_paket as $prog_pak)
-                              <option required value="{{ $prog_pak->id }}" {{ old('kd_tambahan2') == $prog_pak->id ? 'selected' : '' }}>
-                                  {{ ucwords($prog_pak->program_pilihan) }} - (Rp. {{ number_format($prog_pak->harga) }})</option>
-                            @endforeach
-                          </select>
-                          @error('kd_tambahan2')
-                            <div class="invalid-feedback">
-                              {{ $message }}
-                            </div>
-                          @enderror
+                        <select id="kd_tambahan2" name="kd_tambahan2" class="custom-select">
+                          <option value="0">Pilih Program</option>
+                          @foreach ($program_pilihan as $prog_pil)
+                            <option data-price="{{ $prog_pil->harga }}" value="{{ $prog_pil->id }}" {{ old('kd_tambahan2') == $prog_pil->id ? 'selected' : '' }}>
+                              {{ ucwords($prog_pil->program) }} - (Rp. {{ number_format($prog_pil->harga) }})
+                            </option>
+                          @endforeach
+                        </select>
+                        @error('kd_tambahan2')
+                          <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
                       </div>
                     </div>
                     <div class="col-sm-2"> 
                       <div class="form-group">
                         <label for="kd_tambahan3" class="col-sm-12 col-form-label">Program Tambahan 3</label>
-                          <select autofocus name="kd_tambahan3" class="custom-select">
-                            <option>Pilih Program</option>
-                            @foreach ($program_paket as $prog_pak)
-                              <option required value="{{ $prog_pak->id }}" {{ old('kd_tambahan3') == $prog_pak->id ? 'selected' : '' }}>
-                                  {{ ucwords($prog_pak->program_pilihan) }} - (Rp. {{ number_format($prog_pak->harga) }})</option>
-                            @endforeach
-                          </select>
-                          @error('kd_tambahan3')
-                            <div class="invalid-feedback">
-                              {{ $message }}
-                            </div>
-                          @enderror
+                        <select id="kd_tambahan3" name="kd_tambahan3" class="custom-select">
+                          <option value="0">Pilih Program</option>
+                          @foreach ($program_pilihan as $prog_pil)
+                            <option data-price="{{ $prog_pil->harga }}" value="{{ $prog_pil->id }}" {{ old('kd_tambahan3') == $prog_pil->id ? 'selected' : '' }}>
+                              {{ ucwords($prog_pil->program) }} - (Rp. {{ number_format($prog_pil->harga) }})
+                            </option>
+                          @endforeach
+                        </select>
+                        @error('kd_tambahan3')
+                          <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
                       </div>
                     </div>
                     <div class="col-sm-2"> 
                       <div class="form-group">
                         <label for="kd_tambahan4" class="col-sm-12 col-form-label">Program Tambahan 4</label>
-                          <select autofocus name="kd_tambahan4" class="custom-select">
-                            <option>Pilih Program</option>
-                            @foreach ($program_paket as $prog_pak)
-                              <option required value="{{ $prog_pak->id }}" {{ old('kd_tambahan4') == $prog_pak->id ? 'selected' : '' }}>
-                                  {{ ucwords($prog_pak->program_pilihan) }} - (Rp. {{ number_format($prog_pak->harga) }})</option>
-                            @endforeach
-                          </select>
-                          @error('kd_tambahan4')
-                            <div class="invalid-feedback">
-                              {{ $message }}
-                            </div>
-                          @enderror
+                        <select id="kd_tambahan4" name="kd_tambahan4" class="custom-select">
+                          <option value="0">Pilih Program</option>
+                          @foreach ($program_pilihan as $prog_pil)
+                            <option data-price="{{ $prog_pil->harga }}" value="{{ $prog_pil->id }}" {{ old('kd_tambahan4') == $prog_pil->id ? 'selected' : '' }}>
+                              {{ ucwords($prog_pil->program) }} - (Rp. {{ number_format($prog_pil->harga) }})
+                            </option>
+                          @endforeach
+                        </select>
+                        @error('kd_tambahan4')
+                          <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
                       </div>
                     </div>
                   </div>
@@ -296,95 +291,95 @@
             </div>
             <!-- /.col -->
           </div>
-
+        
           <!-- Table row -->
           <div class="row">
             <div class="col-12 table-responsive">
-                <table class="table table-striped">
-                    <thead>
-                        <tr>
-                            <th>#</th>
-                            <th>Deskripsi</th>
-                            <th></th>
-                            <th>Subtotal</th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody id="angsuranTableBody">
-                        <tr>
-                            <td>1</td>
-                            <td>Biaya Kursus</td>
-                            <td></td>
-                            <td colspan="2">
-                                <input value="" readonly required type="number" name="biaya_kursus" class="form-control form-control-sm" id="biaya_kursus" placeholder="Otomatis">
-                                @error('biaya_kursus')
-                                <div class="invalid-feedback">
-                                    {{ $message }}
-                                </div>
-                                @enderror
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>2</td>
-                            <td>Biaya Pendaftaran</td>
-                            <td></td>
-                            <td colspan="2">
-                                <input value="{{ $biaya_daftar->biaya_daftar }}" readonly required type="text" name="biaya_pendaftaran" class="form-control form-control-sm @error('biaya_pendaftaran') is-invalid @enderror" id="biaya_pendaftaran" placeholder="Otomatis">
-                                @error('biaya_pendaftaran')
-                                <div class="invalid-feedback">
-                                    {{ $message }}
-                                </div>
-                                @enderror
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>3</td>
-                            <td>Discount</td>
-                            <td></td>
-                            <td colspan="2">
-                                <input value="0" required type="text" name="discount" class="form-control form-control-sm @error('discount') is-invalid @enderror" id="discount" placeholder="Isi Discount" onkeyup="formatRupiah(this)">
-                                @error('discount')
-                                <div class="invalid-feedback">
-                                    {{ $message }}
-                                </div>
-                                @enderror
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>4</td>
-                            <td>Total Biaya</td>
-                            <td></td>
-                            <td colspan="2">
-                                <input value="" readonly required type="text" name="tot_biaya" class="form-control form-control-sm @error('tot_biaya') is-invalid @enderror" id="tot_biaya" placeholder="Otomatis">
-                                @error('tot_biaya')
-                                <div class="invalid-feedback">
-                                    {{ $message }}
-                                </div>
-                                @enderror
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>5</td>
-                            <td>Angsuran ke 1 <span class="text-danger">*</span></td>
-                            <td>
-                                <input value="{{ $pendaftar->tgl_masuk }}" readonly required type="date" name="tgl_angsuran1" class="form-control form-control-sm @error('tgl_angsuran1') is-invalid @enderror" id="tgl_angsuran1" placeholder="Tanggal Lahir">
-                                @error('tgl_angsuran1')
-                                <div class="invalid-feedback">
-                                    {{ $message }}
-                                </div>
-                                @enderror
-                            </td>
-                            <td colspan="2">
-                                <input value="0" required type="text" name="angsuran1" class="form-control form-control-sm @error('angsuran1') is-invalid @enderror" id="angsuran1" placeholder="Pembayaran Awal" onkeyup="formatRupiah(this)">
-                                @error('angsuran1')
-                                <div class="invalid-feedback">
-                                    {{ $message }}
-                                </div>
-                                @enderror
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+              <table class="table table-striped">
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>Deskripsi</th>
+                    <th></th>
+                    <th>Subtotal</th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody id="angsuranTableBody">
+                  <tr>
+                    <td>1</td>
+                    <td>Biaya Kursus</td>
+                    <td></td>
+                    <td colspan="2">
+                      <input readonly type="text" required name="biaya_kursus" class="form-control form-control-sm" id="biaya_kursus" placeholder="Otomatis">
+                      @error('biaya_kursus')
+                      <div class="invalid-feedback">
+                        {{ $message }}
+                      </div>
+                      @enderror
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>2</td>
+                    <td>Biaya Pendaftaran</td>
+                    <td></td>
+                    <td colspan="2">
+                      <input value="Rp. {{ number_format($biaya_daftar->biaya_daftar, 0, '', '.') }}" readonly required type="text" name="biaya_daftar" class="form-control form-control-sm @error('biaya_daftar') is-invalid @enderror" id="biaya_daftar" placeholder="Otomatis">
+                      @error('biaya_daftar')
+                      <div class="invalid-feedback">
+                        {{ $message }}
+                      </div>
+                      @enderror
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>3</td>
+                    <td>Discount</td>
+                    <td></td>
+                    <td colspan="2">
+                      <input value="" required type="text" name="discount" class="form-control form-control-sm @error('discount') is-invalid @enderror" id="discount" placeholder="Isi Discount" onkeyup="formatRupiah(this); calculateKekurangan();">
+                      @error('discount')
+                      <div class="invalid-feedback">
+                        {{ $message }}
+                      </div>
+                      @enderror
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>4</td>
+                    <td>Total Biaya</td>
+                    <td></td>
+                    <td colspan="2">
+                      <input value="" readonly required type="text" name="tot_biaya" class="form-control form-control-sm @error('tot_biaya') is-invalid @enderror" id="tot_biaya" placeholder="Otomatis">
+                      @error('tot_biaya')
+                      <div class="invalid-feedback">
+                        {{ $message }}
+                      </div>
+                      @enderror
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>5</td>
+                    <td>Angsuran ke 1 <span class="text-danger">*</span></td>
+                    <td>
+                      <input value="{{ $pendaftar->tgl_masuk }}" readonly required type="date" name="tgl_angsuran1" class="form-control form-control-sm @error('tgl_angsuran1') is-invalid @enderror" id="tgl_angsuran1" placeholder="Tanggal Lahir">
+                      @error('tgl_angsuran1')
+                      <div class="invalid-feedback">
+                        {{ $message }}
+                      </div>
+                      @enderror
+                    </td>
+                    <td colspan="2">
+                      <input value="0" required type="text" name="angsuran1" class="form-control form-control-sm @error('angsuran1') is-invalid @enderror" id="angsuran1" placeholder="Pembayaran Awal" onkeyup="formatRupiah(this); calculateKekurangan();">
+                      @error('angsuran1')
+                      <div class="invalid-feedback">
+                        {{ $message }}
+                      </div>
+                      @enderror
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
             </div>
             <!-- /.col -->
             <div class="col-12">
@@ -394,21 +389,26 @@
             </div>
           </div>
           <!-- /.row -->
-
+        
           <div class="row">
             <!-- /.col -->
             <div class="col-12">
               <p class="lead"></p>
-
+        
               <div class="table-responsive">
                 <table class="table">
                   <tr>
-                    <th style="width:50%"><h4>Kekurangan</h4></th>
-                    <td style="width: 50%">
-                      <input value="" readonly required type="text" name="tot_biaya" class="form-control @error('tot_biaya') is-invalid @enderror" id="tot_biaya" placeholder="Otomatis">
-                      @error('tot_biaya')
+                    <th style="width:60%;"><h4 style="text-align: right">Kekurangan</h4></th>
+                    <td style="width: 5%">
+                      <span id="kekuranganStatus" class="ml-2" style="display: none;">
+                        <span class="right badge badge-success">LUNAS </span> <i class="fas fa-check-circle text-success"></i>
+                      </span>
+                    </td>
+                    <td style="width:35%">
+                      <input value="" readonly required type="text" name="kekurangan" class="form-control @error('kekurangan') is-invalid @enderror" id="kekurangan" placeholder="Otomatis" style="flex: 1;">
+                      @error('kekurangan')
                       <div class="invalid-feedback">
-                          {{ $message }}
+                        {{ $message }}
                       </div>
                       @enderror
                     </td>
@@ -419,7 +419,7 @@
             <!-- /.col -->
           </div>
           <!-- /.row -->
-
+        
           <!-- this row will not appear when printing -->
           <div class="row no-print">
             <div class="col-12">
@@ -427,7 +427,7 @@
               <button type="reset" class="btn btn-default float-right mr-2">Reset</button>
             </div>
           </div>
-        </div>
+        </div>        
         <!-- /.row -->
       </div><!-- /.container-fluid -->
       </form>

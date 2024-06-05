@@ -8,6 +8,7 @@ use App\Models\Jam;
 use App\Models\Pendaftar;
 use App\Models\ProgramPaket;
 use App\Models\ProgramPilihan;
+use App\Models\Verification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
@@ -22,7 +23,7 @@ class PendaftarController extends Controller
         $query = DB::table('tb_pendaftar')
                         ->join('tb_pendaftar_verifikasi', 'tb_pendaftar.no_induk', '=', 'tb_pendaftar_verifikasi.no_induk')
                         ->orderByDesc('tb_pendaftar.id')
-                        ->select('tb_pendaftar.no_induk','nm_lengkap','gender','tb_pendaftar_verifikasi.pil_prog','tb_pendaftar_verifikasi.biaya_kursus','tb_pendaftar_verifikasi.kekurangan','no_hp'); // Pilih kolom yang ingin Anda ambil
+                        ->select('tb_pendaftar.no_induk','nm_lengkap','gender','tb_pendaftar_verifikasi.pil_prog','tb_pendaftar_verifikasi.biaya_kursus','tb_pendaftar_verifikasi.biaya_daftar','tb_pendaftar_verifikasi.kekurangan','no_hp'); // Pilih kolom yang ingin Anda ambil
 
         if ($request->has('search')) {
             $search = $request->input('search');
@@ -84,7 +85,6 @@ class PendaftarController extends Controller
 
     public function verifikasi($no_induk)
     {
-        
         $CostRegistration = BiayaDaftar::latest()->first();
         if (is_null($CostRegistration)) {
             return redirect('/biaya-pendaftaran')->with('info', 'Silahkan mengisi biaya pendaftaran');
@@ -99,9 +99,75 @@ class PendaftarController extends Controller
                 "program_pilihan" => ProgramPilihan::orderBy('id')->get(),
                 "program_paket" => ProgramPaket::orderBy('id')->get(),
                 "biaya_daftar" => $CostRegistration,
+                "no_induk" => $no_induk,
             ];
             return view('dashboard.pendaftaran.offline.verifikasi', $data);
         }
+    }
+
+    public function SaveVerifikasi(Request $request, $no_induk)
+    {
+        // Validasi data input
+        $validatedData = $request->validate([
+            'kd_jam' => 'required',
+            'pil_prog' => 'required',
+            'kd_paket' => 'nullable',
+            'kd_tambahan' => 'nullable',
+            'kd_tambahan2' => 'nullable',
+            'kd_tambahan3' => 'nullable',
+            'kd_tambahan4' => 'nullable',
+            'kd_pilihan1' => 'nullable',
+            'kd_pilihan2' => 'nullable',
+            'kd_pilihan3' => 'nullable',
+            'kd_pilihan4' => 'nullable',
+            'kd_pilihan5' => 'nullable',
+            'kd_pilihan6' => 'nullable',
+            'biaya_kursus' => 'required',
+            'biaya_daftar' => 'required',
+            'discount' => 'required',
+            'tot_biaya' => 'required',
+            'kekurangan' => 'nullable',
+            'angsuran1' => 'required',
+            'angsuran2' => 'nullable',
+            'tgl_angsuran2' => 'nullable',
+            'angsuran3' => 'nullable',
+            'tgl_angsuran3' => 'nullable',
+            'angsuran4' => 'nullable',
+            'tgl_angsuran4' => 'nullable',
+            'angsuran5' => 'nullable',
+            'tgl_angsuran5' => 'nullable',
+            'ket' => 'nullable',
+        ]);
+
+        // Menghapus simbol mata uang dan titik
+        $fields = ['biaya_kursus', 'biaya_daftar', 'discount', 'tot_biaya', 'kekurangan', 'angsuran1', 'angsuran2', 'angsuran3', 'angsuran4', 'angsuran5'];
+        foreach ($fields as $field) {
+            if (array_key_exists($field, $validatedData)) {
+                $validatedData[$field] = str_replace(['Rp.', '.', ' '], '', $validatedData[$field]);
+            }
+        }
+
+        // Ubah nilai kosong atau string 'null' menjadi NULL
+        foreach ($validatedData as $key => $value) {
+            if ($value === '' || $value === 'null' || $value === '0') {
+                $validatedData[$key] = 0;
+            }
+        }
+
+        // Tambahkan no_induk ke data yang divalidasi
+        $validatedData['no_induk'] = $no_induk;
+
+        // Debugging untuk memastikan nilai yang benar
+        // dd($validatedData);
+
+        // Logika untuk menentukan nilai ket
+        $validatedData['ket'] = $validatedData['kekurangan'] == 0 ? 'lunas' : 'belum lunas';
+
+        // Simpan data ke database
+        Verification::create($validatedData);
+
+        // Redirect setelah simpan
+        return redirect('/pendaftaran')->with('message', 'Data berhasil disimpan!');
     }
 
     /**
