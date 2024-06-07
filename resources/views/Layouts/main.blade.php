@@ -159,12 +159,18 @@
                     </p>
                 </a>
             </li>
-            <li class="nav-item {{ Request::is('jam*','biaya-pendaftaran*','program-pilihan*','program-paket*','user-category*','user/create', 'sarana-prasarana/create', 'pengumuman*') ? 'menu-open' : ''  }}">
-                <a href="#" class="nav-link {{ Request::is('jam*','biaya-pendaftaran*','program-pilihan*','program-paket*','user-category*','user/create', 'sarana-prasarana/create', 'pengumuman*') ? 'active' : ''  }}">
+            <li class="nav-item {{ Request::is('jam*','profil-lembaga*','biaya-pendaftaran*','program-pilihan*','program-paket*','user-category*') ? 'menu-open' : ''  }}">
+                <a href="#" class="nav-link {{ Request::is('jam*','profil-lembaga*','biaya-pendaftaran*','program-pilihan*','program-paket*','user-category*') ? 'active' : ''  }}">
                     <i class="nav-icon fas fa-database"></i>
                     <p>Data Master <i class="right fas fa-angle-left"></i></p>
                 </a>
                 <ul class="nav nav-treeview">
+                    <li class="nav-item">
+                      <a href="/profil-lembaga" class="nav-link {{ Request::is('profil-lembaga*') ? 'active' : ''  }}">
+                          <i class="far fa-id-card nav-icon"></i>
+                          <p>Profil Lembaga</p>
+                      </a>
+                    </li>
                     <li class="nav-item">
                         <a href="/jam" class="nav-link {{ Request::is('jam*') ? 'active' : ''  }}">
                             <i class="far fa-clock nav-icon"></i>
@@ -190,58 +196,38 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a href="/user-category" class="nav-link {{ Request::is('user-category*') ? 'active' : ''  }}">
+                        <a href="/user-category" class="nav-link {{ Request::segment(1) == 'user-category' ? 'active' : '' }}">
                             <i class="fa fa-key nav-icon"></i>
                             <p>Hak Akses</p>
                         </a>
                     </li>
-                    <li class="nav-item">
-                        <a href="/user/create" class="nav-link {{ Request::is('user/create') ? 'active' : ''  }}">
-                            <i class="far fa-user nav-icon"></i>
-                            <p>Personalia</p>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="/sarana-prasarana/create" class="nav-link {{ Request::is('sarana-prasarana/create') ? 'active' : ''  }}">
-                            <i class="far fa-building nav-icon"></i>
-                            <p>Sarana dan Prasarana</p>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="/pengumuman" class="nav-link {{ Request::is('pengumuman*') ? 'active' : ''  }}">
-                            <i class="nav-icon fas fa-bullhorn"></i>
-                            <p>Pengumuman</p>
-                        </a>
-                    </li>
                 </ul>
             </li>
-            <li class="nav-item">
-                <a href="/pendaftaran/create" class="nav-link {{ Request::is('pendaftaran/create','pendaftaran/verifikasi/*') ? 'active' : ''  }}">
-                    <i class="nav-icon fas fa-user-plus"></i>
-                    <p>Pendaftaran</p>
-                </a>
-            </li>
             <li class="nav-header">REPORT</li>
-            <li class="nav-item {{ Request::is('user', 'user/*', 'user/*/edit', 'user/*/', 'sarana-prasarana', 'sarana-prasarana/*', 'sarana-prasarana/*/edit', 'sarana-prasarana/*/', 'profil-lembaga*', 'berkas-akreditasi*', 'angket-peserta-didik-baru*', 'angket-penilaian*') && !Request::is('sarana-prasarana/create') && !Request::is('user/create') ? 'menu-open' : ''  }}">
-                <a href="#" class="nav-link {{ Request::is('user', 'user/*', 'user/*/edit', 'user/*/', 'sarana-prasarana', 'sarana-prasarana/*', 'sarana-prasarana/*/edit', 'sarana-prasarana/*/', 'profil-lembaga*', 'berkas-akreditasi*', 'angket-peserta-didik-baru*', 'angket-penilaian*') && !Request::is('sarana-prasarana/create') && !Request::is('user/create') ? 'active' : ''  }}">
+            @php
+                $isActive = in_array(Request::segment(1), [
+                    'user', 
+                    'sarana-prasarana', 
+                    'berkas-akreditasi', 
+                    'angket-peserta-didik-baru', 
+                    'angket-penilaian', 
+                    'pengumuman'
+                ]);
+              @endphp
+              <li class="nav-item {{ $isActive ? 'menu-open' : '' }}">
+                <a href="#" class="nav-link {{ $isActive ? 'active' : '' }}">
                     <i class="nav-icon fas fa-landmark"></i>
                     <p>Data Lembaga <i class="right fas fa-angle-left"></i></p>
                 </a>
                 <ul class="nav nav-treeview">
                     <li class="nav-item">
-                        <a href="/user" class="nav-link {{ Request::is('user', 'user/*', 'user/*/edit', 'user/*/') && !Request::is('user/create') ? 'active' : '' }}">
-                            <i class="far fa-user nav-icon"></i>
+                      <a href="/user" class="nav-link {{ Request::segment(1) == 'user' ? 'active' : '' }}">
+                        <i class="far fa-user nav-icon"></i>
                             <p>Data Personalia</p>
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a href="/profil-lembaga" class="nav-link {{ Request::is('profil-lembaga*') ? 'active' : ''  }}">
-                            <i class="far fa-id-card nav-icon"></i>
-                            <p>Profil Lembaga</p>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="/sarana-prasarana" class="nav-link {{ Request::is('sarana-prasarana', 'sarana-prasarana/*', 'sarana-prasarana/*/edit', 'sarana-prasarana/*/') && !Request::is('sarana-prasarana/create') ? 'active' : '' }}">
+                        <a href="/sarana-prasarana" class="nav-link {{ Request::is('sarana-prasarana*') ? 'active' : '' }}">
                             <i class="far fa-building nav-icon"></i>
                             <p>Sarana dan Prasarana</p>
                         </a>
@@ -264,18 +250,24 @@
                             <p>Data Angket Penilaian Kinerja</p>
                         </a>
                     </li>
+                    <li class="nav-item">
+                      <a href="/pengumuman" class="nav-link {{ Request::is('pengumuman*') ? 'active' : ''  }}">
+                          <i class="nav-icon fas fa-bullhorn"></i>
+                          <p>Pengumuman</p>
+                      </a>
+                    </li>
                 </ul>
-            </li>
-            <li class="nav-item">
-                <a href="/pendaftaran" class="nav-link {{ Request::is('pendaftaran*') && !Request::is('pendaftaran/create') && !Request::is('pendaftaran/verifikasi/*') ? 'active' : ''  }}">
-                    <i class="nav-icon fas fa-users"></i>
-                    <p>Data Peserta Didik</p>
-                </a>
             </li>
             <li class="nav-item">
                 <a href="/pendaftar-online" class="nav-link {{ Request::is('pendaftar-online*') ? 'active' : ''  }}">
                     <i class="nav-icon fas fa-user-check"></i>
                     <p>Pendaftar Online</p>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="/pendaftaran" class="nav-link {{ Request::is('pendaftaran*','pendaftaran/verifikasi/*') ? 'active' : ''  }}">
+                    <i class="nav-icon fas fa-users"></i>
+                    <p>Data Peserta Didik</p>
                 </a>
             </li>
             <li class="nav-header">INFORMATION</li>

@@ -86,7 +86,7 @@
                         <div class="form-group">
                           <label for="gender" class="col-sm-12 col-form-label">Jenis Kelamin <span class="text-danger">*</span></label>
                           <select name="gender" id="gender" class="form-control @error('gender') is-invalid @enderror" required>
-                            <option value="" disabled {{ old('gender') ? '' : 'selected' }}>Pilih Jenis Kelamin</option>
+                            <option value=""  {{ old('gender') ? '' : 'selected' }}>Pilih Jenis Kelamin</option>
                             <option value="l" {{ old('gender') == 'l' ? 'selected' : '' }}>Laki-laki</option>
                             <option value="p" {{ old('gender') == 'p' ? 'selected' : '' }}>Perempuan</option>
                           </select>
@@ -121,7 +121,7 @@
                         <div class="form-group">
                           <label for="agama" class="col-sm-12 col-form-label">Agama <span class="text-danger">*</span></label>
                           <select name="agama" id="agama" class="form-control @error('agama') is-invalid @enderror" required>
-                              <option value="" disabled {{ old('agama') ? '' : 'selected' }}>Pilih Agama</option>
+                              <option value=""  {{ old('agama') ? '' : 'selected' }}>Pilih Agama</option>
                               <option value="Islam" {{ old('agama') == 'Islam' ? 'selected' : '' }}>Islam</option>
                               <option value="Kristen/Katolik" {{ old('agama') == 'Kristen/Katolik' ? 'selected' : '' }}>Kristen/Katolik</option>
                               <option value="Hindu" {{ old('agama') == 'Hindu' ? 'selected' : '' }}>Hindu</option>
@@ -138,7 +138,7 @@
                         <div class="form-group">
                           <label for="kewarganegaraan" class="col-sm-12 col-form-label">Kewarganegaraan <span class="text-danger">*</span></label>
                             <select name="kewarganegaraan" class="custom-select" required>
-                                <option value="" disabled {{ old('kewarganegaraan') ? '' : 'selected' }}>Pilih Kewarganegaraan</option>
+                                <option value=""  {{ old('kewarganegaraan') ? '' : 'selected' }}>Pilih Kewarganegaraan</option>
                                 <option value="wni" {{ old('kewarganegaraan') == 'wni' ? 'selected' : '' }}>Warga Negara Indonesia (WNI)</option>
                                 <option value="wna" {{ old('kewarganegaraan') == 'wna' ? 'selected' : '' }}>Warga Negara Asing (WNA)</option>
                             </select>
@@ -151,7 +151,7 @@
                         <div class="form-group"> 
                           <label for="pend_akhir" class="col-sm-12 col-form-label">Pendidikan Terakhir <span class="text-danger">*</span></label>
                             <select name="pend_akhir" class="form-control @error('pend_akhir') is-invalid @enderror" required>
-                                <option value="" disabled {{ old('pend_akhir') ? '' : 'selected' }}>Pilih Pendidikan Terakhir</option>
+                                <option value=""  {{ old('pend_akhir') ? '' : 'selected' }}>Pilih Pendidikan Terakhir</option>
                                 <option value="tidak sekolah" {{ old('pend_akhir') == 'tidak sekolah' ? 'selected' : '' }}>Tidak Sekolah</option>
                                 <option value="sd" {{ old('pend_akhir') == 'sd' ? 'selected' : '' }}>SD</option>
                                 <option value="smp" {{ old('pend_akhir') == 'smp' ? 'selected' : '' }}>SMP</option>
@@ -192,7 +192,7 @@
                         <div class="form-group">
                           <label for="status_pekerjaan" class="col-sm-12 col-form-label">Pekerjaan <span class="text-danger">*</span></label>
                           <select name="status_pekerjaan" id="status_pekerjaan" class="form-control @error('status_pekerjaan') is-invalid @enderror" required>
-                              <option value="" disabled {{ old('status_pekerjaan') ? '' : 'selected' }}>Pilih Pekerjaan</option>
+                              <option value=""  {{ old('status_pekerjaan') ? '' : 'selected' }}>Pilih Pekerjaan</option>
                               <option value="tidak bekerja" {{ old('status_pekerjaan') == 'tidak bekerja' ? 'selected' : '' }}>Tidak Bekerja</option>
                               <option value="nelayan" {{ old('status_pekerjaan') == 'nelayan' ? 'selected' : '' }}>Nelayan</option>
                               <option value="petani" {{ old('status_pekerjaan') == 'petani' ? 'selected' : '' }}>Petani</option>
@@ -226,11 +226,9 @@
                     </div>
                     <!-- /.card-body -->
                     <div class="card-footer">
-                      <button type="button" class="btn btn-info float-right" id="nextalamat">Selanjutnya</button>
+                      <a href="{{ route('pendaftaran') }}"><button type="button" class="btn btn-info float-right" id="nextalamat">Selanjutnya</button></a>
+                      <button type="button" class="btn btn-info float-left" id="nextalamat">Back</button>
                     </div>
-                    {{-- <div class="card-footer">
-                      <a href="#custom-tabs-two-profile" id="custom-tabs-two-profile-tab" data-toggle="pill" role="tab" aria-controls="custom-tabs-two-profile" aria-selected="false"><button type="button" class="btn btn-info float-right">Selanjutnya</button></a>
-                    </div> --}}
                     <!-- /.card-footer -->
                   </div>
                   <div class="tab-pane fade" id="custom-tabs-two-profile" role="tabpanel" aria-labelledby="custom-tabs-two-profile-tab">
@@ -317,8 +315,8 @@
                       <div class="col-sm-3">
                         <div class="form-group">
                             <label for="provinsi" class="col-sm-12 col-form-label">Provinsi</label>
-                            <select name="provinsi" id="provinsi" class="form-control @error('provinsi') is-invalid @enderror" required>
-                                <option value="" disabled {{ old('provinsi') ? '' : 'selected' }}>Pilih Provinsi</option>
+                            <select name="provinsi" id="provinsi" class="form-control @error('provinsi') is-invalid @enderror">
+                                <option value=""  {{ old('provinsi') ? '' : 'selected' }}>Pilih Provinsi</option>
                                 <option value="Aceh" {{ old('provinsi') == 'Aceh' ? 'selected' : '' }}>Aceh</option>
                                 <option value="Sumatera Utara" {{ old('provinsi') == 'Sumatera Utara' ? 'selected' : '' }}>Sumatera Utara</option>
                                 <option value="Sumatera Barat" {{ old('provinsi') == 'Sumatera Barat' ? 'selected' : '' }}>Sumatera Barat</option>
@@ -367,8 +365,8 @@
                       <div class="col-sm-3">
                         <div class="form-group">
                             <label for="jns_tinggal" class="col-sm-12 col-form-label">Jenis Tinggal</label>
-                            <select name="jns_tinggal" id="jns_tinggal" class="form-control @error('jns_tinggal') is-invalid @enderror" required>
-                                <option value="" disabled {{ old('jns_tinggal') ? '' : 'selected' }}>Pilih Jenis Tinggal</option>
+                            <select name="jns_tinggal" id="jns_tinggal" class="form-control @error('jns_tinggal') is-invalid @enderror">
+                                <option value=""  {{ old('jns_tinggal') ? '' : 'selected' }}>Pilih Jenis Tinggal</option>
                                 <option value="rumah_sendiri" {{ old('jns_tinggal') == 'rumah_sendiri' ? 'selected' : '' }}>Rumah Sendiri</option>
                                 <option value="kos" {{ old('jns_tinggal') == 'kos' ? 'selected' : '' }}>Kos</option>
                                 <option value="kontrak" {{ old('jns_tinggal') == 'kontrak' ? 'selected' : '' }}>Kontrak</option>
@@ -384,12 +382,9 @@
                     </div>
                     <!-- /.card-body -->
                     <div class="card-footer">
-                      <button type="button" class="btn btn-secondary float-left" id="nexthome">Kembali</button>
                       <button type="button" class="btn btn-info float-right" id="nextkeluarga">Selanjutnya</button>
+                      <button type="button" class="btn btn-secondary float-left" id="nexthome">Kembali</button>
                     </div>
-                    {{-- <div class="card-footer">
-                      <a href="#custom-tabs-two-profile" id="custom-tabs-two-profile-tab" data-toggle="pill" role="tab" aria-controls="custom-tabs-two-profile" aria-selected="false"><button type="button" class="btn btn-info float-right">Selanjutnya</button></a>
-                    </div> --}}
                     <!-- /.card-footer -->
                   </div>
                   <div class="tab-pane fade" id="custom-tabs-two-messages" role="tabpanel" aria-labelledby="custom-tabs-two-messages-tab">
@@ -431,7 +426,7 @@
                         <div class="form-group"> 
                           <label for="pend_ayah" class="col-sm-12 col-form-label">Pendidikan Ayah</label>
                             <select name="pend_ayah" class="form-control @error('pend_ayah') is-invalid @enderror">
-                                <option value="" disabled {{ old('pend_ayah') ? '' : 'selected' }}>Pilih Pendidikan Terakhir</option>
+                                <option value=""  {{ old('pend_ayah') ? '' : 'selected' }}>Pilih Pendidikan Terakhir</option>
                                 <option value="tidak sekolah" {{ old('pend_ayah') == 'tidak sekolah' ? 'selected' : '' }}>Tidak Sekolah</option>
                                 <option value="sd" {{ old('pend_ayah') == 'sd' ? 'selected' : '' }}>SD</option>
                                 <option value="smp" {{ old('pend_ayah') == 'smp' ? 'selected' : '' }}>SMP</option>
@@ -452,7 +447,7 @@
                         <div class="form-group">
                           <label for="pek_ayah" class="col-sm-12 col-form-label">Pekerjaan Ayah</label>
                           <select name="pek_ayah" id="pek_ayah" class="form-control @error('pek_ayah') is-invalid @enderror">
-                              <option value="" disabled {{ old('pek_ayah') ? '' : 'selected' }}>Pilih Pekerjaan</option>
+                              <option value=""  {{ old('pek_ayah') ? '' : 'selected' }}>Pilih Pekerjaan</option>
                               <option value="tidak bekerja" {{ old('pek_ayah') == 'tidak bekerja' ? 'selected' : '' }}>Tidak Bekerja</option>
                               <option value="nelayan" {{ old('pek_ayah') == 'nelayan' ? 'selected' : '' }}>Nelayan</option>
                               <option value="petani" {{ old('pek_ayah') == 'petani' ? 'selected' : '' }}>Petani</option>
@@ -509,7 +504,7 @@
                         <div class="form-group"> 
                           <label for="pend_ibu" class="col-sm-12 col-form-label">Pendidikan Ibu</label>
                             <select name="pend_ibu" class="form-control @error('pend_ibu') is-invalid @enderror">
-                                <option value="" disabled {{ old('pend_ibu') ? '' : 'selected' }}>Pilih Pendidikan Terakhir</option>
+                                <option value="" {{ old('pend_ibu') ? '' : 'selected' }}>Pilih Pendidikan Terakhir</option>
                                 <option value="tidak sekolah" {{ old('pend_ibu') == 'tidak sekolah' ? 'selected' : '' }}>Tidak Sekolah</option>
                                 <option value="sd" {{ old('pend_ibu') == 'sd' ? 'selected' : '' }}>SD</option>
                                 <option value="smp" {{ old('pend_ibu') == 'smp' ? 'selected' : '' }}>SMP</option>
@@ -521,14 +516,14 @@
                             </select>
                             @error('pend_ibu')
                                 <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror             
+                            @enderror
                         </div>
                       </div>
                       <div class="col-sm-3"> 
                         <div class="form-group">
                           <label for="pek_ibu" class="col-sm-12 col-form-label">Pekerjaan Ibu</label>
                           <select name="pek_ibu" id="pek_ibu" class="form-control @error('pek_ibu') is-invalid @enderror">
-                              <option value="" disabled {{ old('pek_ibu') ? '' : 'selected' }}>Pilih Pekerjaan</option>
+                              <option value=""  {{ old('pek_ibu') ? '' : 'selected' }}>Pilih Pekerjaan</option>
                               <option value="tidak bekerja" {{ old('pek_ibu') == 'tidak bekerja' ? 'selected' : '' }}>Tidak Bekerja</option>
                               <option value="nelayan" {{ old('pek_ibu') == 'nelayan' ? 'selected' : '' }}>Nelayan</option>
                               <option value="petani" {{ old('pek_ibu') == 'petani' ? 'selected' : '' }}>Petani</option>
@@ -595,8 +590,8 @@
                     </div>
                     <!-- /.card-body -->
                     <div class="card-footer">
-                      <button type="button" class="btn btn-secondary float-left" id="prevalamat">Kembali</button>
                       <button type="button" class="btn btn-info float-right" id="nextwali">Selanjutnya</button>
+                      <button type="button" class="btn btn-secondary float-left" id="prevalamat">Kembali</button>
                     </div>
                   </div>
                   <div class="tab-pane fade" id="custom-tabs-two-settings" role="tabpanel" aria-labelledby="custom-tabs-two-settings-tab">
@@ -637,8 +632,8 @@
                       <div class="col-sm-3"> 
                         <div class="form-group"> 
                           <label for="pend_wali" class="col-sm-12 col-form-label">Pendidikan Wali</label>
-                            <select name="pend_wali" class="form-control @error('pend_wali') is-invalid @enderror" required>
-                                <option value="" disabled {{ old('pend_wali') ? '' : 'selected' }}>Pilih Pendidikan Terakhir</option>
+                            <select name="pend_wali" class="form-control @error('pend_wali') is-invalid @enderror">
+                                <option value=""  {{ old('pend_wali') ? '' : 'selected' }}>Pilih Pendidikan Terakhir</option>
                                 <option value="tidak sekolah" {{ old('pend_wali') == 'tidak sekolah' ? 'selected' : '' }}>Tidak Sekolah</option>
                                 <option value="sd" {{ old('pend_wali') == 'sd' ? 'selected' : '' }}>SD</option>
                                 <option value="smp" {{ old('pend_wali') == 'smp' ? 'selected' : '' }}>SMP</option>
@@ -657,7 +652,7 @@
                         <div class="form-group">
                           <label for="pek_wali" class="col-sm-12 col-form-label">Pekerjaan Wali</label>
                           <select name="pek_wali" id="pek_wali" class="form-control @error('pek_wali') is-invalid @enderror">
-                              <option value="" disabled {{ old('pek_wali') ? '' : 'selected' }}>Pilih Pekerjaan</option>
+                              <option value=""  {{ old('pek_wali') ? '' : 'selected' }}>Pilih Pekerjaan</option>
                               <option value="tidak bekerja" {{ old('pek_wali') == 'tidak bekerja' ? 'selected' : '' }}>Tidak Bekerja</option>
                               <option value="nelayan" {{ old('pek_wali') == 'nelayan' ? 'selected' : '' }}>Nelayan</option>
                               <option value="petani" {{ old('pek_wali') == 'petani' ? 'selected' : '' }}>Petani</option>

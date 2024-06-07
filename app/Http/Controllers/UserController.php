@@ -212,7 +212,6 @@ class UserController extends Controller
                 // Menghapus foto dari storage
                 Storage::delete('public/' . $user->foto);
             }
-            
             // Hapus pengguna
             $user->delete();
 
@@ -239,16 +238,39 @@ class UserController extends Controller
             'verpassword' => ['required', 'same:newpassword'],
         ]);
 
+        /** @var User $user */
+        $user = auth()->user();
+
         // Periksa apakah password lama cocok dengan password pengguna
-        if (!Hash::check($request->oldpassword, auth()->user()->password)) {
+        if (!Hash::check($request->oldpassword, $user->password)) {
             return back()->withErrors(['oldpassword' => 'Password lama tidak cocok!!'])->withInput();
         }
 
         // Update password pengguna
-        auth()->user()->update([
+        $user->update([
             'password' => Hash::make($request->newpassword)
         ]);
 
         return redirect('/ganti-password')->with('message', 'Password berhasil Diperbarui!');
     }
+    // public function updatepassword(Request $request)
+    // {
+    //     $request->validate([
+    //         'oldpassword' => ['required', 'min:6'],
+    //         'newpassword' => ['required', 'min:6', 'different:oldpassword'],
+    //         'verpassword' => ['required', 'same:newpassword'],
+    //     ]);
+
+    //     // Periksa apakah password lama cocok dengan password pengguna
+    //     if (!Hash::check($request->oldpassword, auth()->user()->password)) {
+    //         return back()->withErrors(['oldpassword' => 'Password lama tidak cocok!!'])->withInput();
+    //     }
+
+    //     // Update password pengguna
+    //     auth()->user()->update([
+    //         'password' => Hash::make($request->newpassword)
+    //     ]);
+
+    //     return redirect('/ganti-password')->with('message', 'Password berhasil Diperbarui!');
+    // }
 }

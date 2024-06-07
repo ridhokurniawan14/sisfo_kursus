@@ -110,7 +110,7 @@
                     <div class="col-sm-3">
                       <div class="form-group">
                         <label for="nm_ibu" class="col-sm-12 col-form-label">Nama Ibu Kandung</label>
-                        <input value="{{ old('nm_ibu', (ucwords($cari->nm_ibu))) }}" required type="text" name="nm_ibu" class="form-control @error('nm_ibu') is-invalid @enderror" id="nm_ibu" placeholder="Nama Lengkap Ibu Kandung">
+                        <input value="{{ old('nm_ibu', (ucwords($cari->nm_ibu))) }}" type="text" name="nm_ibu" class="form-control @error('nm_ibu') is-invalid @enderror" id="nm_ibu" placeholder="Nama Lengkap Ibu Kandung">
                         @error('nm_ibu')
                           <div class="invalid-feedback">
                             {{ $message }}

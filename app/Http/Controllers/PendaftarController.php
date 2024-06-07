@@ -9,6 +9,7 @@ use App\Models\Pendaftar;
 use App\Models\ProgramPaket;
 use App\Models\ProgramPilihan;
 use App\Models\Verification;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
@@ -173,7 +174,7 @@ class PendaftarController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(Request $request) : RedirectResponse
     {
         // Validasi data input
         $validatedData = $request->validate([
@@ -182,56 +183,63 @@ class PendaftarController extends Controller
             'tmp_lahir' => 'required|string|max:255',
             'tgl_lahir' => 'required|date',
             'gender' => 'required|string|max:1',
-            'nisn' => 'nullable|numeric',
-            'nik' => 'required|numeric',
+            'nisn' => 'nullable',
+            'nik' => 'nullable',
             'agama' => 'required|string|max:255',
             'kewarganegaraan' => 'required|string|max:255',
             'pend_akhir' => 'required|string|max:255',
-            'email' => 'required|email|max:255',
-            'no_hp' => 'required|numeric',
+            'email' => 'nullable|email|max:255',
+            'no_hp' => 'nullable',
             'status_pekerjaan' => 'required|string|max:255',
             'tgl_masuk' => 'required|date',
             'alamat' => 'required|string|max:255',
-            'rt' => 'required|numeric',
-            'rw' => 'required|numeric',
-            'kel' => 'required|string|max:255',
-            'kec' => 'required|string|max:255',
-            'kd_pos' => 'required|numeric',
+            'rt' => 'nullable',
+            'rw' => 'nullable',
+            'kel' => 'nullable|string|max:255',
+            'kec' => 'nullable|string|max:255',
+            'kd_pos' => 'nullable',
             'kab' => 'required|string|max:255',
-            'provinsi' => 'required|string|max:255',
-            'jns_tinggal' => 'required|string|max:255',
+            'provinsi' => 'nullable|string|max:255',
+            'jns_tinggal' => 'nullable|string|max:255',
             'nm_ayah' => 'nullable|string|max:255',
-            'nik_ayah' => 'nullable|numeric',
+            'nik_ayah' => 'nullable',
             'tgl_ayah' => 'nullable|date',
             'pend_ayah' => 'nullable|string|max:255',
             'pek_ayah' => 'nullable|string|max:255',
             'nm_ibu' => 'nullable|string|max:255',
-            'nik_ibu' => 'nullable|numeric',
+            'nik_ibu' => 'nullable',
             'tgl_ibu' => 'nullable|date',
             'pend_ibu' => 'nullable|string|max:255',
             'pek_ibu' => 'nullable|string|max:255',
             'alamat_ortu' => 'nullable|string|max:255',
-            'hp_ortu' => 'nullable|numeric',
-            'telepon_ortu' => 'nullable|numeric',
-            'anak_ke' => 'nullable|numeric',
+            'hp_ortu' => 'nullable',
+            'telepon_ortu' => 'nullable',
+            'anak_ke' => 'nullable',
             'nm_wali' => 'nullable|string|max:255',
-            'nik_wali' => 'nullable|numeric',
+            'nik_wali' => 'nullable',
             'tgl_wali' => 'nullable|date',
             'pend_wali' => 'nullable|string|max:255',
             'pek_wali' => 'nullable|string|max:255',
             'alamat_wali' => 'nullable|string|max:255',
-            'hp_wali' => 'nullable|numeric',
+            'hp_wali' => 'nullable',
         ]);
 
-        // Tambahkan password yang sama dengan tanggal lahir
-        $validatedData['password'] = $request->tgl_lahir;
+        // Tambahkan password yang sama dengan tanggal lahir, dalam format hashed
+        $validatedData['password'] = bcrypt($request->tgl_lahir);
+
+        // Set all empty values to null
+        foreach ($validatedData as $key => $value) {
+            if (empty($value) || $value === 'null') {
+                $validatedData[$key] = null;
+            }
+        }
         
         // Simpan data ke database
         $pendaftar = Pendaftar::create($validatedData);
 
         // Redirect ke halaman verifikasi
-        return redirect()->route('verifikasi.pendaftaran', ['no_induk' => $pendaftar->no_induk])
-        ->with('success', 'Data pendaftar berhasil disimpan.');
+        return redirect()->route('pendaftaran.verifikasi', ['no_induk' => $pendaftar->no_induk])
+                        ->with('message', 'Data pendaftar berhasil disimpan. Silahkan Verifikasi');
     }
 
     /**

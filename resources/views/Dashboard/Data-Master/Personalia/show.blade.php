@@ -99,7 +99,8 @@
                           </div>
                           <div class="form-group">
                             <label for="ibu_kandung">Ibu Kandung</label>
-                            <input type="text" class="form-control" id="ibu_kandung" value="{{ ucwords($data->nm_ibu) }}" readonly>
+                            <input type="text" class="form-control" id="ibu_kandung" value="{{ empty($data->nm_ibu) ? '-' : ucwords($data->nm_ibu) }}" readonly>
+
                           </div>
                           <div class="form-group">
                             <label for="agama">Agama</label>

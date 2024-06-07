@@ -42,7 +42,7 @@
                             </button>
                             <div class="dropdown-menu dropdown-menu-left btn-sm" role="menu">
                                 <a class="dropdown-item" href="{{ route('pendaftar-online.pdf', ['pendaftarOnline' => $data->id]) }}" target="_blank">Cetak Formulir</a>
-                                <a class="dropdown-item" href="?pg=f_pd&amp;ver=35">Lanjutkan</a>
+                                <a class="dropdown-item" href="{{ route('pendaftaran.verifikasi', ['no_induk' => $data->no_induk]) }}">Lanjutkan</a>
                                 <div class="dropdown-divider"></div>
                                 <a href="#" class="dropdown-item" data-toggle="modal" data-target="#modal-delete{{ $data->id }}">Hapus</a>
                             </div>
