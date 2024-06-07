@@ -226,8 +226,8 @@
                     </div>
                     <!-- /.card-body -->
                     <div class="card-footer">
-                      <a href="{{ route('pendaftaran') }}"><button type="button" class="btn btn-info float-right" id="nextalamat">Selanjutnya</button></a>
-                      <button type="button" class="btn btn-info float-left" id="nextalamat">Back</button>
+                      <button type="button" class="btn btn-info float-right" id="nextalamat">Selanjutnya</button>
+                      <a href="{{ route('pendaftaran.index') }}"><button type="button" class="btn btn-secondary float-left" id="nextalamat">Back</button></a>
                     </div>
                     <!-- /.card-footer -->
                   </div>

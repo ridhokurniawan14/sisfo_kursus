@@ -29,11 +29,17 @@
                   </div>
                   <div class="form-group">
                     <label for="program_pilihan">Masukkan Program Kursus <span class="text-danger">*</span></label>
-                    <input autofocus autocomplete="off" value="{{ old('program_pilihan', (ucwords($cari->program_pilihan))) }}" required type="text" name="program_pilihan" class="form-control @error('program_pilihan') is-invalid @enderror" id="program_pilihan" placeholder="Masukkan Program Pilihan (Microsoft Word, Excel, dst)">
+                    <select class="select2" name="program_pilihan[]" id="program_pilihan" multiple="multiple" data-placeholder="Masukkan Program Pilihan" style="width: 100%;">
+                        @foreach ($programPilihan as $progPil)
+                            <option value="{{ $progPil->id }}" {{ in_array($progPil->id, $selectedPrograms) ? 'selected' : '' }}>
+                                {{ ucwords($progPil->program) }}
+                            </option>
+                        @endforeach
+                    </select>
                     @error('program_pilihan')
-                      <div class="invalid-feedback">
-                        {{ $message }}
-                      </div>
+                        <div class="invalid-feedback">
+                            {{ $message }}
+                        </div>
                     @enderror
                   </div>
                   <div class="form-group">

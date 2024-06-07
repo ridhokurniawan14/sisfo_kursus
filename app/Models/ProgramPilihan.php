@@ -8,15 +8,17 @@ use Illuminate\Database\Eloquent\Model;
 class ProgramPilihan extends Model
 {
     use HasFactory;
-    protected $table = 'tb_pilihan'; // Ganti 'nama_tabel_anda' dengan nama tabel yang sebenarnya
+    
+    protected $table = 'tb_pilihan';
     protected $primaryKey = 'id';
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array<int, string>
-     */
+    
     protected $fillable = [
         'program',
-        'harga',        
+        'harga',
     ];
+
+    public function programPaket()
+    {
+        return $this->belongsToMany(ProgramPaket::class, 'tb_paket_kursus_pilihan', 'pilihan_id', 'paket_kursus_id');
+    }
 }
