@@ -12,6 +12,7 @@ use App\Http\Controllers\LoginController;
 use App\Http\Controllers\PendaftarController;
 use App\Http\Controllers\PendaftarOnlineController;
 use App\Http\Controllers\PengumumanController;
+use App\Http\Controllers\PhotoStudentController;
 use App\Http\Controllers\ProfilLembagaController;
 use App\Http\Controllers\ProgramPaketController;
 use App\Http\Controllers\ProgramPilihanController;
@@ -77,6 +78,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/export-penilaian/peserta/{type}', [AngketPenilaianController::class, 'exportPeserta'])->name('exportExcelPeserta');
     // HALAMAN DATA PENDAFTAR ONLINE
     Route::resource('pendaftar-online', PendaftarOnlineController::class);
+    Route::post('pendaftar-online/create/{id}', [PendaftarOnlineController::class, 'store'])->name('pendaftar-online.store');
+    Route::get('pendaftar-online/create/{id}', [PendaftarOnlineController::class, 'create'])->name('pendaftar-online.create');
     Route::get('pendaftar-online/{pendaftarOnline}/generate-pdf', [PendaftarOnlineController::class, 'generatePDF'])->name('pendaftar-online.pdf');
     // HALAMAN INFORMATION
     Route::get('/information', [InformationController::class, 'index']);
@@ -85,6 +88,8 @@ Route::middleware('auth')->group(function () {
     Route::resource('pendaftaran', PendaftarController::class);
     Route::get('pendaftaran/verifikasi/{no_induk}', [PendaftarController::class, 'verifikasi'])->name('pendaftaran.verifikasi');
     Route::post('pendaftaran/verifikasi/{no_induk}', [PendaftarController::class, 'SaveVerifikasi'])->name('pendaftaran.SaveVerifikasi');
+    // HALAMAN PHOTO PESERTA DIDIK
+    Route::resource('photostudent', PhotoStudentController::class);
 
     // Route::get('/data-pendaftar', [PendaftarController::class, 'getDatas'])->name('datas'); // Route untuk mengambil data
 });

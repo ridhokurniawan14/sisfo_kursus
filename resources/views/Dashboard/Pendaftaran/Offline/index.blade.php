@@ -83,7 +83,7 @@
                                           Perintah <span class="sr-only">Toggle Dropdown</span>
                                       </button>
                                       <div class="dropdown-menu dropdown-menu-left btn-sm" role="menu">
-                                          <a class="dropdown-item" href="{{ route('pendaftar-online.pdf', ['pendaftarOnline' => $data->no_induk]) }}" target="_blank">Detail Data</a>
+                                          <a class="dropdown-item" href="/pendaftaran/{{ $data->no_induk }}">Detail Data</a>
                                           <div class="dropdown-divider"></div>
                                           <a class="dropdown-item" href="?pg=f_pd&amp;ver=35">Bayar Angs</a>
                                           <div class="dropdown-divider"></div>

@@ -245,9 +245,22 @@ class PendaftarController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Pendaftar $pendaftar)
+    public function show(Pendaftar $pendaftar, $no_induk)
     {
-        //
+        $student = Pendaftar::select('p.no_induk','p.*', 'pv.*', 'f.*')
+                    ->from('tb_pendaftar as p')
+                    ->join('tb_pendaftar_verifikasi as pv', 'p.no_induk', '=', 'pv.no_induk')
+                    ->leftJoin('tb_foto as f', 'p.no_induk', '=', 'f.no_induk')
+                    ->where('p.no_induk', $no_induk)
+                    ->first();
+
+        return view('dashboard.pendaftaran.offline.show', [
+            "halaman" => "Profile Peserta Didik",
+            "title" => "Peserta Didik",
+            "tab_title" => "Profile",
+            "data" => $student,
+            "no_induk" => $no_induk,
+        ]);
     }
 
     /**

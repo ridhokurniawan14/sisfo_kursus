@@ -197,7 +197,7 @@
                           <option value="0">Pilih Program</option>
                           @foreach ($program_paket as $prog_pak)
                             <option data-price="{{ $prog_pak->harga }}" value="{{ $prog_pak->id }}" {{ old('kd_paket') == $prog_pak->id ? 'selected' : '' }}>
-                              {{ ucwords($prog_pak->program_pilihan) }} - (Rp. {{ number_format($prog_pak->harga) }})
+                              Paket {{ ucwords($prog_pak->kode) }} - (Rp. {{ number_format($prog_pak->harga) }})
                             </option>
                           @endforeach
                         </select>
@@ -433,5 +433,175 @@
       </form>
     </section>
     <!-- /.content -->
+    <script>
+      let angsuranCount = 1;
+      const maxAngsuran = 5;
+    
+      document.getElementById('addAngsuranButton').addEventListener('click', function() {
+        if (angsuranCount >= maxAngsuran) return;
+    
+        angsuranCount++;
+    
+        const tableBody = document.getElementById('angsuranTableBody');
+        const newRow = document.createElement('tr');
+        newRow.id = `angsuranRow${angsuranCount}`;
+    
+        newRow.innerHTML = `
+          <td>${angsuranCount + 4}</td>
+          <td>Angsuran ke ${angsuranCount} <span class="text-danger">*</span></td>
+          <td>
+            <input value="{{ old('tgl_angsuran${angsuranCount}') }}" required type="date" name="tgl_angsuran${angsuranCount}" class="form-control form-control-sm @error('tgl_angsuran${angsuranCount}') is-invalid @enderror" id="tgl_angsuran${angsuranCount}" placeholder="Tanggal Lahir">
+            @error('tgl_angsuran${angsuranCount}')
+              <div class="invalid-feedback">
+                {{ $message }}
+              </div>
+            @enderror
+          </td>
+          <td colspan="2">
+            <input value="0" required type="text" name="angsuran${angsuranCount}" class="form-control form-control-sm @error('angsuran${angsuranCount}') is-invalid @enderror" id="angsuran${angsuranCount}" placeholder="Angsuran ke ${angsuranCount}" onkeyup="formatRupiah(this); calculateKekurangan();">
+            @error('angsuran${angsuranCount}')
+              <div class="invalid-feedback">
+                {{ $message }}
+              </div>
+            @enderror
+          </td>
+          <td>
+            <button type="button" class="btn btn-danger btn-sm" onclick="removeAngsuran(${angsuranCount})"><i class="fas fa-trash"></i></button>
+          </td>
+        `;
+    
+        tableBody.appendChild(newRow);
+    
+        if (angsuranCount === maxAngsuran) {
+          document.getElementById('addAngsuranButton').style.display = 'none';
+        }
+      });
+      function formatRupiah(input) {
+            // Menghilangkan semua karakter kecuali angka
+            var angka = input.value.replace(/[^0-9]/g, '');
+            
+            // Memisahkan angka menjadi grup-grup dengan titik setiap tiga digit
+            var formattedAngka = angka.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+            
+            // Memasukkan angka yang telah diformat kembali ke input
+            input.value = formattedAngka;
+        }
+      function removeAngsuran(count) {
+        const row = document.getElementById(`angsuranRow${count}`);
+        if (row) {
+          row.remove();
+          angsuranCount--;
+    
+          if (angsuranCount < maxAngsuran) {
+            document.getElementById('addAngsuranButton').style.display = 'block';
+          }
+    
+          // Reorder the remaining rows
+          reorderAngsuranRows();
+        }
+      }
+    
+      function reorderAngsuranRows() {
+        const rows = document.querySelectorAll('#angsuranTableBody tr');
+        let number = 5;
+        rows.forEach((row, index) => {
+          if (index >= 4) { // Start from the 5th row which is the first angsuran
+            row.cells[0].innerText = number++;
+            row.cells[1].innerHTML = `Angsuran ke ${index - 3} <span class="text-danger">*</span>`;
+            row.id = `angsuranRow${index - 3}`;
+            row.querySelector('input[type="date"]').name = `tgl_angsuran${index - 3}`;
+            row.querySelector('input[type="text"]').name = `angsuran${index - 3}`;
+            row.querySelector('button').setAttribute('onclick', `removeAngsuran(${index - 3})`);
+          }
+        });
+      }
+    
+      function calculateTotalBiaya() {
+        const biayaKursus = parseFloat(document.getElementById('biaya_kursus').value.replace(/[^\d]/g, '')) || 0;
+        const biayaPendaftaran = parseFloat(document.getElementById('biaya_daftar').value.replace(/[^\d]/g, '')) || 0;
+        const discount = parseFloat(document.getElementById('discount').value.replace(/[^\d]/g, '')) || 0;
+        
+        const totalBiaya = biayaKursus + biayaPendaftaran - discount;
+        
+        document.getElementById('tot_biaya').value = `Rp. ${totalBiaya.toLocaleString('id-ID')}`;
+        calculateKekurangan();
+      }
+    
+      function calculateKekurangan() {
+        const totalBiaya = parseFloat(document.getElementById('tot_biaya').value.replace(/[^\d]/g, '')) || 0;
+        let totalAngsuran = 0;
+    
+        for (let i = 1; i <= maxAngsuran; i++) {
+          const angsuran = parseFloat(document.getElementById(`angsuran${i}`)?.value.replace(/[^\d]/g, '') || 0);
+          totalAngsuran += angsuran;
+        }
+        
+        const kekurangan = totalBiaya - totalAngsuran;
+        
+        document.getElementById('kekurangan').value = `Rp. ${kekurangan.toLocaleString('id-ID')}`;
+        
+        const kekuranganStatus = document.getElementById('kekuranganStatus');
+        if (kekurangan <= 0) {
+          kekuranganStatus.style.display = 'inline';
+        } else {
+          kekuranganStatus.style.display = 'none';
+        }
+      }
+    
+      // Pastikan memanggil calculateKekurangan setiap kali nilai angsuran diubah
+      document.addEventListener('DOMContentLoaded', function() {
+        document.getElementById('discount').addEventListener('keyup', calculateTotalBiaya);
+        document.querySelectorAll('input[name^="angsuran"]').forEach(input => {
+          input.addEventListener('keyup', calculateKekurangan);
+        });
+      });
+    
+      document.addEventListener('DOMContentLoaded', function() {
+      const programSelects = document.querySelectorAll('select');
+      
+      programSelects.forEach(select => {
+        select.addEventListener('change', hitungBiaya);
+      });
+    
+      function toggleProgram(value) {
+        const programPaket = document.getElementById('program-paket');
+        const programPilihan = document.getElementById('program-pilihan');
+    
+        if (value === 'paket') {
+          programPaket.style.display = 'block';
+          programPilihan.style.display = 'none';
+        } else {
+          programPaket.style.display = 'none';
+          programPilihan.style.display = 'block';
+        }
+        
+        hitungBiaya(); // Recalculate biaya when program type is toggled
+      }
+    
+      function hitungBiaya() {
+        const prices = [];
+        const selectedRadio = document.querySelector('input[name="pil_prog"]:checked').value;
+        
+        let selects;
+        if (selectedRadio === 'paket') {
+          selects = document.querySelectorAll('#program-paket select');
+        } else {
+          selects = document.querySelectorAll('#program-pilihan select');
+        }
+        
+        selects.forEach(select => {
+          const selectedOption = select.options[select.selectedIndex];
+          if (selectedOption && selectedOption.value !== 'Pilih Program') {
+            const price = parseFloat(selectedOption.getAttribute('data-price'));
+            if (!isNaN(price)) {
+              prices.push(price);
+            }
+          }
+        });
+    
+        const totalBiaya = prices.reduce((a, b) => a + b, 0);
+        document.getElementById('biaya_kursus').value = `Rp. ${totalBiaya.toLocaleString('id-ID')}`;
+      }
+    });
+    </script>
 @endsection
- 
