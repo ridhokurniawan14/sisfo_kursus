@@ -90,6 +90,7 @@ Route::middleware('auth')->group(function () {
     Route::post('pendaftaran/verifikasi/{no_induk}', [PendaftarController::class, 'SaveVerifikasi'])->name('pendaftaran.SaveVerifikasi');
     // HALAMAN PHOTO PESERTA DIDIK
     Route::resource('photostudent', PhotoStudentController::class);
+    Route::put('/photostudent/update/{no_induk}', [PhotoStudentController::class, 'update'])->name('photostudent.update');
 
     // Route::get('/data-pendaftar', [PendaftarController::class, 'getDatas'])->name('datas'); // Route untuk mengambil data
 });

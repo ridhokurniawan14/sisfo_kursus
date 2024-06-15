@@ -159,6 +159,12 @@
       text-align: left;
   }
 
+  .highlight-green {
+    background-color: green;
+    color: white;
+    padding: 5px;
+    border-radius: 5px;
+}
 </style>
 <section class="content">
     <div class="container-fluid">
@@ -179,7 +185,7 @@
                         <div class="dropdown-menu dropdown-menu-right">
                             <a class="dropdown-item" href="#" data-toggle="modal" data-target="#viewPhotoModal" data-image-url="{{ asset('storage/' . $data->foto) }}">View Photo</a>
                             <a class="dropdown-item" href="#" data-toggle="modal" data-target="#uploadPhotoModal">Upload Photo</a>
-                            <form action="{{ route('photostudent.destroy', $data->id) }}" method="POST" style="display:inline;">
+                            <form action="{{ route('photostudent.destroy', $data->no_induk) }}" method="POST" style="display:inline;">
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit" class="dropdown-item">Remove Photo</button>
@@ -554,7 +560,195 @@
                       </div>
                     </div>
                     <div class="tab-pane fade" id="custom-tabs-one-profile" role="tabpanel" aria-labelledby="custom-tabs-one-profile-tab">
-                       Mauris tincidunt mi at erat gravida, eget tristique urna bibendum. Mauris pharetra purus ut ligula tempor, et vulputate metus facilisis. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Maecenas sollicitudin, nisi a luctus interdum, nisl ligula placerat mi, quis posuere purus ligula eu lectus. Donec nunc tellus, elementum sit amet ultricies at, posuere nec nunc. Nunc euismod pellentesque diam.
+                        {{-- <div class="invoice p-3 mb-3"> --}}
+                            <!-- title row -->
+                            <div class="row">
+                                <div class="col-12">
+                                <h4>
+                                    <i class="fas fa-receipt"></i> Detail Pembayaran
+                                    <small class="float-right">{{ ucwords($data->nm_lengkap) }}</small>
+                                </h4>
+                                <hr>
+                                </div>
+                                <!-- /.col -->
+                            </div>
+                            <!-- info row -->
+                            <div class="row invoice-info">
+                                <!-- Sisi Kiri -->
+                                <div class="col-sm-6 invoice-col">
+                                    <div class="address-row">
+                                        <span class="address-label">Biaya Kursus</span>
+                                        <span class="address-data">Rp. {{ number_format($data->biaya_kursus, 0, ',', '.') }},-</span>
+                                    </div>
+                                    <div class="address-row">
+                                        <span class="address-label">Pendaftaran</span>
+                                        <span class="address-data">Rp. {{ number_format($data->biaya_daftar, 0, ',', '.') }},-</span>
+                                    </div>
+                                    <div class="address-row">
+                                        <span class="address-label">Discount</span>
+                                        <span class="address-data">Rp. {{ number_format($data->discount, 0, ',', '.') }},-</span>
+                                    </div>
+                                    <div class="address-row">
+                                        <span class="address-label">Total Biaya Kursus</span>
+                                        <span class="address-data">Rp. {{ number_format($data->tot_biaya, 0, ',', '.') }},-</span>
+                                    </div>
+                                    <div class="address-row">
+                                        <span class="address-label">Kekurangan</span>
+                                        <span class="address-data {{ $data->kekurangan == 0 ? 'highlight-green' : '' }}">Rp. {{ number_format($data->kekurangan, 0, ',', '.') }},-</span>
+                                    </div>
+                                </div>
+                                <!-- /.col -->
+
+                                <!-- Sisi Kanan -->
+                                <div class="col-sm-6 invoice-col">
+                                    <div class="address-row">
+                                        <span class="address-label">Jam Kursus</span>
+                                        <span class="address-data">{{ $data->jam }}</span>
+                                    </div>
+                                    <div class="address-row">
+                                        <span class="address-label">Program Kursus</span>
+                                        <span class="address-data">
+                                            {{ 
+                                                $data->kd_paket != 0 
+                                                    ? ($data->kd_tambahan != 0 
+                                                        ? ucwords($data->pil_prog) . ' ' . $data->kd_paket . ' + Program Tambahan' 
+                                                        : ucwords($data->pil_prog) . ' ' . $data->kd_paket) 
+                                                    : ucwords($data->pil_prog) 
+                                            }}
+                                        </span>
+                                    </div>
+                                    <div class="address-row">
+                                        <div class="address-data">
+                                            <table class="table table-bordered">
+                                                <thead>
+                                                    <tr>
+                                                        <th>No.</th>
+                                                        <th>Program Kursus</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    {{-- @foreach($course_programs as $index => $program)
+                                                        <tr>
+                                                            <td>{{ $index + 1 }}</td>
+                                                            <td>{{ $program }}</td>
+                                                        </tr>
+                                                    @endforeach --}}
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- /.col -->
+                            </div>
+                            
+                            <!-- /.row -->
+                
+                            <!-- Table row -->
+                            <div class="row">
+                                <div class="col-12 table-responsive">
+                                <table class="table table-striped">
+                                    <thead>
+                                    <tr>
+                                    <th>Qty</th>
+                                    <th>Product</th>
+                                    <th>Serial #</th>
+                                    <th>Description</th>
+                                    <th>Subtotal</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr>
+                                    <td>1</td>
+                                    <td>Call of Duty</td>
+                                    <td>455-981-221</td>
+                                    <td>El snort testosterone trophy driving gloves handsome</td>
+                                    <td>$64.50</td>
+                                    </tr>
+                                    <tr>
+                                    <td>1</td>
+                                    <td>Need for Speed IV</td>
+                                    <td>247-925-726</td>
+                                    <td>Wes Anderson umami biodiesel</td>
+                                    <td>$50.00</td>
+                                    </tr>
+                                    <tr>
+                                    <td>1</td>
+                                    <td>Monsters DVD</td>
+                                    <td>735-845-642</td>
+                                    <td>Terry Richardson helvetica tousled street art master</td>
+                                    <td>$10.70</td>
+                                    </tr>
+                                    <tr>
+                                    <td>1</td>
+                                    <td>Grown Ups Blue Ray</td>
+                                    <td>422-568-642</td>
+                                    <td>Tousled lomo letterpress</td>
+                                    <td>$25.99</td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                                </div>
+                                <!-- /.col -->
+                            </div>
+                            <!-- /.row -->
+                
+                            <div class="row">
+                                <!-- accepted payments column -->
+                                <div class="col-6">
+                                <p class="lead">Payment Methods:</p>
+                                <img src="../../dist/img/credit/visa.png" alt="Visa">
+                                <img src="../../dist/img/credit/mastercard.png" alt="Mastercard">
+                                <img src="../../dist/img/credit/american-express.png" alt="American Express">
+                                <img src="../../dist/img/credit/paypal2.png" alt="Paypal">
+                
+                                <p class="text-muted well well-sm shadow-none" style="margin-top: 10px;">
+                                    Etsy doostang zoodles disqus groupon greplin oooj voxy zoodles, weebly ning heekya handango imeem
+                                    plugg
+                                    dopplr jibjab, movity jajah plickers sifteo edmodo ifttt zimbra.
+                                </p>
+                                </div>
+                                <!-- /.col -->
+                                <div class="col-6">
+                                <p class="lead">Amount Due 2/22/2014</p>
+                
+                                <div class="table-responsive">
+                                    <table class="table">
+                                    <tr>
+                                        <th style="width:50%">Subtotal:</th>
+                                        <td>$250.30</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Tax (9.3%)</th>
+                                        <td>$10.34</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Shipping:</th>
+                                        <td>$5.80</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Total:</th>
+                                        <td>$265.24</td>
+                                    </tr>
+                                    </table>
+                                </div>
+                                </div>
+                                <!-- /.col -->
+                            </div>
+                            <!-- /.row -->
+                
+                            <!-- this row will not appear when printing -->
+                            <div class="row no-print">
+                                <div class="col-12">
+                                <a href="invoice-print.html" rel="noopener" target="_blank" class="btn btn-default"><i class="fas fa-print"></i> Print</a>
+                                <button type="button" class="btn btn-success float-right"><i class="far fa-credit-card"></i> Submit
+                                    Payment
+                                </button>
+                                <button type="button" class="btn btn-primary float-right" style="margin-right: 5px;">
+                                    <i class="fas fa-download"></i> Generate PDF
+                                </button>
+                                </div>
+                            </div>
+                        {{-- </div> --}}
                     </div>
                     <div class="tab-pane fade" id="custom-tabs-one-messages" role="tabpanel" aria-labelledby="custom-tabs-one-messages-tab">
                        Morbi turpis dolor, vulputate vitae felis non, tincidunt congue mauris. Phasellus volutpat augue id mi placerat mollis. Vivamus faucibus eu massa eget condimentum. Fusce nec hendrerit sem, ac tristique nulla. Integer vestibulum orci odio. Cras nec augue ipsum. Suspendisse ut velit condimentum, mattis urna a, malesuada nunc. Curabitur eleifend facilisis velit finibus tristique. Nam vulputate, eros non luctus efficitur, ipsum odio volutpat massa, sit amet sollicitudin est libero sed ipsum. Nulla lacinia, ex vitae gravida fermentum, lectus ipsum gravida arcu, id fermentum metus arcu vel metus. Curabitur eget sem eu risus tincidunt eleifend ac ornare magna.
@@ -648,8 +842,8 @@ document.addEventListener('DOMContentLoaded', function () {
     var url = '{{ route('photostudent.store') }}';
     var method = 'POST';
 
-    @if ($data->id)
-        url = '{{ route('photostudent.update', $data->id) }}';
+    @if ($data->judul_foto)
+        url = '{{ route('photostudent.update', $data->no_induk) }}';
         method = 'POST';
         formData.append('_method', 'PUT'); // Tambahkan metode PUT untuk update
     @endif
@@ -676,8 +870,6 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 });
-
-
     
     // Event listener untuk saat modal View Photo ditampilkan
     $('#viewPhotoModal').on('show.bs.modal', function (event) {

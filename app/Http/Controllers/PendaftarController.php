@@ -247,20 +247,24 @@ class PendaftarController extends Controller
      */
     public function show(Pendaftar $pendaftar, $no_induk)
     {
-        $student = Pendaftar::select('p.no_induk','p.*', 'pv.*', 'f.*')
-                    ->from('tb_pendaftar as p')
-                    ->join('tb_pendaftar_verifikasi as pv', 'p.no_induk', '=', 'pv.no_induk')
-                    ->leftJoin('tb_foto as f', 'p.no_induk', '=', 'f.no_induk')
-                    ->where('p.no_induk', $no_induk)
-                    ->first();
-
-        return view('dashboard.pendaftaran.offline.show', [
-            "halaman" => "Profile Peserta Didik",
-            "title" => "Peserta Didik",
-            "tab_title" => "Profile",
-            "data" => $student,
-            "no_induk" => $no_induk,
-        ]);
+        $student = Pendaftar::select('p.no_induk', 'p.*', 'pv.*', 'f.*', 'j.*')
+                            ->from('tb_pendaftar as p')
+                            ->join('tb_pendaftar_verifikasi as pv', 'p.no_induk', '=', 'pv.no_induk')
+                            ->leftJoin('tb_foto as f', 'p.no_induk', '=', 'f.no_induk')
+                            ->leftJoin('tb_jam as j', 'pv.kd_jam', '=', 'j.id')
+                            ->where('p.no_induk', $no_induk)
+                            ->first();
+        if (!$student) {
+            abort(404); // Menampilkan halaman 404 jika data tidak ditemukan
+        } else {
+            return view('dashboard.pendaftaran.offline.show', [
+                "halaman" => "Profile Peserta Didik",
+                "title" => "Peserta Didik",
+                "tab_title" => "Profile",
+                "data" => $student,
+                "no_induk" => $no_induk,
+            ]);
+        }
     }
 
     /**

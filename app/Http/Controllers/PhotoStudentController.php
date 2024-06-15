@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\PhotoStudent;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
 class PhotoStudentController extends Controller
@@ -46,12 +47,13 @@ class PhotoStudentController extends Controller
             $photoStudent->judul_foto = basename($path);
             $photoStudent->foto = $path;
             $photoStudent->save(); // Simpan objek dengan benar
-    
+
             return response()->json(['success' => 'Foto berhasil diupload.']); // Kode status sukses
         } else {
             return response()->json(['error' => 'Tidak ada file yang diupload.'], 500); // Kode status error
         }
     }
+
     /**
      * Display the specified resource.
      */
@@ -71,40 +73,40 @@ class PhotoStudentController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, $id)
-{
-    $photoStudent = PhotoStudent::findOrFail($id);
+    public function update(Request $request, $no_induk)
+    {
+        $photoStudent = PhotoStudent::where('no_induk', $no_induk)->firstOrFail();
 
-    if ($request->hasFile('foto')) {
-        $request->validate([
-            'foto' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-        ]);
+        if ($request->hasFile('foto')) {
+            $request->validate([
+                'foto' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            ]);
 
-        // Hapus foto lama jika ada
-        if ($photoStudent->foto) {
-            Storage::disk('public')->delete($photoStudent->foto);
+            // Hapus foto lama jika ada
+            if ($photoStudent->foto) {
+                Storage::disk('public')->delete($photoStudent->foto);
+            }
+
+            $file = $request->file('foto');
+            $path = $file->store('foto-student', 'public');
+
+            $photoStudent->judul_foto = basename($path);
+            $photoStudent->foto = $path;
+            $photoStudent->save();
+
+            return response()->json(['success' => 'Foto berhasil diperbarui.']);
+        } else {
+            return response()->json(['error' => 'Tidak ada file yang diupload.'], 500);
         }
-
-        $file = $request->file('foto');
-        $path = $file->store('foto-student', 'public');
-
-        $photoStudent->judul_foto = basename($path);
-        $photoStudent->foto = $path;
-        $photoStudent->save();
-
-        return response()->json(['success' => 'Foto berhasil diperbarui.']);
-    } else {
-        return response()->json(['error' => 'Tidak ada file yang diupload.'], 500);
     }
-}
 
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy($id)
+    public function destroy($no_induk)
     {
-        $photo = PhotoStudent::findOrFail($id);
+        $photo = PhotoStudent::where('no_induk', $no_induk)->firstOrFail();
         $filePath = public_path('storage/foto-student/' . $photo->judul_foto);
         
         if (file_exists($filePath)) {
