@@ -5,6 +5,7 @@ use App\Http\Controllers\AngketPesertaDidikBaruController;
 use App\Http\Controllers\BerkasAkreditasiController;
 use App\Http\Controllers\BiayaDaftarController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\DataRekeningController;
 use App\Http\Controllers\HakAksesController;
 use App\Http\Controllers\InformationController;
 use App\Http\Controllers\JamController;
@@ -50,6 +51,8 @@ Route::middleware('auth')->group(function () {
     Route::resource('jam', JamController::class);
     // HALAMAN BIAYA PENDAFTARAN
     Route::resource('biaya-pendaftaran', BiayaDaftarController::class);
+    // HALAMAN DATA REKENING
+    Route::resource('data-rekening', DataRekeningController::class);
     // HALAMAN PROGRAM PILIHAN
     Route::resource('program-pilihan', ProgramPilihanController::class);
     // HALAMAN PROGRAM PAKET

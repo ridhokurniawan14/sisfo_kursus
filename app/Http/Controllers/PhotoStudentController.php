@@ -59,7 +59,8 @@ class PhotoStudentController extends Controller
      */
     public function show(PhotoStudent $photoStudent)
     {
-        //
+        abort(404);
+
     }
 
     /**
@@ -67,7 +68,7 @@ class PhotoStudentController extends Controller
      */
     public function edit(PhotoStudent $photoStudent)
     {
-        //
+        abort(404);
     }
 
     /**

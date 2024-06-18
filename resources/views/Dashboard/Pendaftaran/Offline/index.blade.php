@@ -87,7 +87,7 @@
                                           <div class="dropdown-divider"></div>
                                           <a class="dropdown-item" href="?pg=f_pd&amp;ver=35">Bayar Angs</a>
                                           <div class="dropdown-divider"></div>
-                                          <a class="dropdown-item" href="?pg=f_pd&amp;ver=35">Edit Bio</a>
+                                          <a class="dropdown-item" href="/pendaftaran/{{ $data->no_induk }}/edit">Edit Bio</a>
                                           <a href="#" class="dropdown-item" data-toggle="modal" data-target="#modal-delete{{ $data->no_induk }}">Hapus</a>
                                       </div>
                                   </div>                                             

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Exports\DataPendaftarExport;
 use App\Models\BiayaDaftar;
+use App\Models\DataRekening;
 use App\Models\Jam;
 use App\Models\Pendaftar;
 use App\Models\ProgramPaket;
@@ -12,6 +13,7 @@ use App\Models\Verification;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Maatwebsite\Excel\Facades\Excel;
 
 class PendaftarController extends Controller
@@ -257,12 +259,89 @@ class PendaftarController extends Controller
         if (!$student) {
             abort(404); // Menampilkan halaman 404 jika data tidak ditemukan
         } else {
+            // Array untuk menyimpan nama-nama program
+            $programs = [];
+
+            // Ambil program sesuai dengan nilai pil_prog
+    if ($student->pil_prog === 'paket') {
+        // Ambil program dari kd_paket jika ada
+        if ($student->kd_paket) {
+            $programPaket = DB::table('tb_paket_kursus as pk')
+                            ->join('tb_paket_kursus_pilihan as pkp', 'pk.id', '=', 'pkp.paket_kursus_id')
+                            ->join('tb_pilihan as p', 'pkp.pilihan_id', '=', 'p.id')
+                            ->where('pk.kode', $student->kd_paket)
+                            ->select(DB::raw('GROUP_CONCAT(p.program SEPARATOR ", ") as program_pilihan'))
+                            ->value('program_pilihan');
+
+            if ($programPaket) {
+                $programs = array_merge($programs, explode(', ', $programPaket));
+            }
+        }
+
+        // Ambil program dari kd_tambahan, kd_tambahan2, kd_tambahan3, kd_tambahan4 jika ada
+        $kd_tambahan_fields = ['kd_tambahan', 'kd_tambahan2', 'kd_tambahan3', 'kd_tambahan4'];
+        foreach ($kd_tambahan_fields as $field) {
+            if ($student->$field) {
+                $programTambahan = DB::table('tb_pilihan')
+                                    ->where('id', $student->$field)
+                                    ->value('program');
+
+                if ($programTambahan) {
+                    $programs[] = $programTambahan;
+                }
+            }
+        }
+    } elseif ($student->pil_prog === 'pilihan') {
+        // Loop untuk mengambil nama program dari kd_pilihan1 hingga kd_pilihan6
+        for ($i = 1; $i <= 6; $i++) {
+            $kd_pilihan_field = 'kd_pilihan' . $i;
+            $kd_pilihan_value = $student->$kd_pilihan_field;
+
+            if ($kd_pilihan_value) {
+                // Fetch program details from tb_pilihan based on kd_pilihan_value
+                $program = DB::table('tb_pilihan')
+                            ->where('id', $kd_pilihan_value)
+                            ->value('program');
+
+                if ($program) {
+                    $programs[] = $program;
+                }
+            }
+        }
+    }
+            // Ambil data angsuran dan tanggal angsuran
+            $installments = [];
+
+            // Angsuran pertama menggunakan tgl_masuk
+            if ($student->angsuran1) {
+                $installments[] = [
+                    'angsuran' => $student->angsuran1,
+                    'tanggal' => $student->tgl_masuk,
+                    'keterangan' => $student->angsuran1 == $student->tot_biaya ? 'Pelunasan' : 'Angsuran 1',
+                ];
+            }
+
+            // Angsuran berikutnya menggunakan tgl_angsuran2, tgl_angsuran3, tgl_angsuran4, tgl_angsuran5
+            for ($i = 2; $i <= 5; $i++) {
+                $installment_field = 'angsuran' . $i;
+                $date_field = 'tgl_angsuran' . $i;
+                if ($student->$installment_field && $student->$date_field) {
+                    $installments[] = [
+                        'angsuran' => $student->$installment_field,
+                        'tanggal' => $student->$date_field,
+                        'keterangan' => 'Angsuran ' . $i,
+                    ];
+                }
+            }
             return view('dashboard.pendaftaran.offline.show', [
                 "halaman" => "Profile Peserta Didik",
                 "title" => "Peserta Didik",
                 "tab_title" => "Profile",
                 "data" => $student,
                 "no_induk" => $no_induk,
+                "programs" => $programs, // Mengirim data programs ke view
+                "installments" => $installments, // Mengirim data angsuran ke view
+                "rekenings" => DataRekening::orderBy('id')->get(),
             ]);
         }
     }
@@ -270,18 +349,101 @@ class PendaftarController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Pendaftar $pendaftar)
+    public function edit(Pendaftar $pendaftar, $no_induk)
     {
-        //
+        // Kembali ke halaman pendaftaran
+        return view('dashboard.pendaftaran.offline.edit', [
+            "halaman" => "Edit Peserta Didik",
+            "title" => "Profile Peserta Didik",
+            "tab_title" => "Edit",
+            "no_induk" => $no_induk,
+            "cari" => Pendaftar::where('no_induk', $no_induk)->orderBy('id')->first(),
+        ]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Pendaftar $pendaftar)
-    {
-        //
+    public function update(Request $request, $no_induk)
+{
+    // Validasi data input
+    $validatedData = $request->validate([
+        'nm_lengkap' => 'required|string|max:255',
+        'tmp_lahir' => 'required|string|max:255',
+        'tgl_lahir' => 'required|date',
+        'gender' => 'required|string|max:1',
+        'nisn' => 'nullable',
+        'nik' => 'nullable',
+        'agama' => 'required|string|max:255',
+        'kewarganegaraan' => 'required|string|max:255',
+        'pend_akhir' => 'required|string|max:255',
+        'email' => 'nullable|email|max:255',
+        'no_hp' => 'nullable',
+        'status_pekerjaan' => 'required|string|max:255',
+        'tgl_masuk' => 'required|date',
+        'alamat' => 'required|string|max:255',
+        'rt' => 'nullable',
+        'rw' => 'nullable',
+        'kel' => 'nullable|string|max:255',
+        'kec' => 'nullable|string|max:255',
+        'kd_pos' => 'nullable',
+        'kab' => 'required|string|max:255',
+        'provinsi' => 'nullable|string|max:255',
+        'jns_tinggal' => 'nullable|string|max:255',
+        'nm_ayah' => 'nullable|string|max:255',
+        'nik_ayah' => 'nullable',
+        'tgl_ayah' => 'nullable|date',
+        'pend_ayah' => 'nullable|string|max:255',
+        'pek_ayah' => 'nullable|string|max:255',
+        'nm_ibu' => 'nullable|string|max:255',
+        'nik_ibu' => 'nullable',
+        'tgl_ibu' => 'nullable|date',
+        'pend_ibu' => 'nullable|string|max:255',
+        'pek_ibu' => 'nullable|string|max:255',
+        'alamat_ortu' => 'nullable|string|max:255',
+        'hp_ortu' => 'nullable',
+        'telepon_ortu' => 'nullable',
+        'anak_ke' => 'nullable',
+        'nm_wali' => 'nullable|string|max:255',
+        'nik_wali' => 'nullable',
+        'tgl_wali' => 'nullable|date',
+        'pend_wali' => 'nullable|string|max:255',
+        'pek_wali' => 'nullable|string|max:255',
+        'alamat_wali' => 'nullable|string|max:255',
+        'hp_wali' => 'nullable',
+    ]);
+
+    // Set all empty values to null
+    foreach ($validatedData as $key => $value) {
+        if (empty($value) || $value === 'null') {
+            $validatedData[$key] = null;
+        }
     }
+
+    // Ambil objek Pendaftar berdasarkan no_induk
+    $pendaftar = Pendaftar::where('no_induk', $no_induk)->first();
+
+    // Cek apakah pendaftar ditemukan
+    if (!$pendaftar) {
+        return redirect()->back()->withErrors(['error' => 'Pendaftar tidak ditemukan.']);
+    }
+
+    try {
+        // Simpan data ke database
+        $updateSuccess = $pendaftar->update($validatedData);
+
+        // Debug: Log status update
+        Log::info('Status update:', ['success' => $updateSuccess]);
+
+        // Redirect ke halaman verifikasi
+        return redirect('/pendaftaran')->with('message', 'Data berhasil diperbarui!');
+    } catch (\Exception $e) {
+        // Tangani kesalahan dan log error
+        Log::error('Error saat update data:', ['error' => $e->getMessage()]);
+        return redirect()->back()->withErrors(['error' => 'Terjadi kesalahan saat memperbarui data: ' . $e->getMessage()]);
+    }
+}
+
 
     /**
      * Remove the specified resource from storage.

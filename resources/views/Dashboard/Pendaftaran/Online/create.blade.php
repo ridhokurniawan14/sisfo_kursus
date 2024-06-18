@@ -147,7 +147,7 @@
                         <div class="form-group"> 
                           <label for="pend_akhir" class="col-sm-12 col-form-label">Pendidikan Terakhir <span class="text-danger">*</span></label>
                           <select name="pend_akhir" class="form-control @error('pend_akhir') is-invalid @enderror" required>
-                            @foreach(['' => 'Pilih Pendidikan Terakhir', 'tidak sekolah' => 'Tidak Sekolah', 'sd' => 'SD', 'smp' => 'SMP', 'SLTA' => 'SLTA', 'd3' => 'D3', 'd4/s1' => 'D4/S1', 's2' => 'S2', 's3' => 'S3'] as $value => $label)
+                            @foreach(['' => 'Pilih Pendidikan Terakhir', 'tidak sekolah' => 'Tidak Sekolah', 'sd' => 'SD', 'smp' => 'SMP', 'SLTA' => 'SLTA', 'd3' => 'D3', 'S1' => 'D4/S1', 's2' => 'S2', 's3' => 'S3'] as $value => $label)
                               <option value="{{ $value }}" {{ old('pend_akhir', $pendaftar_online->pend_akhir) == $value ? 'selected' : '' }}>{{ $label }}</option>
                             @endforeach
                           </select>
@@ -209,7 +209,7 @@
                     <!-- /.card-body -->
                     <div class="card-footer">
                       <button type="button" class="btn btn-info float-right" id="nextalamat">Selanjutnya</button>
-                      <a href="{{ route('pendaftaran.index') }}"><button type="button" class="btn btn-secondary float-left" id="nextalamat">Back</button></a>
+                      <a href="{{ route('pendaftar-online.index') }}"><button type="button" class="btn btn-light float-left" id="nextalamat">Batal</button></a>
                     </div>
                     <!-- /.card-footer -->
                   </div>

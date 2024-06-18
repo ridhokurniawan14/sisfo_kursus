@@ -13,6 +13,7 @@
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
   <!-- Font Awesome -->
   <link rel="stylesheet" href="/plugins/fontawesome-free/css/all.min.css">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
   <!-- DataTables -->
   <link rel="stylesheet" href="/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
   <link rel="stylesheet" href="/plugins/datatables-responsive/css/responsive.bootstrap4.min.css">
@@ -38,6 +39,9 @@
   <link rel="stylesheet" href="/plugins/summernote/summernote-bs4.min.css">
   <!-- Toastr -->
   <link rel="stylesheet" href="/plugins/toastr/toastr.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha512-JwJnpBLf7o3soPQrB16T0w6rnj4N94D0qP5KXCTu7lNQHKuBKJtDYqE0QD4U9+9EnBMrfVvA8tY0lRQOhmTDnw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+  {{-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="sha512-qgLJwA0zOJ0wW3hIOULYhKiVSHVex8zLYRYb6wMgQI1jQ2zax7+RGv5Pw0Wkzovv4G3edTffit1x6y4c1aYQPA==" crossorigin="anonymous" referrerpolicy="no-referrer" /> --}}
   @livewireStyles
   @stack('styles')
 </head>
@@ -162,8 +166,8 @@
                     </p>
                 </a>
             </li>
-            <li class="nav-item {{ Request::is('jam*','profil-lembaga*','biaya-pendaftaran*','program-pilihan*','program-paket*','user-category*') ? 'menu-open' : ''  }}">
-                <a href="#" class="nav-link {{ Request::is('jam*','profil-lembaga*','biaya-pendaftaran*','program-pilihan*','program-paket*','user-category*') ? 'active' : ''  }}">
+            <li class="nav-item {{ Request::is('jam*','profil-lembaga*','biaya-pendaftaran*','program-pilihan*','program-paket*','user-category*','data-rekening*') ? 'menu-open' : ''  }}">
+                <a href="#" class="nav-link {{ Request::is('jam*','profil-lembaga*','biaya-pendaftaran*','program-pilihan*','program-paket*','user-category*','data-rekening*') ? 'active' : ''  }}">
                     <i class="nav-icon fas fa-database"></i>
                     <p>Data Master <i class="right fas fa-angle-left"></i></p>
                 </a>
@@ -185,7 +189,13 @@
                           <i class="fas fa-dollar-sign nav-icon"></i>
                           <p>Biaya Pendaftaran</p>
                       </a>
-                  </li>
+                    </li>
+                    <li class="nav-item">
+                      <a href="/data-rekening" class="nav-link {{ Request::is('data-rekening*') ? 'active' : ''  }}">
+                          <i class="fas fa-credit-card nav-icon"></i>
+                          <p>Data Rekening</p>
+                      </a>
+                    </li>
                     <li class="nav-item">
                         <a href="/program-pilihan" class="nav-link {{ Request::is('program-pilihan*') ? 'active' : ''  }}">
                             <i class="fa fa-tag nav-icon"></i>

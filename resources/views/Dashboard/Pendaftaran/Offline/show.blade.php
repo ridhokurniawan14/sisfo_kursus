@@ -3,169 +3,197 @@
 @section('container')
 {{-- <meta name="csrf-token" content="{{ csrf_token() }}"> --}}
 <style>
-  .profile-photo-hover-text {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      color: white;
-      background-color: rgba(0, 0, 0, 0.5);
-      padding: 5px 10px;
-      border-radius: 5px;
-      display: none;
-  }
-  .profile-photo-container:hover .profile-photo-hover-text {
-      display: block;
-  }
-  .profile-photo-hover-text-not-null {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      color: white;
-      background-color: rgba(0, 0, 0, 0.5);
-      padding: 5px 10px;
-      border-radius: 5px;
-      display: none;
-  }
-  .profile-photo-container:hover .profile-photo-hover-text-not-null {
-      display: block;
-      width: 90px;
-      height: 90px;
-      border-radius: 50%; /* Menghilangkan border-radius untuk membuatnya kotak */
-      padding: 2px; /* Menambahkan padding 2px di sekitar gambar */
-  }
-  .profile-photo-container {
-      position: relative;
-      display: inline-block;
-  }
-
-  .profile-user-img {
-      cursor: pointer;
-  }
-  /* Profile CSS */
-  .profile-container {
-      display: flex;
-      align-items: flex-start;
-  }
-
-  .profile-image {
-    width: 250px;
-    height: 250px;
-    object-fit: cover;
-    border: 3px solid gainsboro; /* Mengatur border biru dengan ketebalan 3px */
-    border-radius: 3%; /* Menghilangkan border-radius untuk membuatnya kotak */
-    padding: 2px; /* Menambahkan padding 2px di sekitar gambar */
-    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* Menambahkan bayangan */
-    margin-right: 20px;
-  }
-
-  .profile-image-null {
+    .profile-photo-hover-text {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        color: white;
+        background-color: rgba(0, 0, 0, 0.5);
+        padding: 5px 10px;
+        border-radius: 5px;
+        display: none;
+    }
+    .profile-photo-container:hover .profile-photo-hover-text {
+        display: block;
+    }
+    .profile-photo-hover-text-not-null {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        color: white;
+        background-color: rgba(0, 0, 0, 0.5);
+        padding: 5px 10px;
+        border-radius: 5px;
+        display: none;
+    }
+    .profile-photo-container:hover .profile-photo-hover-text-not-null {
+        display: block;
+        width: 90px;
+        height: 90px;
+        border-radius: 50%; /* Menghilangkan border-radius untuk membuatnya kotak */
+        padding: 2px; /* Menambahkan padding 2px di sekitar gambar */
+    }
+    .profile-photo-container {
+        position: relative;
+        display: inline-block;
+    }
+  
+    .profile-user-img {
+        cursor: pointer;
+    }
+    /* Profile CSS */
+    .profile-container {
+        display: flex;
+        align-items: flex-start;
+    }
+  
+    .profile-image {
       width: 250px;
       height: 250px;
       object-fit: cover;
-      border-radius: 50%;
+      border: 3px solid gainsboro; /* Mengatur border biru dengan ketebalan 3px */
+      border-radius: 3%; /* Menghilangkan border-radius untuk membuatnya kotak */
+      padding: 2px; /* Menambahkan padding 2px di sekitar gambar */
+      box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* Menambahkan bayangan */
       margin-right: 20px;
-  }
-
-  .profile-details {
-      display: flex;
-      flex-direction: column;
-      width: 100%;
-  }
-
-  .profile-row {
-      display: flex;
-      margin-bottom: 10px;
-  }
-
-  .profile-label {
-      flex: 1;
-      font-weight: bold;
-  }
-
-  .profile-data {
-      flex: 2;
-      text-align: left;
-  }
-
-  /* Address CSS */
-  .address-details {
-      display: flex;
-      flex-direction: column;
-  }
-
-  .address-row {
-      display: flex;
-      margin-bottom: 10px;
-  }
-
-  .address-label {
-      flex: 1;
-      font-weight: bold;
-  }
-
-  .address-data {
-      flex: 2;
-      text-align: left;
-  }
-
-  /* Family CSS */
-  .family-details {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 20px;
-      margin-bottom: 20px;
-  }
-
-  .family-column {
-      display: flex;
-      flex-direction: column;
-  }
-
-  .family-row {
-      display: flex;
-      margin-bottom: 10px;
-  }
-
-  .family-label {
-      flex: 1;
-      font-weight: bold;
-  }
-
-  .family-data {
-      flex: 2;
-      text-align: left;
-  }
-
-  /* Guardian CSS */
-  .guardian-details {
-      display: flex;
-      flex-direction: column;
-  }
-
-  .guardian-row {
-      display: flex;
-      margin-bottom: 10px;
-  }
-
-  .guardian-label {
-      flex: 1;
-      font-weight: bold;
-  }
-
-  .guardian-data {
-      flex: 2;
-      text-align: left;
-  }
-
-  .highlight-green {
-    background-color: green;
-    color: white;
-    padding: 5px;
-    border-radius: 5px;
+    }
+  
+    .profile-image-null {
+        width: 250px;
+        height: 250px;
+        object-fit: cover;
+        border-radius: 50%;
+        margin-right: 20px;
+    }
+  
+    .profile-details {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+    }
+  
+    .profile-row {
+        display: flex;
+        margin-bottom: 10px;
+    }
+  
+    .profile-label {
+        flex: 1;
+        font-weight: bold;
+    }
+  
+    .profile-data {
+        flex: 2;
+        text-align: left;
+    }
+  
+    /* Address CSS */
+    .address-details {
+        display: flex;
+        flex-direction: column;
+    }
+  
+    .address-row {
+        display: flex;
+        margin-bottom: 10px;
+    }
+  
+    .address-label {
+        flex: 1;
+        font-weight: bold;
+    }
+  
+    .address-data {
+        flex: 2;
+        text-align: left;
+    }
+  
+    .address-row h5 {
+        margin-left: 10px; /* Menambahkan margin kiri */
+    }
+  
+    .address-row .badge {
+        margin-left: 10px; /* Menambahkan margin kiri pada elemen badge */
+    }
+  
+    /* Family CSS */
+    .family-details {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+        margin-bottom: 20px;
+    }
+  
+    .family-column {
+        display: flex;
+        flex-direction: column;
+    }
+  
+    .family-row {
+        display: flex;
+        margin-bottom: 10px;
+    }
+  
+    .family-label {
+        flex: 1;
+        font-weight: bold;
+    }
+  
+    .family-data {
+        flex: 2;
+        text-align: left;
+    }
+  
+    /* Guardian CSS */
+    .guardian-details {
+        display: flex;
+        flex-direction: column;
+    }
+  
+    .guardian-row {
+        display: flex;
+        margin-bottom: 10px;
+    }
+  
+    .guardian-label {
+        flex: 1;
+        font-weight: bold;
+    }
+  
+    .guardian-data {
+        flex: 2;
+        text-align: left;
+    }
+  
+    .highlight-green {
+      background-color: green;
+      color: white;
+      padding: 5px;
+      border-radius: 5px;
+      }
+    .highlight-red {
+      background-color: red;
+      color: white;
+      padding: 5px;
+      border-radius: 5px;
+      }
+      .table-bordered th {
+          text-align: center;
+      }
+      .table-bordered th, .table-bordered td {
+          padding: 3px; /* Sesuaikan dengan kebutuhan Anda */
+      }
+      .address-row h5 {
+    margin-left: 0; /* Menghilangkan margin kiri default */
 }
-</style>
+
+.address-row h5 .badge {
+    margin-left: 0; /* Menghilangkan margin kiri pada elemen badge di dalam h5 */
+}
+  </style>
+  
 <section class="content">
     <div class="container-fluid">
       <div class="row">
@@ -284,7 +312,7 @@
                 </li>
               </ul>
               @if (!empty($data->no_hp))
-                <a target="_blank" href="https://wa.me/+62{{ $data->no_hp }}" class="btn btn-success btn-block">
+                <a target="_blank" href="https://wa.me/+62{{ $data->no_hp }}" class="btn btn-success btn-block no-print">
                   <i class="fab fa-whatsapp mr-1"></i> <b>Whatsapp</b>
                 </a>          
               @endif
@@ -323,16 +351,16 @@
               <div class="card card-primary card-tabs">
                 <div class="card-header p-0 pt-1">
                   <ul class="nav nav-tabs" id="custom-tabs-one-tab" role="tablist">
-                    <li class="nav-item">
+                    <li class="nav-item no-print">
                       <a class="nav-link active" id="custom-tabs-one-home-tab" data-toggle="pill" href="#custom-tabs-one-home" role="tab" aria-controls="custom-tabs-one-home" aria-selected="true">Biodata</a>
                     </li>
                     <li class="nav-item">
                       <a class="nav-link" id="custom-tabs-one-profile-tab" data-toggle="pill" href="#custom-tabs-one-profile" role="tab" aria-controls="custom-tabs-one-profile" aria-selected="false">Laporan Keuangan</a>
                     </li>
-                    <li class="nav-item">
+                    <li class="nav-item no-print">
                       <a class="nav-link" id="custom-tabs-one-messages-tab" data-toggle="pill" href="#custom-tabs-one-messages" role="tab" aria-controls="custom-tabs-one-messages" aria-selected="false">Nilai</a>
                     </li>
-                    <li class="nav-item">
+                    <li class="nav-item no-print">
                       <a class="nav-link" id="custom-tabs-one-settings-tab" data-toggle="pill" href="#custom-tabs-one-settings" role="tab" aria-controls="custom-tabs-one-settings" aria-selected="false">Sertifikat</a>
                     </li>
                   </ul>
@@ -404,7 +432,7 @@
                                       </div>
                                       <div class="address-row">
                                           <span class="address-label">RW</span>
-                                          <span class="address-data">{{ !empty($data->rt) ? $data->rt : '-' }}</span>
+                                          <span class="address-data">{{ !empty($data->rw) ? $data->rw : '-' }}</span>
                                       </div>
                                       <div class="address-row">
                                           <span class="address-label">Desa / Kel.</span>
@@ -543,7 +571,7 @@
                                       </div>
                                       <div class="guardian-row">
                                           <span class="guardian-label">Pekerjaan Wali</span>
-                                          <span class="guardian-data">{{ !empty($data->pek_wali) ? $data->pek_wali : '-' }}</span>
+                                          <span class="guardian-data">{{ !empty($data->pek_wali) ? ucwords($data->pek_wali) : '-' }}</span>
                                       </div>
                                       <div class="guardian-row">
                                           <span class="guardian-label">Alamat Lengkap Wali</span>
@@ -556,11 +584,12 @@
                                   </div>
                               </div>
                           </div>
-                      </div>                      
+                        </div>                      
+                        <a href="/pendaftaran/{{ $no_induk }}/edit" class="btn btn-warning float-right"><i class="bi bi-pencil-fill"></i> Edit Data</a>
                       </div>
                     </div>
-                    <div class="tab-pane fade" id="custom-tabs-one-profile" role="tabpanel" aria-labelledby="custom-tabs-one-profile-tab">
-                        {{-- <div class="invoice p-3 mb-3"> --}}
+                    <div class="tab-pane fade" id="custom-tabs-one-profile" role="tabpanel" aria-labelledby="custom-tabs-one-profile-tab"> 
+                        {{-- <div id="print-section"> --}}
                             <!-- title row -->
                             <div class="row">
                                 <div class="col-12">
@@ -594,7 +623,7 @@
                                     </div>
                                     <div class="address-row">
                                         <span class="address-label">Kekurangan</span>
-                                        <span class="address-data {{ $data->kekurangan == 0 ? 'highlight-green' : '' }}">Rp. {{ number_format($data->kekurangan, 0, ',', '.') }},-</span>
+                                        <span class="address-data {{ ($data->ket == 'Lunas' || strtolower($data->ket) == 'lunas') ? 'highlight-green' : 'highlight-red' }}">{{ number_format($data->kekurangan, 0, ',', '.') }},-</span>
                                     </div>
                                 </div>
                                 <!-- /.col -->
@@ -619,7 +648,7 @@
                                     </div>
                                     <div class="address-row">
                                         <div class="address-data">
-                                            <table class="table table-bordered">
+                                            <table class="table table-bordered custom-table-style">
                                                 <thead>
                                                     <tr>
                                                         <th>No.</th>
@@ -627,14 +656,14 @@
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    {{-- @foreach($course_programs as $index => $program)
-                                                        <tr>
-                                                            <td>{{ $index + 1 }}</td>
-                                                            <td>{{ $program }}</td>
-                                                        </tr>
-                                                    @endforeach --}}
+                                                    @foreach($programs as $index => $program)
+                                                    <tr>
+                                                        <td style="text-align: center">{{ $index + 1 }}</td>
+                                                        <td>{{ ucwords($program) }}</td>
+                                                    </tr>
+                                                    @endforeach
                                                 </tbody>
-                                            </table>
+                                            </table>                                            
                                         </div>
                                     </div>
                                 </div>
@@ -642,49 +671,27 @@
                             </div>
                             
                             <!-- /.row -->
-                
                             <!-- Table row -->
                             <div class="row">
                                 <div class="col-12 table-responsive">
                                 <table class="table table-striped">
                                     <thead>
-                                    <tr>
-                                    <th>Qty</th>
-                                    <th>Product</th>
-                                    <th>Serial #</th>
-                                    <th>Description</th>
-                                    <th>Subtotal</th>
-                                    </tr>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Keterangan</th>
+                                            <th>Tanggal</th>
+                                            <th>Bayar</th>
+                                        </tr>
                                     </thead>
                                     <tbody>
-                                    <tr>
-                                    <td>1</td>
-                                    <td>Call of Duty</td>
-                                    <td>455-981-221</td>
-                                    <td>El snort testosterone trophy driving gloves handsome</td>
-                                    <td>$64.50</td>
-                                    </tr>
-                                    <tr>
-                                    <td>1</td>
-                                    <td>Need for Speed IV</td>
-                                    <td>247-925-726</td>
-                                    <td>Wes Anderson umami biodiesel</td>
-                                    <td>$50.00</td>
-                                    </tr>
-                                    <tr>
-                                    <td>1</td>
-                                    <td>Monsters DVD</td>
-                                    <td>735-845-642</td>
-                                    <td>Terry Richardson helvetica tousled street art master</td>
-                                    <td>$10.70</td>
-                                    </tr>
-                                    <tr>
-                                    <td>1</td>
-                                    <td>Grown Ups Blue Ray</td>
-                                    <td>422-568-642</td>
-                                    <td>Tousled lomo letterpress</td>
-                                    <td>$25.99</td>
-                                    </tr>
+                                        @foreach($installments as $index => $installment)
+                                        <tr>
+                                            <td>{{ $index + 1 }}</td>
+                                            <td>{{ $installment['keterangan'] }}</td>
+                                            <td>{{ \Carbon\Carbon::parse($installment['tanggal'])->isoFormat('D MMMM YYYY') }}</td>
+                                            <td>Rp. {{ number_format($installment['angsuran'], 0, ',', '.') }},-</td>
+                                        </tr>
+                                        @endforeach
                                     </tbody>
                                 </table>
                                 </div>
@@ -695,39 +702,41 @@
                             <div class="row">
                                 <!-- accepted payments column -->
                                 <div class="col-6">
-                                <p class="lead">Payment Methods:</p>
-                                <img src="../../dist/img/credit/visa.png" alt="Visa">
-                                <img src="../../dist/img/credit/mastercard.png" alt="Mastercard">
-                                <img src="../../dist/img/credit/american-express.png" alt="American Express">
-                                <img src="../../dist/img/credit/paypal2.png" alt="Paypal">
-                
-                                <p class="text-muted well well-sm shadow-none" style="margin-top: 10px;">
-                                    Etsy doostang zoodles disqus groupon greplin oooj voxy zoodles, weebly ning heekya handango imeem
-                                    plugg
-                                    dopplr jibjab, movity jajah plickers sifteo edmodo ifttt zimbra.
+                                <p class="lead mb-0">Metode Pembayaran</p>
+                                <img src="/img/bri-card.webp" width="15%" alt="BRI">
+                                <img src="/img/ovo-card.webp" width="15%" alt="OVO">
+                                <img src="/img/dana-card.webp" width="15%" alt="DANA">
+                                <p class="text-muted well well-sm shadow-none mb-0" style="margin-top: 10px;">
+                                    Cash atau Transfer Rekening :
+                                    <ol style="margin-left: 0; padding-left: 1.2em;">
+                                        @foreach ($rekenings as $rekening)
+                                            <li>{{ '('.strtoupper($rekening->nm_bank).') '.ucwords($rekening->nm_rekening).' : '.formatNoRek($rekening->no_rek) }} </li>    
+                                        @endforeach
+                                    </ol>
                                 </p>
                                 </div>
                                 <!-- /.col -->
                                 <div class="col-6">
-                                <p class="lead">Amount Due 2/22/2014</p>
+                                <p class="lead">Jumlah yang harus dibayar</p>
                 
                                 <div class="table-responsive">
                                     <table class="table">
                                     <tr>
-                                        <th style="width:50%">Subtotal:</th>
-                                        <td>$250.30</td>
+                                        <th style="width:50%">Total Biaya Kursus</th>
+                                        <td>Rp. {{ number_format($data->tot_biaya, 0, ',', '.') }},-</td>
                                     </tr>
                                     <tr>
-                                        <th>Tax (9.3%)</th>
-                                        <td>$10.34</td>
+                                        <th>Sudah Dibayarkan</th>
+                                        <td>Rp. {{ number_format($data->tot_biaya-$data->kekurangan, 0, ',', '.') }},-</td>
                                     </tr>
                                     <tr>
-                                        <th>Shipping:</th>
-                                        <td>$5.80</td>
+                                        <th>Total Kekurangan</th>
+                                        <td>Rp. {{ number_format($data->kekurangan, 0, ',', '.') }},-</td>
                                     </tr>
                                     <tr>
-                                        <th>Total:</th>
-                                        <td>$265.24</td>
+                                        <th>Keterangan</th>
+                                        <td><h4><span class="right badge badge-{{ ($data->ket == 'Lunas' || strtolower($data->ket) == 'lunas') ? 'success' : 'danger' }}"> {{ strtoupper($data->ket) }} </span></h4></td>
+
                                     </tr>
                                     </table>
                                 </div>
@@ -735,16 +744,12 @@
                                 <!-- /.col -->
                             </div>
                             <!-- /.row -->
-                
+            
                             <!-- this row will not appear when printing -->
                             <div class="row no-print">
                                 <div class="col-12">
-                                <a href="invoice-print.html" rel="noopener" target="_blank" class="btn btn-default"><i class="fas fa-print"></i> Print</a>
-                                <button type="button" class="btn btn-success float-right"><i class="far fa-credit-card"></i> Submit
-                                    Payment
-                                </button>
-                                <button type="button" class="btn btn-primary float-right" style="margin-right: 5px;">
-                                    <i class="fas fa-download"></i> Generate PDF
+                                <a href="javascript:window.print();" rel="noopener" class="btn btn-default"><i class="fas fa-print"></i> Print</a>
+                                <button type="button" class="btn btn-warning float-right"><i class="bi bi-cash"></i> Pembayaran
                                 </button>
                                 </div>
                             </div>
