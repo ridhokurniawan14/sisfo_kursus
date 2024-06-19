@@ -623,7 +623,7 @@
                                     </div>
                                     <div class="address-row">
                                         <span class="address-label">Kekurangan</span>
-                                        <span class="address-data {{ ($data->ket == 'Lunas' || strtolower($data->ket) == 'lunas') ? 'highlight-green' : 'highlight-red' }}">{{ number_format($data->kekurangan, 0, ',', '.') }},-</span>
+                                        <span class="address-data {{ ($data->ket == 'Lunas' || strtolower($data->ket) == 'lunas') ? 'highlight-green' : 'highlight-red' }}">Rp. {{ number_format($data->kekurangan, 0, ',', '.') }},-</span>
                                     </div>
                                 </div>
                                 <!-- /.col -->
@@ -637,12 +637,14 @@
                                     <div class="address-row">
                                         <span class="address-label">Program Kursus</span>
                                         <span class="address-data">
-                                            {{ 
-                                                $data->kd_paket != 0 
-                                                    ? ($data->kd_tambahan != 0 
-                                                        ? ucwords($data->pil_prog) . ' ' . $data->kd_paket . ' + Program Tambahan' 
-                                                        : ucwords($data->pil_prog) . ' ' . $data->kd_paket) 
-                                                    : ucwords($data->pil_prog) 
+                                            {{
+                                                $data->pil_prog == "paket" || $data->pil_prog == "Paket"
+                                                    ? ($data->kd_paket != 0
+                                                        ? ($data->kd_tambahan != 0
+                                                            ? 'Paket ' . $data->kd_paket . ' + Program Tambahan'
+                                                            : 'Paket ' . $data->kd_paket)
+                                                        : 'Pilihan')
+                                                    : 'Pilihan'
                                             }}
                                         </span>
                                     </div>
@@ -749,8 +751,7 @@
                             <div class="row no-print">
                                 <div class="col-12">
                                 <a href="javascript:window.print();" rel="noopener" class="btn btn-default"><i class="fas fa-print"></i> Print</a>
-                                <button type="button" class="btn btn-warning float-right"><i class="bi bi-cash"></i> Pembayaran
-                                </button>
+                                <a href="/pendaftaran/verifikasi/{{ $no_induk }}/edit" class="btn btn-warning float-right"><i class="bi bi-cash"></i> Pembayaran</a>
                                 </div>
                             </div>
                         {{-- </div> --}}

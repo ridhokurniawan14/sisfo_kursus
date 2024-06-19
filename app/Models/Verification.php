@@ -8,15 +8,17 @@ use Illuminate\Database\Eloquent\Model;
 class Verification extends Model
 {
     use HasFactory;
-    protected $table = 'tb_pendaftar_verifikasi'; // Ganti 'nama_tabel_anda' dengan nama tabel yang sebenarnya
+
+    protected $table = 'tb_pendaftar_verifikasi'; // Use the correct table name
     protected $primaryKey = 'id';
+    protected $appends = ['angsuran_count'];
+
     /**
      * The attributes that are mass assignable.
      *
      * @var array<int, string>
      */
-
-     protected $fillable = [
+    protected $fillable = [
         'no_induk',
         'kd_jam',
         'pil_prog',
@@ -54,10 +56,22 @@ class Verification extends Model
 
         // Menambahkan event listener untuk event 'saving'
         static::saving(function ($model) {
-            // Mengonversi semua atribut ke huruf kecil sebelum disimpan
             foreach ($model->getAttributes() as $key => $value) {
-                $model->{$key} = strtolower($value);
+                // Mengecualikan kolom bertipe tanggal dan kolom yang tidak perlu diubah ke huruf kecil
+                if (!in_array($key, ['tgl_angsuran2', 'tgl_angsuran3', 'tgl_angsuran4', 'tgl_angsuran5', 'created_at', 'updated_at']) && is_string($value)) {
+                    $model->{$key} = strtolower($value);
+                }
             }
         });
+    }
+    public function getAngsuranCountAttribute()
+    {
+        $count = 0;
+        for ($i = 1; $i <= 5; $i++) {
+            if ($this->{"angsuran$i"} > 0) {
+                $count++;
+            }
+        }
+        return $count;
     }
 }

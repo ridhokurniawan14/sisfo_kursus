@@ -519,6 +519,11 @@
           document.getElementById("program-paket").style.display = "block";
       }
   }
+  function refreshPage() {
+    // Logika untuk mereset atau mengarahkan ke halaman lain
+    // Contoh: window.location.href = '/home';
+    location.reload(); // Contoh: refresh halaman saat tombol diklik
+  }
 </script>  
 @if(Session::has('message'))
 <script>

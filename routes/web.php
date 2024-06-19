@@ -90,7 +90,9 @@ Route::middleware('auth')->group(function () {
     Route::get('pendaftaran/export', [PendaftarController::class, 'export'])->name('pendaftaran.export');
     Route::resource('pendaftaran', PendaftarController::class);
     Route::get('pendaftaran/verifikasi/{no_induk}', [PendaftarController::class, 'verifikasi'])->name('pendaftaran.verifikasi');
-    Route::post('pendaftaran/verifikasi/{no_induk}', [PendaftarController::class, 'SaveVerifikasi'])->name('pendaftaran.SaveVerifikasi');
+    Route::get('pendaftaran/verifikasi/{no_induk}/edit', [PendaftarController::class, 'editVerifikasi'])->name('pendaftaran.editVerifikasi');
+    Route::post('pendaftaran/verifikasi/{no_induk}/save', [PendaftarController::class, 'SaveVerifikasi'])->name('pendaftaran.SaveVerifikasi');
+    Route::put('pendaftaran/verifikasi/{no_induk}/update', [PendaftarController::class, 'UpdateVerifikasi'])->name('pendaftaran.UpdateVerifikasi');
     // HALAMAN PHOTO PESERTA DIDIK
     Route::resource('photostudent', PhotoStudentController::class);
     Route::put('/photostudent/update/{no_induk}', [PhotoStudentController::class, 'update'])->name('photostudent.update');

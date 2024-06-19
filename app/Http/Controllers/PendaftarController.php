@@ -172,6 +172,70 @@ class PendaftarController extends Controller
         // Redirect setelah simpan
         return redirect('/pendaftaran')->with('message', 'Data berhasil disimpan!');
     }
+    public function UpdateVerifikasi(Request $request, $no_induk)
+    {
+        // Validasi data input
+        $validatedData = $request->validate([
+            'kd_jam' => 'required',
+            'pil_prog' => 'required',
+            'kd_paket' => 'nullable',
+            'kd_tambahan' => 'nullable',
+            'kd_tambahan2' => 'nullable',
+            'kd_tambahan3' => 'nullable',
+            'kd_tambahan4' => 'nullable',
+            'kd_pilihan1' => 'nullable',
+            'kd_pilihan2' => 'nullable',
+            'kd_pilihan3' => 'nullable',
+            'kd_pilihan4' => 'nullable',
+            'kd_pilihan5' => 'nullable',
+            'kd_pilihan6' => 'nullable',
+            'biaya_kursus' => 'required',
+            'biaya_daftar' => 'required',
+            'discount' => 'required',
+            'tot_biaya' => 'required',
+            'kekurangan' => 'nullable',
+            'angsuran1' => 'required',
+            'angsuran2' => 'nullable',
+            'tgl_angsuran2' => 'nullable',
+            'angsuran3' => 'nullable',
+            'tgl_angsuran3' => 'nullable',
+            'angsuran4' => 'nullable',
+            'tgl_angsuran4' => 'nullable',
+            'angsuran5' => 'nullable',
+            'tgl_angsuran5' => 'nullable',
+            'ket' => 'nullable',
+        ]);
+
+        // Menghapus simbol mata uang dan titik
+        $fields = ['biaya_kursus', 'biaya_daftar', 'discount', 'tot_biaya', 'kekurangan', 'angsuran1', 'angsuran2', 'angsuran3', 'angsuran4', 'angsuran5'];
+        foreach ($fields as $field) {
+            if (array_key_exists($field, $validatedData)) {
+                $validatedData[$field] = str_replace(['Rp.', '.', ' '], '', $validatedData[$field]);
+            }
+        }
+
+        // Ubah nilai kosong atau string 'null' menjadi NULL atau 0
+        foreach ($validatedData as $key => $value) {
+            if ($value === '' || $value === 'null' || $value === '0') {
+                $validatedData[$key] = null; // Ubah menjadi NULL atau sesuai kebutuhan
+            }
+        }
+
+        // Temukan record berdasarkan no_induk
+        $verification = Verification::where('no_induk', $no_induk)->firstOrFail();
+
+        // Update data
+        $verification->update($validatedData);
+
+        // Logika untuk menentukan nilai ket
+        $verification->ket = ($verification->kekurangan == 0 || $verification->kekurangan === null) ? 'lunas' : 'belum lunas';
+        $verification->save();
+
+        // Redirect setelah simpan
+        return redirect('/pendaftaran/' . $no_induk)->with('message', 'Data Pembayaran berhasil diperbarui!');
+    }
+
+
 
     /**
      * Store a newly created resource in storage.
@@ -360,12 +424,36 @@ class PendaftarController extends Controller
             "cari" => Pendaftar::where('no_induk', $no_induk)->orderBy('id')->first(),
         ]);
     }
-
+    public function editVerifikasi(Pendaftar $pendaftar, $no_induk)
+    {
+        $CostRegistration = BiayaDaftar::latest()->first();
+        if (is_null($CostRegistration)) {
+            return redirect('/biaya-pendaftaran')->with('info', 'Silahkan mengisi biaya pendaftaran');
+        } else {
+        // Kembali ke halaman pendaftaran
+            return view('dashboard.pendaftaran.offline.editverifikasi', [
+                "halaman" => "Pembayaran",
+                "title" => "Profile Peserta Didik",
+                "tab_title" => "Pembayaran",
+                "no_induk" => $no_induk,
+                "pendaftar" => Pendaftar::select('p.no_induk', 'p.*', 'pv.*', 'j.*')
+                                ->from('tb_pendaftar as p')
+                                ->join('tb_pendaftar_verifikasi as pv', 'p.no_induk', '=', 'pv.no_induk')
+                                ->leftJoin('tb_jam as j', 'pv.kd_jam', '=', 'j.id')
+                                ->where('p.no_induk', $no_induk)
+                                ->first(),
+                "categories" => Jam::orderBy('id')->get(),
+                "program_pilihan" => ProgramPilihan::orderBy('id')->get(),
+                "program_paket" => ProgramPaket::orderBy('id')->get(),
+                "biaya_daftar" => $CostRegistration,
+            ]);
+        }
+    }
     /**
      * Update the specified resource in storage.
      */
     public function update(Request $request, $no_induk)
-{
+    {
     // Validasi data input
     $validatedData = $request->validate([
         'nm_lengkap' => 'required|string|max:255',
@@ -436,7 +524,7 @@ class PendaftarController extends Controller
         Log::info('Status update:', ['success' => $updateSuccess]);
 
         // Redirect ke halaman verifikasi
-        return redirect('/pendaftaran')->with('message', 'Data berhasil diperbarui!');
+        return redirect('/pendaftaran')->with('message', 'Biodata berhasil diperbarui!');
     } catch (\Exception $e) {
         // Tangani kesalahan dan log error
         Log::error('Error saat update data:', ['error' => $e->getMessage()]);
