@@ -35,7 +35,7 @@ use Illuminate\Support\Facades\Route;
 // Route::get('/', function () {
 //     return view('/Login');
 // });
-Route::get('/',[LoginController::class, 'index'])->name('login')->middleware('guest');
+Route::get('/', [LoginController::class, 'index'])->name('login')->middleware('guest');
 
 // HALAMAN LOGIN
 // Define login route
@@ -93,6 +93,11 @@ Route::middleware('auth')->group(function () {
     Route::get('pendaftaran/verifikasi/{no_induk}/edit', [PendaftarController::class, 'editVerifikasi'])->name('pendaftaran.editVerifikasi');
     Route::post('pendaftaran/verifikasi/{no_induk}/save', [PendaftarController::class, 'SaveVerifikasi'])->name('pendaftaran.SaveVerifikasi');
     Route::put('pendaftaran/verifikasi/{no_induk}/update', [PendaftarController::class, 'UpdateVerifikasi'])->name('pendaftaran.UpdateVerifikasi');
+    // NILAI
+    // Route::get('/nilai/{no_induk}', [KursusController::class, 'showForm'])->name('show-nilai-form');
+    Route::post('/nilai/{no_induk}', [PendaftarController::class, 'saveNilai'])->name('save-nilai');
+    Route::post('/nilai/updateAll', [PendaftarController::class, 'updateAllNilai'])->name('nilai.updateAll');
+
     // HALAMAN PHOTO PESERTA DIDIK
     Route::resource('photostudent', PhotoStudentController::class);
     Route::put('/photostudent/update/{no_induk}', [PhotoStudentController::class, 'update'])->name('photostudent.update');

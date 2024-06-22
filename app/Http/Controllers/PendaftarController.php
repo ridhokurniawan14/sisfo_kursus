@@ -6,6 +6,7 @@ use App\Exports\DataPendaftarExport;
 use App\Models\BiayaDaftar;
 use App\Models\DataRekening;
 use App\Models\Jam;
+use App\Models\Nilai;
 use App\Models\Pendaftar;
 use App\Models\ProgramPaket;
 use App\Models\ProgramPilihan;
@@ -24,15 +25,15 @@ class PendaftarController extends Controller
     public function index(Request $request)
     {
         $query = DB::table('tb_pendaftar')
-                        ->join('tb_pendaftar_verifikasi', 'tb_pendaftar.no_induk', '=', 'tb_pendaftar_verifikasi.no_induk')
-                        ->orderByDesc('tb_pendaftar.id')
-                        ->select('tb_pendaftar.no_induk','nm_lengkap','gender','tb_pendaftar_verifikasi.pil_prog','tb_pendaftar_verifikasi.biaya_kursus','tb_pendaftar_verifikasi.biaya_daftar','tb_pendaftar_verifikasi.kekurangan','no_hp'); // Pilih kolom yang ingin Anda ambil
+            ->join('tb_pendaftar_verifikasi', 'tb_pendaftar.no_induk', '=', 'tb_pendaftar_verifikasi.no_induk')
+            ->orderByDesc('tb_pendaftar.id')
+            ->select('tb_pendaftar.no_induk', 'nm_lengkap', 'gender', 'tb_pendaftar_verifikasi.pil_prog', 'tb_pendaftar_verifikasi.biaya_kursus', 'tb_pendaftar_verifikasi.biaya_daftar', 'tb_pendaftar_verifikasi.kekurangan', 'no_hp'); // Pilih kolom yang ingin Anda ambil
 
         if ($request->has('search')) {
             $search = $request->input('search');
             $query->where(function ($q) use ($search) {
                 $q->where('tb_pendaftar.no_induk', 'like', "%{$search}%")
-                ->orWhere('tb_pendaftar.nm_lengkap', 'like', "%{$search}%");
+                    ->orWhere('tb_pendaftar.nm_lengkap', 'like', "%{$search}%");
             });
         }
 
@@ -235,12 +236,10 @@ class PendaftarController extends Controller
         return redirect('/pendaftaran/' . $no_induk)->with('message', 'Data Pembayaran berhasil diperbarui!');
     }
 
-
-
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request) : RedirectResponse
+    public function store(Request $request): RedirectResponse
     {
         // Validasi data input
         $validatedData = $request->validate([
@@ -299,13 +298,34 @@ class PendaftarController extends Controller
                 $validatedData[$key] = null;
             }
         }
-        
+
         // Simpan data ke database
         $pendaftar = Pendaftar::create($validatedData);
 
         // Redirect ke halaman verifikasi
         return redirect()->route('pendaftaran.verifikasi', ['no_induk' => $pendaftar->no_induk])
-                        ->with('message', 'Data pendaftar berhasil disimpan. Silahkan Verifikasi');
+            ->with('message', 'Data pendaftar berhasil disimpan. Silahkan Verifikasi');
+    }
+
+    private function getPredikat($nilai)
+    {
+        if ($nilai >= 90 && $nilai <= 100) {
+            return ['predikat' => 'A', 'bg' => 'bg-success'];
+        } elseif ($nilai >= 85 && $nilai <= 89) {
+            return ['predikat' => 'B+', 'bg' => 'bg-primary'];
+        } elseif ($nilai >= 80 && $nilai <= 84) {
+            return ['predikat' => 'B', 'bg' => 'bg-primary'];
+        } elseif ($nilai >= 75 && $nilai <= 79) {
+            return ['predikat' => 'B-', 'bg' => 'bg-primary'];
+        } elseif ($nilai >= 70 && $nilai <= 74) {
+            return ['predikat' => 'C+', 'bg' => 'bg-warning'];
+        } elseif ($nilai >= 65 && $nilai <= 69) {
+            return ['predikat' => 'C', 'bg' => 'bg-warning'];
+        } elseif ($nilai >= 60 && $nilai <= 64) {
+            return ['predikat' => 'C-', 'bg' => 'bg-warning'];
+        } else {
+            return ['predikat' => 'D', 'bg' => 'bg-danger'];
+        }
     }
 
     /**
@@ -314,100 +334,182 @@ class PendaftarController extends Controller
     public function show(Pendaftar $pendaftar, $no_induk)
     {
         $student = Pendaftar::select('p.no_induk', 'p.*', 'pv.*', 'f.*', 'j.*')
-                            ->from('tb_pendaftar as p')
-                            ->join('tb_pendaftar_verifikasi as pv', 'p.no_induk', '=', 'pv.no_induk')
-                            ->leftJoin('tb_foto as f', 'p.no_induk', '=', 'f.no_induk')
-                            ->leftJoin('tb_jam as j', 'pv.kd_jam', '=', 'j.id')
-                            ->where('p.no_induk', $no_induk)
-                            ->first();
+            ->from('tb_pendaftar as p')
+            ->join('tb_pendaftar_verifikasi as pv', 'p.no_induk', '=', 'pv.no_induk')
+            ->leftJoin('tb_foto as f', 'p.no_induk', '=', 'f.no_induk')
+            ->leftJoin('tb_jam as j', 'pv.kd_jam', '=', 'j.id')
+            ->where('p.no_induk', $no_induk)
+            ->first();
+
         if (!$student) {
             abort(404); // Menampilkan halaman 404 jika data tidak ditemukan
-        } else {
-            // Array untuk menyimpan nama-nama program
-            $programs = [];
-
-            // Ambil program sesuai dengan nilai pil_prog
-    if ($student->pil_prog === 'paket') {
-        // Ambil program dari kd_paket jika ada
-        if ($student->kd_paket) {
-            $programPaket = DB::table('tb_paket_kursus as pk')
-                            ->join('tb_paket_kursus_pilihan as pkp', 'pk.id', '=', 'pkp.paket_kursus_id')
-                            ->join('tb_pilihan as p', 'pkp.pilihan_id', '=', 'p.id')
-                            ->where('pk.kode', $student->kd_paket)
-                            ->select(DB::raw('GROUP_CONCAT(p.program SEPARATOR ", ") as program_pilihan'))
-                            ->value('program_pilihan');
-
-            if ($programPaket) {
-                $programs = array_merge($programs, explode(', ', $programPaket));
-            }
         }
 
-        // Ambil program dari kd_tambahan, kd_tambahan2, kd_tambahan3, kd_tambahan4 jika ada
-        $kd_tambahan_fields = ['kd_tambahan', 'kd_tambahan2', 'kd_tambahan3', 'kd_tambahan4'];
-        foreach ($kd_tambahan_fields as $field) {
-            if ($student->$field) {
-                $programTambahan = DB::table('tb_pilihan')
-                                    ->where('id', $student->$field)
-                                    ->value('program');
+        $programs = [];
+        $kd_programs = [];
 
-                if ($programTambahan) {
-                    $programs[] = $programTambahan;
+        if ($student->pil_prog === 'paket') {
+            if ($student->kd_paket) {
+                $programPaket = DB::table('tb_paket_kursus as pk')
+                    ->join('tb_paket_kursus_pilihan as pkp', 'pk.id', '=', 'pkp.paket_kursus_id')
+                    ->join('tb_pilihan as p', 'pkp.pilihan_id', '=', 'p.id')
+                    ->where('pk.kode', $student->kd_paket)
+                    ->select('p.program', 'p.id')
+                    ->get();
+
+                foreach ($programPaket as $item) {
+                    $programs[] = $item->program;
+                    $kd_programs[] = $item->id;
+                }
+            }
+
+            $kd_tambahan_fields = ['kd_tambahan', 'kd_tambahan2', 'kd_tambahan3', 'kd_tambahan4'];
+            foreach ($kd_tambahan_fields as $field) {
+                if ($student->$field) {
+                    $programTambahan = DB::table('tb_pilihan')
+                        ->where('id', $student->$field)
+                        ->select('program', 'id')
+                        ->first();
+
+                    if ($programTambahan) {
+                        $programs[] = $programTambahan->program;
+                        $kd_programs[] = $programTambahan->id;
+                    }
+                }
+            }
+        } elseif ($student->pil_prog === 'pilihan') {
+            for ($i = 1; $i <= 6; $i++) {
+                $kd_pilihan_field = 'kd_pilihan' . $i;
+                $kd_pilihan_value = $student->$kd_pilihan_field;
+
+                if ($kd_pilihan_value) {
+                    $program = DB::table('tb_pilihan')
+                        ->where('id', $kd_pilihan_value)
+                        ->select('program', 'id')
+                        ->first();
+
+                    if ($program) {
+                        $programs[] = $program->program;
+                        $kd_programs[] = $program->id;
+                    }
                 }
             }
         }
-    } elseif ($student->pil_prog === 'pilihan') {
-        // Loop untuk mengambil nama program dari kd_pilihan1 hingga kd_pilihan6
-        for ($i = 1; $i <= 6; $i++) {
-            $kd_pilihan_field = 'kd_pilihan' . $i;
-            $kd_pilihan_value = $student->$kd_pilihan_field;
 
-            if ($kd_pilihan_value) {
-                // Fetch program details from tb_pilihan based on kd_pilihan_value
-                $program = DB::table('tb_pilihan')
-                            ->where('id', $kd_pilihan_value)
-                            ->value('program');
+        // Fetch existing scores
+        $existing_scores = Nilai::where('no_induk', $no_induk)->get()->keyBy('kd_program');
 
-                if ($program) {
-                    $programs[] = $program;
-                }
-            }
+        // Process the predikat for each existing score
+        foreach ($existing_scores as $score) {
+            $score->predikat = $this->getPredikat($score->nilai);
         }
-    }
-            // Ambil data angsuran dan tanggal angsuran
-            $installments = [];
 
-            // Angsuran pertama menggunakan tgl_masuk
-            if ($student->angsuran1) {
+        // Ambil data angsuran dan tanggal angsuran
+        $installments = [];
+
+        // Angsuran pertama menggunakan tgl_masuk
+        if ($student->angsuran1) {
+            $installments[] = [
+                'angsuran' => $student->angsuran1,
+                'tanggal' => $student->tgl_masuk,
+                'keterangan' => $student->angsuran1 == $student->tot_biaya ? 'Pelunasan' : 'Angsuran 1',
+            ];
+        }
+
+        // Angsuran berikutnya menggunakan tgl_angsuran2, tgl_angsuran3, tgl_angsuran4, tgl_angsuran5
+        for ($i = 2; $i <= 5; $i++) {
+            $installment_field = 'angsuran' . $i;
+            $date_field = 'tgl_angsuran' . $i;
+            if ($student->$installment_field && $student->$date_field) {
                 $installments[] = [
-                    'angsuran' => $student->angsuran1,
-                    'tanggal' => $student->tgl_masuk,
-                    'keterangan' => $student->angsuran1 == $student->tot_biaya ? 'Pelunasan' : 'Angsuran 1',
+                    'angsuran' => $student->$installment_field,
+                    'tanggal' => $student->$date_field,
+                    'keterangan' => 'Angsuran ' . $i,
                 ];
             }
-
-            // Angsuran berikutnya menggunakan tgl_angsuran2, tgl_angsuran3, tgl_angsuran4, tgl_angsuran5
-            for ($i = 2; $i <= 5; $i++) {
-                $installment_field = 'angsuran' . $i;
-                $date_field = 'tgl_angsuran' . $i;
-                if ($student->$installment_field && $student->$date_field) {
-                    $installments[] = [
-                        'angsuran' => $student->$installment_field,
-                        'tanggal' => $student->$date_field,
-                        'keterangan' => 'Angsuran ' . $i,
-                    ];
-                }
-            }
-            return view('dashboard.pendaftaran.offline.show', [
-                "halaman" => "Profile Peserta Didik",
-                "title" => "Peserta Didik",
-                "tab_title" => "Profile",
-                "data" => $student,
-                "no_induk" => $no_induk,
-                "programs" => $programs, // Mengirim data programs ke view
-                "installments" => $installments, // Mengirim data angsuran ke view
-                "rekenings" => DataRekening::orderBy('id')->get(),
-            ]);
         }
+
+        return view('dashboard.pendaftaran.offline.show', [
+            "halaman" => "Profile Peserta Didik",
+            "title" => "Peserta Didik",
+            "tab_title" => "Profile",
+            "data" => $student,
+            "no_induk" => $no_induk,
+            "programs" => $programs,
+            "kd_programs" => $kd_programs,
+            "existing_scores" => $existing_scores,
+            "installments" => $installments,
+            "rekenings" => DataRekening::orderBy('id')->get(),
+        ]);
+    }
+    public function saveNilai(Request $request)
+    {
+        // Validasi input
+        $validated = $request->validate([
+            'no_induk' => 'required|string',
+            'nilai' => 'array',
+            'programs' => 'required|array',
+            'kd_programs' => 'required|array',
+        ]);
+
+        // Mulai transaksi database
+        DB::beginTransaction();
+        try {
+            foreach ($validated['kd_programs'] as $index => $kd_program) {
+                $nilai = $validated['nilai'][$index] ?? null;
+
+                // Jika nilai tidak diisi, set nilai menjadi null atau 0
+                if (is_null($nilai) || $nilai === '') {
+                    $nilai = 0; // Atau null jika ingin nilai default menjadi null
+                }
+
+                Nilai::updateOrCreate(
+                    [
+                        'no_induk' => $validated['no_induk'],
+                        'kd_program' => $kd_program,
+                    ],
+                    [
+                        'nilai' => $nilai,
+                        'program_kursus' => $validated['programs'][$index],
+                    ]
+                );
+            }
+
+            DB::commit();
+            return redirect()->back()->with('message', 'Nilai berhasil disimpan!');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return redirect()->back()->withErrors('Terjadi kesalahan saat menyimpan nilai: ' . $e->getMessage());
+        }
+    }
+
+    // Add this method to your controller
+    public function updateAllNilai(Request $request)
+    {
+        $request->validate([
+            'no_induk' => 'required',
+            'nilai' => 'required|array',
+            'nilai.*' => 'integer|min:0|max:100',
+            'kd_programs' => 'required|array',
+            'kd_programs.*' => 'required|integer',
+        ]);
+
+        $no_induk = $request->no_induk;
+        $nilai = $request->nilai;
+        $kd_programs = $request->kd_programs;
+
+        foreach ($kd_programs as $index => $kd_program) {
+            $existing_score = Nilai::where('no_induk', $no_induk)
+                ->where('kd_program', $kd_program)
+                ->first();
+
+            if ($existing_score) {
+                $existing_score->nilai = $nilai[$index];
+                $existing_score->save();
+            }
+        }
+
+        return redirect()->back()->with('message', 'Nilai berhasil diperbarui!');
     }
 
     /**
@@ -430,18 +532,18 @@ class PendaftarController extends Controller
         if (is_null($CostRegistration)) {
             return redirect('/biaya-pendaftaran')->with('info', 'Silahkan mengisi biaya pendaftaran');
         } else {
-        // Kembali ke halaman pendaftaran
+            // Kembali ke halaman pendaftaran
             return view('dashboard.pendaftaran.offline.editverifikasi', [
                 "halaman" => "Pembayaran",
                 "title" => "Profile Peserta Didik",
                 "tab_title" => "Pembayaran",
                 "no_induk" => $no_induk,
                 "pendaftar" => Pendaftar::select('p.no_induk', 'p.*', 'pv.*', 'j.*')
-                                ->from('tb_pendaftar as p')
-                                ->join('tb_pendaftar_verifikasi as pv', 'p.no_induk', '=', 'pv.no_induk')
-                                ->leftJoin('tb_jam as j', 'pv.kd_jam', '=', 'j.id')
-                                ->where('p.no_induk', $no_induk)
-                                ->first(),
+                    ->from('tb_pendaftar as p')
+                    ->join('tb_pendaftar_verifikasi as pv', 'p.no_induk', '=', 'pv.no_induk')
+                    ->leftJoin('tb_jam as j', 'pv.kd_jam', '=', 'j.id')
+                    ->where('p.no_induk', $no_induk)
+                    ->first(),
                 "categories" => Jam::orderBy('id')->get(),
                 "program_pilihan" => ProgramPilihan::orderBy('id')->get(),
                 "program_paket" => ProgramPaket::orderBy('id')->get(),
@@ -454,83 +556,83 @@ class PendaftarController extends Controller
      */
     public function update(Request $request, $no_induk)
     {
-    // Validasi data input
-    $validatedData = $request->validate([
-        'nm_lengkap' => 'required|string|max:255',
-        'tmp_lahir' => 'required|string|max:255',
-        'tgl_lahir' => 'required|date',
-        'gender' => 'required|string|max:1',
-        'nisn' => 'nullable',
-        'nik' => 'nullable',
-        'agama' => 'required|string|max:255',
-        'kewarganegaraan' => 'required|string|max:255',
-        'pend_akhir' => 'required|string|max:255',
-        'email' => 'nullable|email|max:255',
-        'no_hp' => 'nullable',
-        'status_pekerjaan' => 'required|string|max:255',
-        'tgl_masuk' => 'required|date',
-        'alamat' => 'required|string|max:255',
-        'rt' => 'nullable',
-        'rw' => 'nullable',
-        'kel' => 'nullable|string|max:255',
-        'kec' => 'nullable|string|max:255',
-        'kd_pos' => 'nullable',
-        'kab' => 'required|string|max:255',
-        'provinsi' => 'nullable|string|max:255',
-        'jns_tinggal' => 'nullable|string|max:255',
-        'nm_ayah' => 'nullable|string|max:255',
-        'nik_ayah' => 'nullable',
-        'tgl_ayah' => 'nullable|date',
-        'pend_ayah' => 'nullable|string|max:255',
-        'pek_ayah' => 'nullable|string|max:255',
-        'nm_ibu' => 'nullable|string|max:255',
-        'nik_ibu' => 'nullable',
-        'tgl_ibu' => 'nullable|date',
-        'pend_ibu' => 'nullable|string|max:255',
-        'pek_ibu' => 'nullable|string|max:255',
-        'alamat_ortu' => 'nullable|string|max:255',
-        'hp_ortu' => 'nullable',
-        'telepon_ortu' => 'nullable',
-        'anak_ke' => 'nullable',
-        'nm_wali' => 'nullable|string|max:255',
-        'nik_wali' => 'nullable',
-        'tgl_wali' => 'nullable|date',
-        'pend_wali' => 'nullable|string|max:255',
-        'pek_wali' => 'nullable|string|max:255',
-        'alamat_wali' => 'nullable|string|max:255',
-        'hp_wali' => 'nullable',
-    ]);
+        // Validasi data input
+        $validatedData = $request->validate([
+            'nm_lengkap' => 'required|string|max:255',
+            'tmp_lahir' => 'required|string|max:255',
+            'tgl_lahir' => 'required|date',
+            'gender' => 'required|string|max:1',
+            'nisn' => 'nullable',
+            'nik' => 'nullable',
+            'agama' => 'required|string|max:255',
+            'kewarganegaraan' => 'required|string|max:255',
+            'pend_akhir' => 'required|string|max:255',
+            'email' => 'nullable|email|max:255',
+            'no_hp' => 'nullable',
+            'status_pekerjaan' => 'required|string|max:255',
+            'tgl_masuk' => 'required|date',
+            'alamat' => 'required|string|max:255',
+            'rt' => 'nullable',
+            'rw' => 'nullable',
+            'kel' => 'nullable|string|max:255',
+            'kec' => 'nullable|string|max:255',
+            'kd_pos' => 'nullable',
+            'kab' => 'required|string|max:255',
+            'provinsi' => 'nullable|string|max:255',
+            'jns_tinggal' => 'nullable|string|max:255',
+            'nm_ayah' => 'nullable|string|max:255',
+            'nik_ayah' => 'nullable',
+            'tgl_ayah' => 'nullable|date',
+            'pend_ayah' => 'nullable|string|max:255',
+            'pek_ayah' => 'nullable|string|max:255',
+            'nm_ibu' => 'nullable|string|max:255',
+            'nik_ibu' => 'nullable',
+            'tgl_ibu' => 'nullable|date',
+            'pend_ibu' => 'nullable|string|max:255',
+            'pek_ibu' => 'nullable|string|max:255',
+            'alamat_ortu' => 'nullable|string|max:255',
+            'hp_ortu' => 'nullable',
+            'telepon_ortu' => 'nullable',
+            'anak_ke' => 'nullable',
+            'nm_wali' => 'nullable|string|max:255',
+            'nik_wali' => 'nullable',
+            'tgl_wali' => 'nullable|date',
+            'pend_wali' => 'nullable|string|max:255',
+            'pek_wali' => 'nullable|string|max:255',
+            'alamat_wali' => 'nullable|string|max:255',
+            'hp_wali' => 'nullable',
+        ]);
 
-    // Set all empty values to null
-    foreach ($validatedData as $key => $value) {
-        if (empty($value) || $value === 'null') {
-            $validatedData[$key] = null;
+        // Set all empty values to null
+        foreach ($validatedData as $key => $value) {
+            if (empty($value) || $value === 'null') {
+                $validatedData[$key] = null;
+            }
+        }
+
+        // Ambil objek Pendaftar berdasarkan no_induk
+        $pendaftar = Pendaftar::where('no_induk', $no_induk)->first();
+
+        // Cek apakah pendaftar ditemukan
+        if (!$pendaftar) {
+            return redirect()->back()->withErrors(['error' => 'Pendaftar tidak ditemukan.']);
+        }
+
+        try {
+            // Simpan data ke database
+            $updateSuccess = $pendaftar->update($validatedData);
+
+            // Debug: Log status update
+            Log::info('Status update:', ['success' => $updateSuccess]);
+
+            // Redirect ke halaman verifikasi
+            return redirect('/pendaftaran')->with('message', 'Biodata berhasil diperbarui!');
+        } catch (\Exception $e) {
+            // Tangani kesalahan dan log error
+            Log::error('Error saat update data:', ['error' => $e->getMessage()]);
+            return redirect()->back()->withErrors(['error' => 'Terjadi kesalahan saat memperbarui data: ' . $e->getMessage()]);
         }
     }
-
-    // Ambil objek Pendaftar berdasarkan no_induk
-    $pendaftar = Pendaftar::where('no_induk', $no_induk)->first();
-
-    // Cek apakah pendaftar ditemukan
-    if (!$pendaftar) {
-        return redirect()->back()->withErrors(['error' => 'Pendaftar tidak ditemukan.']);
-    }
-
-    try {
-        // Simpan data ke database
-        $updateSuccess = $pendaftar->update($validatedData);
-
-        // Debug: Log status update
-        Log::info('Status update:', ['success' => $updateSuccess]);
-
-        // Redirect ke halaman verifikasi
-        return redirect('/pendaftaran')->with('message', 'Biodata berhasil diperbarui!');
-    } catch (\Exception $e) {
-        // Tangani kesalahan dan log error
-        Log::error('Error saat update data:', ['error' => $e->getMessage()]);
-        return redirect()->back()->withErrors(['error' => 'Terjadi kesalahan saat memperbarui data: ' . $e->getMessage()]);
-    }
-}
 
 
     /**

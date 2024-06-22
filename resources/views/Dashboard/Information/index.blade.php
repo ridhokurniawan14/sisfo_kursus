@@ -5,28 +5,6 @@
     <section class="content">
 
       <!-- Default box -->
-      <div class="card card-warning">
-        <div class="card-header">
-          <h3 class="card-title"><b>PENTING!!!</b></h3>
-
-          <div class="card-tools">
-            <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
-              <i class="fas fa-minus"></i>
-            </button>
-            <button type="button" class="btn btn-tool" data-card-widget="remove" title="Remove">
-              <i class="fas fa-times"></i>
-            </button>
-          </div>
-        </div>
-        <div class="card-body">
-          Jika ingin <b>Merubah Program Kursus</b> yang dipilih oleh Peserta Didik, <b>Harap Hubungi <a href="https://wa.me/6289682154449?text=Assalamuallaikum%2C%20Mas%20Ridho%20ada%20perubahan%20No.%20Induk%20%3A%20......%20dari%20Pilihan%2FPaket%20....%20menjadi%20Pilihan%2FPaket%20.......%20Maturnuwun." target="_blank">Ridho Kurniawan (089 682 154 449)</a></b>
-        </div>
-        <!-- /.card-body -->
-        <div class="card-footer">
-          Dibuat oleh <strong><a target="_blank" href="https://www.instagram.com/ridhoo_kurniawaan/">Ridho Kurniawan</a></strong>
-        </div>
-        <!-- /.card-footer-->
-      </div>
       <div class="card card-primary">
         <div class="card-header">
           <h3 class="card-title">Update Sistem Informasi PTCC Version 2.5</h3>
