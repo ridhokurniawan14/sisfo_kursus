@@ -1111,6 +1111,8 @@
                                                                                 method="POST">
                                                                                 @csrf
                                                                                 @method('PUT')
+                                                                                <input type="hidden" name="no_induk"
+                                                                                value="{{ $no_induk }}">
                                                                                 <div class="form-group">
                                                                                     <label
                                                                                         for="edit_kategori_sertifikat">Kategori
