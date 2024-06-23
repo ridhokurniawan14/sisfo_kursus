@@ -324,7 +324,7 @@ class PendaftarController extends Controller
         } elseif ($nilai >= 60 && $nilai <= 64) {
             return ['predikat' => 'C-', 'bg' => 'bg-warning'];
         } else {
-            return ['predikat' => 'D', 'bg' => 'bg-danger'];
+            return ['predikat' => 'BELUM DINILAI', 'bg' => 'bg-secondary'];
         }
     }
 
@@ -333,6 +333,10 @@ class PendaftarController extends Controller
      */
     public function show(Pendaftar $pendaftar, $no_induk)
     {
+        $certificate = DB::table('tb_sertifikat')->orderBy('id', 'desc')->first();
+        $lastCertificate = $certificate ? $certificate->no_sertifikat : 0;
+        $newCertificate = $lastCertificate + 1;
+
         $student = Pendaftar::select('p.no_induk', 'p.*', 'pv.*', 'f.*', 'j.*')
             ->from('tb_pendaftar as p')
             ->join('tb_pendaftar_verifikasi as pv', 'p.no_induk', '=', 'pv.no_induk')
@@ -429,6 +433,10 @@ class PendaftarController extends Controller
             }
         }
 
+        // Get sertifikat data
+        $sertifikatData = DB::table('tb_sertifikat')->where('no_induk', $no_induk)->first();
+        $isReadOnly = $sertifikatData ? true : false;
+
         return view('dashboard.pendaftaran.offline.show', [
             "halaman" => "Profile Peserta Didik",
             "title" => "Peserta Didik",
@@ -440,8 +448,14 @@ class PendaftarController extends Controller
             "existing_scores" => $existing_scores,
             "installments" => $installments,
             "rekenings" => DataRekening::orderBy('id')->get(),
+            "newCertificate" => $newCertificate,
+            "isReadOnly" => $isReadOnly,
+            "sertifikatData" => $sertifikatData
         ]);
     }
+
+
+
     public function saveNilai(Request $request)
     {
         // Validasi input
@@ -526,6 +540,7 @@ class PendaftarController extends Controller
             "cari" => Pendaftar::where('no_induk', $no_induk)->orderBy('id')->first(),
         ]);
     }
+
     public function editVerifikasi(Pendaftar $pendaftar, $no_induk)
     {
         $CostRegistration = BiayaDaftar::latest()->first();

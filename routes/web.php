@@ -18,6 +18,7 @@ use App\Http\Controllers\ProfilLembagaController;
 use App\Http\Controllers\ProgramPaketController;
 use App\Http\Controllers\ProgramPilihanController;
 use App\Http\Controllers\SaranaPrasaranaController;
+use App\Http\Controllers\SertifikatController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -97,7 +98,8 @@ Route::middleware('auth')->group(function () {
     // Route::get('/nilai/{no_induk}', [KursusController::class, 'showForm'])->name('show-nilai-form');
     Route::post('/nilai/{no_induk}', [PendaftarController::class, 'saveNilai'])->name('save-nilai');
     Route::post('/nilai/updateAll', [PendaftarController::class, 'updateAllNilai'])->name('nilai.updateAll');
-
+    // SERTIFIKAT
+    Route::resource('sertifikat', SertifikatController::class);
     // HALAMAN PHOTO PESERTA DIDIK
     Route::resource('photostudent', PhotoStudentController::class);
     Route::put('/photostudent/update/{no_induk}', [PhotoStudentController::class, 'update'])->name('photostudent.update');

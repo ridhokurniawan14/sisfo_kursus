@@ -1018,39 +1018,152 @@
                                                     <!-- Bagian kiri untuk data -->
                                                     <div class="col-md-8">
                                                         <h4><i class="fas fa-certificate"></i> Data Sertifikat</h4>
-                                                        <form>
+                                                        <form
+                                                            action="{{ $isReadOnly ? route('sertifikat.update', $sertifikatData->id) : route('sertifikat.store') }}"
+                                                            method="POST">
+                                                            @csrf
+                                                            @if ($isReadOnly)
+                                                                @method('PUT')
+                                                            @endif
+                                                            <input type="hidden" name="no_induk"
+                                                                value="{{ $no_induk }}">
                                                             <div class="form-group">
                                                                 <label for="no_sertifikat">No. Sertifikat <span
                                                                         class="text-danger">*</span></label>
-                                                                <input type="text" class="form-control"
-                                                                    id="no_sertifikat"
+                                                                <input readonly type="text"
+                                                                    value="{{ $isReadOnly ? $sertifikatData->no_sertifikat : $newCertificate }}"
+                                                                    class="form-control" id="no_sertifikat"
+                                                                    name="no_sertifikat"
                                                                     placeholder="Masukkan No. Sertifikat">
                                                             </div>
                                                             <div class="form-group">
-                                                                <label for="kategori_sertifikat">Kategori Sertifikat
-                                                                    <span class="text-danger">*</span></label>
-                                                                <select class="form-control" id="kategori_sertifikat">
+                                                                <label for="kategori_sertifikat">Kategori Sertifikat <span
+                                                                        class="text-danger">*</span></label>
+                                                                <select class="form-control" id="kategori_sertifikat"
+                                                                    name="kategori" {{ $isReadOnly ? 'disabled' : '' }}>
                                                                     <option value="">Pilih Kategori Sertifikat
                                                                     </option>
-                                                                    <option value="umum">Umum</option>
-                                                                    <option value="ut">Ujian Terbuka</option>
+                                                                    <option value="umum"
+                                                                        {{ $isReadOnly && $sertifikatData->kategori == 'umum' ? 'selected' : '' }}>
+                                                                        Umum</option>
+                                                                    <option value="ut"
+                                                                        {{ $isReadOnly && $sertifikatData->kategori == 'ut' ? 'selected' : '' }}>
+                                                                        Ujian Terbuka</option>
                                                                 </select>
                                                             </div>
                                                             <div class="form-group">
                                                                 <label for="tanggal_ujian">Tanggal Ujian Akhir <span
                                                                         class="text-danger">*</span></label>
-                                                                <input type="date" class="form-control"
-                                                                    id="tanggal_ujian">
+                                                                @if ($isReadOnly)
+                                                                    <input type="text" class="form-control"
+                                                                        id="tanggal_ujian" name="tgl_ujian"
+                                                                        value="{{ \Carbon\Carbon::parse($sertifikatData->tgl_ujian)->isoFormat('D MMMM YYYY') }}"
+                                                                        readonly>
+                                                                @else
+                                                                    <input type="date" class="form-control"
+                                                                        id="tanggal_ujian" name="tgl_ujian"
+                                                                        value="">
+                                                                @endif
                                                             </div>
                                                             <div class="form-group">
-                                                                <label for="tanggal_sertifikat">Tanggal Sertifikat
-                                                                    <span class="text-danger">*</span></label>
-                                                                <input type="date" class="form-control"
-                                                                    id="tanggal_sertifikat">
+                                                                <label for="tanggal_sertifikat">Tanggal Sertifikat <span
+                                                                        class="text-danger">*</span></label>
+                                                                @if ($isReadOnly)
+                                                                    <input type="text" class="form-control"
+                                                                        id="tanggal_sertifikat" name="tgl_pembuatan"
+                                                                        value="{{ \Carbon\Carbon::parse($sertifikatData->tgl_pembuatan)->isoFormat('D MMMM YYYY') }}"
+                                                                        readonly>
+                                                                @else
+                                                                    <input type="date" class="form-control"
+                                                                        id="tanggal_sertifikat" name="tgl_pembuatan"
+                                                                        value="">
+                                                                @endif
                                                             </div>
-                                                            <button type="submit" class="btn btn-success float-right"><i
-                                                                    class="fas fa-check"></i> Simpan Data</button>
+                                                            @if ($isReadOnly)
+                                                                <button type="button" class="btn btn-warning float-right"
+                                                                    data-toggle="modal" data-target="#editModal"><i
+                                                                        class="fas fa-edit"></i> Edit Data</button>
+                                                            @else
+                                                                <button type="submit"
+                                                                    class="btn btn-success float-right"><i
+                                                                        class="fas fa-check"></i> Simpan Data</button>
+                                                            @endif
                                                         </form>
+
+                                                        <!-- Modal -->
+                                                        <div class="modal fade" id="editModal" tabindex="-1"
+                                                            role="dialog" aria-labelledby="editModalLabel"
+                                                            aria-hidden="true">
+                                                            <div class="modal-dialog" role="document">
+                                                                <div class="modal-content">
+                                                                    <div class="modal-header">
+                                                                        <h5 class="modal-title" id="editModalLabel">Edit
+                                                                            Sertifikat</h5>
+                                                                        <button type="button" class="close"
+                                                                            data-dismiss="modal" aria-label="Close">
+                                                                            <span aria-hidden="true">&times;</span>
+                                                                        </button>
+                                                                    </div>
+                                                                    <div class="modal-body">
+                                                                        @if ($sertifikatData)
+                                                                            <form
+                                                                                action="{{ route('sertifikat.update', $sertifikatData->id) }}"
+                                                                                method="POST">
+                                                                                @csrf
+                                                                                @method('PUT')
+                                                                                <div class="form-group">
+                                                                                    <label
+                                                                                        for="edit_kategori_sertifikat">Kategori
+                                                                                        Sertifikat <span
+                                                                                            class="text-danger">*</span></label>
+                                                                                    <select class="form-control"
+                                                                                        id="edit_kategori_sertifikat"
+                                                                                        name="kategori">
+                                                                                        <option value="umum"
+                                                                                            {{ $sertifikatData->kategori == 'umum' ? 'selected' : '' }}>
+                                                                                            Umum</option>
+                                                                                        <option value="ut"
+                                                                                            {{ $sertifikatData->kategori == 'ut' ? 'selected' : '' }}>
+                                                                                            Ujian Terbuka</option>
+                                                                                    </select>
+                                                                                </div>
+                                                                                <div class="form-group">
+                                                                                    <label for="edit_tanggal_ujian">Tanggal
+                                                                                        Ujian Akhir <span
+                                                                                            class="text-danger">*</span></label>
+                                                                                    <input type="date"
+                                                                                        class="form-control"
+                                                                                        id="edit_tanggal_ujian"
+                                                                                        name="tgl_ujian"
+                                                                                        value="{{ $sertifikatData->tgl_ujian }}">
+                                                                                </div>
+                                                                                <div class="form-group">
+                                                                                    <label
+                                                                                        for="edit_tanggal_sertifikat">Tanggal
+                                                                                        Sertifikat <span
+                                                                                            class="text-danger">*</span></label>
+                                                                                    <input type="date"
+                                                                                        class="form-control"
+                                                                                        id="edit_tanggal_sertifikat"
+                                                                                        name="tgl_pembuatan"
+                                                                                        value="{{ $sertifikatData->tgl_pembuatan }}">
+                                                                                </div>
+                                                                                <div class="modal-footer">
+                                                                                    <button type="button"
+                                                                                        class="btn btn-secondary"
+                                                                                        data-dismiss="modal">Close</button>
+                                                                                    <button type="submit"
+                                                                                        class="btn btn-primary"><i
+                                                                                            class="fas fa-check"></i>
+                                                                                        Simpan Perubahan</button>
+                                                                                </div>
+                                                                            </form>
+                                                                        @endif
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
                                                     </div>
                                                     <!-- /.col-md-8 -->
 
@@ -1216,6 +1329,18 @@
                     modalBodyInputNilai.value = nilai;
                 });
             }
+        });
+    </script>
+    <script>
+        // Jika menggunakan modal, tambahkan script untuk menangani tampilan modal
+        $('#editModal').on('show.bs.modal', function(event) {
+            var button = $(event.relatedTarget); // Tombol yang membuka modal
+            // Extract info dari data-* attributes
+            var modal = $(this);
+            // Set nilai pada modal berdasarkan data yang ada
+            modal.find('.modal-body #edit_kategori_sertifikat').val(button.data('kategori'));
+            modal.find('.modal-body #edit_tanggal_ujian').val(button.data('tgl_ujian'));
+            modal.find('.modal-body #edit_tanggal_sertifikat').val(button.data('tgl_pembuatan'));
         });
     </script>
 @endsection
