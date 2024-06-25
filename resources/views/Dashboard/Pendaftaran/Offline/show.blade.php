@@ -1124,6 +1124,8 @@
                                                                                 @method('PUT')
                                                                                 <input type="hidden" name="no_induk"
                                                                                     value="{{ $no_induk }}">
+                                                                                <input type="hidden" name="no_sertifikat"
+                                                                                    value="{{ $sertifikatData->no_sertifikat }}">
                                                                                 <div class="form-group">
                                                                                     <label
                                                                                         for="edit_kategori_sertifikat">Kategori

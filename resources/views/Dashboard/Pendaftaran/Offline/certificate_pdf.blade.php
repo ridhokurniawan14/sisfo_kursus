@@ -2,8 +2,8 @@
 <html>
 
 <head>
-    <link rel="icon" type="image/png" href="/img/Logo-PTCC.png">
     <title>Cetak Sertifikat</title>
+    <link rel="icon" type="image/png" href="{{ asset('img/Logo-PTCC.webp') }}">
     <style>
         body {
             font-family: Arial, sans-serif;

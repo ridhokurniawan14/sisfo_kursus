@@ -104,8 +104,6 @@ Route::middleware('auth')->group(function () {
     // HALAMAN PHOTO PESERTA DIDIK
     Route::resource('photostudent', PhotoStudentController::class);
     Route::put('/photostudent/update/{no_induk}', [PhotoStudentController::class, 'update'])->name('photostudent.update');
-
-    // Route::get('/data-pendaftar', [PendaftarController::class, 'getDatas'])->name('datas'); // Route untuk mengambil data
 });
 // VALIDASI SERTIFIKAT
 Route::get('/validate-certificate/{hash}', [SertifikatController::class, 'validateCertificate'])->name('validate.certificate')->middleware('guest');

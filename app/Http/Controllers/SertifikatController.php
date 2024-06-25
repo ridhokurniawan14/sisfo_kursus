@@ -87,10 +87,10 @@ class SertifikatController extends Controller
         $pdfPath = "certificate_pdf/{$merger_certificate}.pdf";
 
         // Hash the certificate number for the URL
-        $hashedCertificateNumber = Hash::make($no_sertifikat);
+        $hashedCertificateNumber = hash('sha256', $merger_certificate);
 
         // Generate QR code with the URL to the validation page including the hashed certificate number
-        $validationUrl = route('validate.certificate', ['hash' => $hashedCertificateNumber]);
+        $validationUrl = route('validate.certificate', $hashedCertificateNumber);
 
         $qrCode = QrCode::create($validationUrl)
             ->setEncoding(new Encoding('UTF-8'))
@@ -142,6 +142,7 @@ class SertifikatController extends Controller
             "data" => $data
         ]);
     }
+
 
     private function convertToRoman($num)
     {
@@ -476,29 +477,22 @@ class SertifikatController extends Controller
      */
     public function update(Request $request, $id)
     {
-        Log::info('Update request received for ID: ' . $id);
-
         $request->validate([
+            'no_sertifikat' => 'required',
             'kategori' => 'required',
             'tgl_ujian' => 'required|date',
             'tgl_pembuatan' => 'required|date',
+            'no_induk' => 'required',
         ]);
+
+        $no_sertifikat = $request->input('no_sertifikat');
         $kategori = $request->input('kategori');
         $tgl_pembuatan = $request->input('tgl_pembuatan');
         $no_induk = $request->input('no_induk');
 
-        // Cari data sertifikat berdasarkan ID
-        $sertifikat = Sertifikat::findOrFail($id);
-        Log::info('Found sertifikat: ' . $sertifikat->id);
-
-        // Hapus file lama setelah memastikan data valid
-        Storage::disk('public')->delete($sertifikat->qrcode);
-        Storage::disk('public')->delete($sertifikat->file);
-
         // Get student data
-        $student = Verification::where('no_induk', $request->input('no_induk'))->first();
+        $student = Verification::where('no_induk', $no_induk)->first();
         if (!$student) {
-            Log::error('Peserta didik tidak ditemukan: ' . $request->input('no_induk'));
             abort(404, 'Peserta didik tidak ditemukan');
         }
         $pil_prog = $student->pil_prog;
@@ -509,65 +503,66 @@ class SertifikatController extends Controller
         $bulanRomawi = $this->convertToRoman($bulan);
         $tahun = date('Y', strtotime($tgl_pembuatan));
 
-        Log::info('Found student: ' . $student->no_induk);
-
-        // Convert month to Roman numeral
-        $bulan = date('n', strtotime($request->input('tgl_pembuatan')));
-        $bulanRomawi = $this->convertToRoman($bulan);
-        $tahun = date('Y', strtotime($request->input('tgl_pembuatan')));
-
         // Determine merger_certificate format
-        if ($request->input('kategori') == 'ut') {
-            $merger_certificate = "{$sertifikat->no_sertifikat}-UT-$bulanRomawi-$tahun";
+        if ($kategori == 'ut') {
+            $merger_certificate = "$no_sertifikat-UT-$bulanRomawi-$tahun";
         } elseif ($pil_prog == 'paket') {
             $kd_paket_romawi = $this->convertToRoman($kd_paket);
-            $merger_certificate = "{$sertifikat->no_sertifikat}-L$kd_paket_romawi-$bulanRomawi-$tahun";
+            $merger_certificate = "$no_sertifikat-L$kd_paket_romawi-$bulanRomawi-$tahun";
         } elseif ($pil_prog == 'pilihan') {
-            $merger_certificate = "{$sertifikat->no_sertifikat}-PP-$bulanRomawi-$tahun";
+            $merger_certificate = "$no_sertifikat-PP-$bulanRomawi-$tahun";
         } else {
-            $merger_certificate = "{$sertifikat->no_sertifikat}-$bulanRomawi-$tahun";
+            $merger_certificate = "$no_sertifikat-$bulanRomawi-$tahun";
         }
 
-        // Generate QR code
-        $renderer = new ImageRenderer(
-            new RendererStyle(200),
-            new SvgImageBackEnd()
-        );
-        $writer = new Writer($renderer);
-        $qrcodePath = "qrcodes/{$merger_certificate}.svg";
-        $qrcodeImage = $writer->writeString($merger_certificate);
-
-        // Simpan QR code sebagai gambar
-        Storage::disk('public')->put($qrcodePath, $qrcodeImage);
-
-        // Generate PDF using Dompdf
-        $dompdf = new Dompdf();
-        $html = view('Dashboard.Pendaftaran.Offline.certificate_pdf', compact('merger_certificate', 'qrcodePath'))->render();
-        $dompdf->loadHtml($html);
-        $dompdf->render();
-
+        // Generate PDF path
         $pdfPath = "certificate_pdf/{$merger_certificate}.pdf";
-        Storage::disk('public')->put($pdfPath, $dompdf->output());
 
-        $hashedFileName = Hash::make($pdfPath);
+        // Hash the certificate number for the URL
+        $hashedCertificateNumber = hash('sha256', $merger_certificate);
 
-        // Update data in database
+        // Generate QR code with the URL to the validation page including the hashed certificate number
+        $validationUrl = route('validate.certificate', $hashedCertificateNumber);
+
+        $qrCode = QrCode::create($validationUrl)
+            ->setEncoding(new Encoding('UTF-8'))
+            ->setErrorCorrectionLevel(ErrorCorrectionLevel::Low)
+            ->setSize(200)
+            ->setMargin(10);
+
+        $writer = new PngWriter();
+        $qrCodePath = "qrcodes/{$merger_certificate}.png";
+        $qrCodeResult = $writer->write($qrCode);
+        $qrCodeImage = $qrCodeResult->getString();
+        Storage::disk('public')->put($qrCodePath, $qrCodeImage);
+
+        // Debug: Log Image found
+        Log::info('Image found:', ['success' => $validationUrl]);
+
+        // Find the existing certificate
+        $sertifikat = Sertifikat::find($id);
+        if (!$sertifikat) {
+            abort(404, 'Sertifikat tidak ditemukan');
+        }
+
+        // Delete the old QR code file
+        Storage::disk('public')->delete($sertifikat->qrcode);
+
+        // Update the database record
         $sertifikat->update([
-            'no_sertifikat' => $sertifikat->no_sertifikat,
-            'kategori' => $request->input('kategori'),
+            'no_sertifikat' => $no_sertifikat,
+            'kategori' => $kategori,
             'tgl_ujian' => $request->input('tgl_ujian'),
-            'tgl_pembuatan' => $request->input('tgl_pembuatan'),
-            'no_induk' => $request->input('no_induk'),
-            'merger_certificate' => str_replace('-', '/', $merger_certificate),
-            'qrcode' => $qrcodePath,
-            'file' => $pdfPath,
-            'hash_file' => $hashedFileName,
+            'tgl_pembuatan' => $tgl_pembuatan,
+            'no_induk' => $no_induk,
+            'merger_certificate' => str_replace('-', '/', $merger_certificate), // Save in the original format to the DB
+            'qrcode' => $qrCodePath,
+            'hash_file' => $hashedCertificateNumber,
         ]);
-
-        Log::info('Sertifikat updated successfully for ID: ' . $id);
 
         return redirect()->back()->with('message', 'Sertifikat berhasil diperbarui');
     }
+
 
     /**
      * Remove the specified resource from storage.
