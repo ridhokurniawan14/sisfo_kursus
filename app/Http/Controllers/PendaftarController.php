@@ -651,8 +651,39 @@ class PendaftarController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Pendaftar $pendaftar)
+    public function destroy($no_induk)
     {
-        //
+        // Gunakan transaction untuk memastikan semua query berhasil atau tidak ada yang dieksekusi
+        DB::beginTransaction();
+
+        try {
+            // Hapus data dari tabel `tb_pendaftar_verifikasi`, `tb_foto`, `tb_sertifikat`, `tb_nilai`
+            DB::table('tb_pendaftar_verifikasi')->where('no_induk', $no_induk)->delete();
+            DB::table('tb_foto')->where('no_induk', $no_induk)->delete();
+            DB::table('tb_sertifikat')->where('no_induk', $no_induk)->delete();
+            Nilai::where('no_induk', $no_induk)->delete();
+
+            // Hapus data dari tabel `tb_ppdb`
+            DB::table('tb_ppdb')->where('no_induk', $no_induk)->delete();
+
+            // Hapus data dari tabel `tb_penilaian`
+            DB::table('tb_penilaian')->where('no_induk', $no_induk)->delete();
+
+            // Hapus data dari tabel `tb_angket`
+            DB::table('tb_angket')->where('no_induk', $no_induk)->delete();
+
+            // Hapus data dari tabel `tb_pendaftar`
+            Pendaftar::where('no_induk', $no_induk)->delete();
+
+            // Commit transaction
+            DB::commit();
+
+            return redirect()->route('pendaftaran.index')->with('message', 'Data berhasil dihapus');
+        } catch (\Exception $e) {
+            // Rollback transaction jika terjadi error
+            DB::rollback();
+
+            return redirect()->route('pendaftaran.index')->with('error', 'Terjadi kesalahan saat menghapus data');
+        }
     }
 }
