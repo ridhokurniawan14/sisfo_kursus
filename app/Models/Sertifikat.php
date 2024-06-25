@@ -13,6 +13,6 @@ class Sertifikat extends Model
 
     protected $fillable = [
         'no_sertifikat', 'kategori', 'tgl_ujian', 'tgl_pembuatan', 'no_induk',
-        'merger_certificate', 'qrcode', 'file', 'hash_file'
+        'merger_certificate', 'qrcode', 'hash_file'
     ];
 }

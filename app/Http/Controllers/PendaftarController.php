@@ -454,8 +454,6 @@ class PendaftarController extends Controller
         ]);
     }
 
-
-
     public function saveNilai(Request $request)
     {
         // Validasi input

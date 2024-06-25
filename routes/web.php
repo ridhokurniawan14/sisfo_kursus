@@ -100,9 +100,12 @@ Route::middleware('auth')->group(function () {
     Route::post('/nilai/updateAll', [PendaftarController::class, 'updateAllNilai'])->name('nilai.updateAll');
     // SERTIFIKAT
     Route::resource('sertifikat', SertifikatController::class);
+    Route::get('sertifikat/{no_induk}', [SertifikatController::class, 'show'])->name('sertifikat.show');
     // HALAMAN PHOTO PESERTA DIDIK
     Route::resource('photostudent', PhotoStudentController::class);
     Route::put('/photostudent/update/{no_induk}', [PhotoStudentController::class, 'update'])->name('photostudent.update');
 
     // Route::get('/data-pendaftar', [PendaftarController::class, 'getDatas'])->name('datas'); // Route untuk mengambil data
 });
+// VALIDASI SERTIFIKAT
+Route::get('/validate-certificate/{hash}', [SertifikatController::class, 'validateCertificate'])->name('validate.certificate')->middleware('guest');

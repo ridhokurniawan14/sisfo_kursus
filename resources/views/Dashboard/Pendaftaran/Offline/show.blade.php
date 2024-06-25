@@ -457,6 +457,11 @@
                                                                             class="profile-data">{{ $data->kewarganegaraan = 'wni' || 'WNI' ? 'Warga Negara Indonesia (WNI)' : 'Warga Negara Asing (WNA)' }}</span>
                                                                     </div>
                                                                     <div class="profile-row">
+                                                                        <span class="profile-label">Agama</span>
+                                                                        <span
+                                                                            class="profile-data">{{ !empty($data->agama) ? ucwords($data->agama) : '-' }}</span>
+                                                                    </div>
+                                                                    <div class="profile-row">
                                                                         <span class="profile-label">Email</span>
                                                                         <span
                                                                             class="profile-data">{{ !empty($data->email) ? $data->email : '-' }}</span>
@@ -1016,7 +1021,7 @@
                                             <div class="container">
                                                 <div class="row">
                                                     <!-- Bagian kiri untuk data -->
-                                                    <div class="col-md-8">
+                                                    <div class="col-md-12">
                                                         <h4><i class="fas fa-certificate"></i> Data Sertifikat</h4>
                                                         <form
                                                             action="{{ $isReadOnly ? route('sertifikat.update', $sertifikatData->id) : route('sertifikat.store') }}"
@@ -1080,7 +1085,13 @@
                                                                 @endif
                                                             </div>
                                                             @if ($isReadOnly)
-                                                                <button type="button" class="btn btn-warning float-right"
+                                                                <a id="printButton" target="_blank"
+                                                                    href="{{ route('sertifikat.show', ['no_induk' => $no_induk]) }}"
+                                                                    class="btn btn-primary float-right">
+                                                                    <i class="fas fa-print"></i> Print Sertifikat
+                                                                </a>
+                                                                <button type="button"
+                                                                    class="btn btn-warning float-right  mr-2"
                                                                     data-toggle="modal" data-target="#editModal"><i
                                                                         class="fas fa-edit"></i> Edit Data</button>
                                                             @else
@@ -1112,7 +1123,7 @@
                                                                                 @csrf
                                                                                 @method('PUT')
                                                                                 <input type="hidden" name="no_induk"
-                                                                                value="{{ $no_induk }}">
+                                                                                    value="{{ $no_induk }}">
                                                                                 <div class="form-group">
                                                                                     <label
                                                                                         for="edit_kategori_sertifikat">Kategori
@@ -1168,20 +1179,6 @@
 
                                                     </div>
                                                     <!-- /.col-md-8 -->
-
-                                                    <!-- Bagian kanan untuk tampilan sertifikat -->
-                                                    <div class="col-md-4">
-                                                        <h4>Tampilan Sertifikat</h4>
-                                                        <iframe id="pdfViewer"
-                                                            src="{{ asset('storage/sertifikat/example-certifikate.pdf') }}"
-                                                            width="100%" height="200px"></iframe>
-                                                        <div class="mt-2">
-                                                            <button onclick="downloadPDF()" class="btn btn-primary">
-                                                                <i class="fas fa-download"></i> Download
-                                                            </button>
-                                                        </div>
-                                                    </div>
-                                                    <!-- /.col-md-4 -->
                                                 </div>
                                             </div>
                                         </div>
@@ -1332,8 +1329,17 @@
                 });
             }
         });
-    </script>
-    <script>
+
+        function openPDF(pdfUrl) {
+            window.open(pdfUrl, '_blank');
+        }
+
+        function downloadPDF(pdfUrl, fileName) {
+            const link = document.createElement('a');
+            link.href = pdfUrl;
+            link.download = fileName;
+            link.click();
+        }
         // Jika menggunakan modal, tambahkan script untuk menangani tampilan modal
         $('#editModal').on('show.bs.modal', function(event) {
             var button = $(event.relatedTarget); // Tombol yang membuka modal
@@ -1343,6 +1349,22 @@
             modal.find('.modal-body #edit_kategori_sertifikat').val(button.data('kategori'));
             modal.find('.modal-body #edit_tanggal_ujian').val(button.data('tgl_ujian'));
             modal.find('.modal-body #edit_tanggal_sertifikat').val(button.data('tgl_pembuatan'));
+        });
+    </script>
+    <script>
+        document.getElementById('printButton').addEventListener('click', function(event) {
+            event.preventDefault(); // Menghentikan default action dari link
+
+            var url = this.getAttribute('href'); // Mengambil URL dari atribut href
+
+            // Buka halaman baru
+            var newWindow = window.open(url, '_blank');
+
+            // Setelah halaman baru terbuka, tunggu sebentar untuk memastikan halaman terload sepenuhnya
+            newWindow.onload = function() {
+                // Panggil fungsi print untuk mencetak halaman baru tersebut
+                newWindow.print();
+            };
         });
     </script>
 @endsection
