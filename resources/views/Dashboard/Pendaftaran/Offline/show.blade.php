@@ -682,7 +682,7 @@
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <a href="/pendaftaran/{{ $no_induk }}/edit"
+                                                <a href="/admin/pendaftaran/{{ $no_induk }}/edit"
                                                     class="btn btn-warning float-right"><i class="bi bi-pencil-fill"></i>
                                                     Edit Data</a>
                                             </div>
@@ -874,7 +874,7 @@
                                                 <div class="col-12">
                                                     <a href="javascript:window.print();" rel="noopener"
                                                         class="btn btn-default"><i class="fas fa-print"></i> Print</a>
-                                                    <a href="/pendaftaran/verifikasi/{{ $no_induk }}/edit"
+                                                    <a href="/admin/pendaftaran/verifikasi/{{ $no_induk }}/edit"
                                                         class="btn btn-warning float-right"><i class="bi bi-cash"></i>
                                                         Pembayaran</a>
                                                 </div>

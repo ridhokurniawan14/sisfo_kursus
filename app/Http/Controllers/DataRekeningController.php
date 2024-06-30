@@ -41,7 +41,7 @@ class DataRekeningController extends Controller
 
         $dataRekening = DataRekening::create($validateData);
 
-        return redirect('/data-rekening')->with('message', 'Data berhasil disimpan!');
+        return redirect('/admin/data-rekening')->with('message', 'Data berhasil disimpan!');
     }
 
     /**
@@ -80,7 +80,7 @@ class DataRekeningController extends Controller
         // Update data utama
         $dataRekening->update($validateData);
 
-        return redirect('/data-rekening')->with('message', 'Data berhasil diupdate!');
+        return redirect('/admin/data-rekening')->with('message', 'Data berhasil diupdate!');
     }
 
     /**
@@ -94,6 +94,6 @@ class DataRekeningController extends Controller
         // Catat aktivitas dalam log (opsional)
         // ActivityLogger::logActivity('delete', 'Kategori Kode Surat Masuk dengan deskripsi '.ucwords($dataRekening->kode), '');
 
-        return redirect('/data-rekening')->with('message', 'Data berhasil dihapus!');
+        return redirect('/admin/data-rekening')->with('message', 'Data berhasil dihapus!');
     }
 }

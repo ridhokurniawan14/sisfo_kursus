@@ -20,8 +20,8 @@ class PengumumanController extends Controller
             "title" => "Data Lembaga",
             "tab_title" => "Data Pengumuman",
             "datas" => DB::table('tb_pengumuman')
-                        ->orderByDesc('id') // Mengurutkan berdasarkan kolom 'id', yang mungkin merupakan kolom yang menunjukkan urutan data yang pertama dimasukkan
-                        ->get()
+                ->orderByDesc('id') // Mengurutkan berdasarkan kolom 'id', yang mungkin merupakan kolom yang menunjukkan urutan data yang pertama dimasukkan
+                ->get()
         ]);
     }
 
@@ -35,7 +35,7 @@ class PengumumanController extends Controller
 
     /**
      * Store a newly created resource in storage.
-     */ 
+     */
     public function store(Request $request)
     {
         // Validasi data yang diterima dari request
@@ -58,8 +58,8 @@ class PengumumanController extends Controller
         // Menyimpan data ke dalam database dan langsung mendapatkan objek Pengumuman yang dibuat
         $pengumuman = Pengumuman::create($validatedData);
 
-        // Redirect ke halaman '/pengumuman' dengan pesan sukses
-        return redirect('/pengumuman')->with('message', 'Data berhasil disimpan!');
+        // Redirect ke halaman '/admin/pengumuman' dengan pesan sukses
+        return redirect('/admin/pengumuman')->with('message', 'Data berhasil disimpan!');
     }
 
     /**
@@ -80,8 +80,8 @@ class PengumumanController extends Controller
             "title" => "Data Lembaga",
             "tab_title" => "Data Pengumuman",
             "datas" => DB::table('tb_pengumuman')
-                        ->orderByDesc('id') // Mengurutkan berdasarkan kolom 'id', yang mungkin merupakan kolom yang menunjukkan urutan data yang pertama dimasukkan
-                        ->get(),
+                ->orderByDesc('id') // Mengurutkan berdasarkan kolom 'id', yang mungkin merupakan kolom yang menunjukkan urutan data yang pertama dimasukkan
+                ->get(),
             "cari" => $pengumuman,
         ]);
     }
@@ -115,8 +115,8 @@ class PengumumanController extends Controller
         // Update data ke dalam database
         $pengumuman->update($validatedData);
 
-        // Redirect ke halaman '/pengumuman' dengan pesan sukses
-        return redirect('/pengumuman')->with('message', 'Data berhasil diperbarui!');
+        // Redirect ke halaman '/admin/pengumuman' dengan pesan sukses
+        return redirect('/admin/pengumuman')->with('message', 'Data berhasil diperbarui!');
     }
 
     /**
@@ -125,21 +125,21 @@ class PengumumanController extends Controller
     public function destroy(Pengumuman $pengumuman)
     {
         // Periksa apakah pengguna ada
-        if($pengumuman) {
+        if ($pengumuman) {
             // Hapus foto jika ada
             if ($pengumuman->foto) {
                 // Menghapus foto dari storage
                 Storage::delete('public/' . $pengumuman->foto);
             }
-            
+
             // Hapus pengguna
             $pengumuman->delete();
 
             // Redirect dengan pesan berhasil
-            return redirect('/pengumuman')->with('message', 'Data Berhasil Dihapus!');
+            return redirect('/admin/pengumuman')->with('message', 'Data Berhasil Dihapus!');
         } else {
             // Redirect dengan pesan error jika pengguna tidak ditemukan
-            return redirect('/pengumuman')->with('error', 'Data tidak ditemukan!');
+            return redirect('/admin/pengumuman')->with('error', 'Data tidak ditemukan!');
         }
     }
 }

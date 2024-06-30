@@ -48,7 +48,8 @@ class PendaftarController extends Controller
     }
     public function export()
     {
-        return Excel::download(new DataPendaftarExport, 'data_pendaftar.xlsx');
+        $date = date('d M Y');
+        return Excel::download(new DataPendaftarExport, 'Data Pendaftar (' . $date . ').xlsx');
     }
 
     /**
@@ -91,7 +92,7 @@ class PendaftarController extends Controller
     {
         $CostRegistration = BiayaDaftar::latest()->first();
         if (is_null($CostRegistration)) {
-            return redirect('/biaya-pendaftaran')->with('info', 'Silahkan mengisi biaya pendaftaran');
+            return redirect('/admin/biaya-pendaftaran')->with('info', 'Silahkan mengisi biaya pendaftaran');
         } else {
             $pendaftar = Pendaftar::where('no_induk', $no_induk)->firstOrFail();
             $data = [
@@ -171,7 +172,7 @@ class PendaftarController extends Controller
         Verification::create($validatedData);
 
         // Redirect setelah simpan
-        return redirect('/pendaftaran')->with('message', 'Data berhasil disimpan!');
+        return redirect('/admin/pendaftaran')->with('message', 'Data berhasil disimpan!');
     }
     public function UpdateVerifikasi(Request $request, $no_induk)
     {
@@ -233,7 +234,7 @@ class PendaftarController extends Controller
         $verification->save();
 
         // Redirect setelah simpan
-        return redirect('/pendaftaran/' . $no_induk)->with('message', 'Data Pembayaran berhasil diperbarui!');
+        return redirect('/admin/pendaftaran/' . $no_induk)->with('message', 'Data Pembayaran berhasil diperbarui!');
     }
 
     /**
@@ -543,7 +544,7 @@ class PendaftarController extends Controller
     {
         $CostRegistration = BiayaDaftar::latest()->first();
         if (is_null($CostRegistration)) {
-            return redirect('/biaya-pendaftaran')->with('info', 'Silahkan mengisi biaya pendaftaran');
+            return redirect('/admin/biaya-pendaftaran')->with('info', 'Silahkan mengisi biaya pendaftaran');
         } else {
             // Kembali ke halaman pendaftaran
             return view('dashboard.pendaftaran.offline.editverifikasi', [
@@ -639,7 +640,7 @@ class PendaftarController extends Controller
             Log::info('Status update:', ['success' => $updateSuccess]);
 
             // Redirect ke halaman verifikasi
-            return redirect('/pendaftaran')->with('message', 'Biodata berhasil diperbarui!');
+            return redirect('/admin/pendaftaran')->with('message', 'Biodata berhasil diperbarui!');
         } catch (\Exception $e) {
             // Tangani kesalahan dan log error
             Log::error('Error saat update data:', ['error' => $e->getMessage()]);

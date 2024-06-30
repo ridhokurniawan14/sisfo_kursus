@@ -22,9 +22,9 @@ class PendaftarOnlineController extends Controller
             "title" => "Pendaftar Online",
             "tab_title" => "Data Pendaftar",
             "datas" => DB::table('tb_ppdb')
-                        ->orderByDesc('id') // Mengurutkan berdasarkan kolom 'id', yang mungkin merupakan kolom yang menunjukkan urutan data yang pertama dimasukkan
-                        ->where('no_induk','n')
-                        ->get()
+                ->orderByDesc('id') // Mengurutkan berdasarkan kolom 'id', yang mungkin merupakan kolom yang menunjukkan urutan data yang pertama dimasukkan
+                ->where('no_induk', 'n')
+                ->get()
         ]);
     }
 
@@ -53,7 +53,7 @@ class PendaftarOnlineController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request, $id) : RedirectResponse
+    public function store(Request $request, $id): RedirectResponse
     {
         // Validasi data input
         $validatedData = $request->validate([
@@ -118,10 +118,10 @@ class PendaftarOnlineController extends Controller
 
         // Update no_induk di database PendaftarOnline berdasarkan id
         $po = PendaftarOnline::where('id', $id)->update(['no_induk' => $validatedData['no_induk']]);
-        
+
         // Redirect ke halaman verifikasi
         return redirect()->route('pendaftaran.verifikasi', ['no_induk' => $pendaftar->no_induk])
-                        ->with('message', 'Data pendaftar berhasil disimpan. Silahkan Verifikasi');
+            ->with('message', 'Data pendaftar berhasil disimpan. Silahkan Verifikasi');
     }
 
     /**
@@ -151,7 +151,7 @@ class PendaftarOnlineController extends Controller
         return response($pdf->output(), 200)
             ->header('Content-Type', 'application/pdf');
     }
-    
+
     public function show(PendaftarOnline $pendaftarOnline)
     {
         abort(404);
@@ -180,9 +180,9 @@ class PendaftarOnlineController extends Controller
     {
         if ($pendaftarOnline->exists()) {
             $pendaftarOnline->delete();
-            return redirect('pendaftar-online')->with('message', 'Data Berhasil Dihapus!');
+            return redirect('/admin/pendaftar-online')->with('message', 'Data Berhasil Dihapus!');
         } else {
-            return redirect('pendaftar-online')->with('error', 'Data Tidak Ditemukan!');
+            return redirect('/admin/pendaftar-online')->with('error', 'Data Tidak Ditemukan!');
         }
     }
 }

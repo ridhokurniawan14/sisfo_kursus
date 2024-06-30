@@ -4,12 +4,22 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Spatie\Activitylog\LogOptions;
+use Spatie\Activitylog\Traits\LogsActivity;
 
 class Pengumuman extends Model
 {
-    use HasFactory;
+    use HasFactory, LogsActivity;
     protected $table = 'tb_pengumuman'; // Ganti 'nama_tabel_anda' dengan nama tabel yang sebenarnya
     protected $primaryKey = 'id';
+    protected static $logAttributes = [
+        'jenis',
+        'judul',
+        'ket',
+        'untuk',
+        'foto',
+    ];
+
     /**
      * The attributes that are mass assignable.
      *
@@ -36,5 +46,19 @@ class Pengumuman extends Model
             $pengumuman->untuk = strtolower($pengumuman->untuk);
             $pengumuman->created_by = strtolower($pengumuman->created_by);
         });
+    }
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+            ->logOnly([
+                'jenis',
+                'judul',
+                'ket',
+                'untuk',
+                'foto',
+            ]) // Atribut yang dilacak
+            ->useLogName('Pengumuman') // Nama log opsional
+            ->logOnlyDirty()    // Hanya mencatat perubahan
+            ->dontSubmitEmptyLogs(); // Tidak mencatat jika tidak ada perubahan
     }
 }

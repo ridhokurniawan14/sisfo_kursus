@@ -6,10 +6,6 @@ use App\Models\Nilai;
 use App\Models\Pendaftar;
 use App\Models\Sertifikat;
 use App\Models\Verification;
-use BaconQrCode\Renderer\Image\SvgImageBackEnd;
-use BaconQrCode\Renderer\ImageRenderer;
-use BaconQrCode\Renderer\RendererStyle\RendererStyle;
-use BaconQrCode\Writer;
 use Dompdf\Dompdf;
 use Dompdf\Options;
 use Endroid\QrCode\Encoding\Encoding;
@@ -18,7 +14,6 @@ use Endroid\QrCode\QrCode;
 use Endroid\QrCode\Writer\PngWriter;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 

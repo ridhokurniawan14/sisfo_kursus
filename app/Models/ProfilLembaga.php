@@ -4,12 +4,57 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Spatie\Activitylog\LogOptions;
+use Spatie\Activitylog\Traits\LogsActivity;
 
 class ProfilLembaga extends Model
 {
-    use HasFactory;
+    use HasFactory, LogsActivity;
     protected $table = 'tb_profile'; // Ganti 'nama_tabel_anda' dengan nama tabel yang sebenarnya
     protected $primaryKey = 'id';
+    protected static $logAttributes = [
+        'nm_lembaga',
+        'npsn',
+        'bentuk',
+        'sts_lembaga',
+        'sts',
+        'sk_izin',
+        'sk_pendirian',
+        'tgl_sk_pendirian',
+        'tgl_sk_izin',
+        'alamat',
+        'rt',
+        'rw',
+        'kel',
+        'kec',
+        'kd_pos',
+        'kab',
+        'provinsi',
+        'no_tel',
+        'no_fax',
+        'email',
+        'web',
+        'but_kus',
+        'nm_yayasan',
+        'nm_pajak',
+        'no_npwp',
+        'nm_bank',
+        'bank_cabang',
+        'nm_rekening',
+        'luas_tanah',
+        'luas_tanah_bkn',
+        'kat_lembaga',
+        'ms_ijin',
+        'sumber_dana',
+        'no_sertifikat',
+        'tgl_sertifikat',
+        'no_sk_akreditasi',
+        'mulai_berlaku',
+        'ms_akreditasi',
+        'hasil',
+        'penilai',
+        'logo',
+    ];
     /**
      * The attributes that are mass assignable.
      *
@@ -56,6 +101,7 @@ class ProfilLembaga extends Model
         'ms_akreditasi',
         'hasil',
         'penilai',
+        'logo',
     ];
 
     protected static function boot()
@@ -90,5 +136,55 @@ class ProfilLembaga extends Model
             $profilLembaga->penilai = strtolower($profilLembaga->penilai);
             // Masukkan kolom lain yang ingin Anda konversi ke huruf kecil di sini
         });
+    }
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+            ->logOnly([
+                'nm_lembaga',
+                'npsn',
+                'bentuk',
+                'sts_lembaga',
+                'sts',
+                'sk_izin',
+                'sk_pendirian',
+                'tgl_sk_pendirian',
+                'tgl_sk_izin',
+                'alamat',
+                'rt',
+                'rw',
+                'kel',
+                'kec',
+                'kd_pos',
+                'kab',
+                'provinsi',
+                'no_tel',
+                'no_fax',
+                'email',
+                'web',
+                'but_kus',
+                'nm_yayasan',
+                'nm_pajak',
+                'no_npwp',
+                'nm_bank',
+                'bank_cabang',
+                'nm_rekening',
+                'luas_tanah',
+                'luas_tanah_bkn',
+                'kat_lembaga',
+                'ms_ijin',
+                'sumber_dana',
+                'no_sertifikat',
+                'tgl_sertifikat',
+                'no_sk_akreditasi',
+                'mulai_berlaku',
+                'ms_akreditasi',
+                'hasil',
+                'penilai',
+                'logo',
+            ]) // Atribut yang dilacak
+            ->useLogName('Profil Lembaga') // Nama log opsional
+            ->logOnlyDirty()    // Hanya mencatat perubahan
+            ->dontSubmitEmptyLogs(); // Tidak mencatat jika tidak ada perubahan
     }
 }

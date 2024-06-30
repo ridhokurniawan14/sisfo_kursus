@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <title>404 | Page Not Found</title>
     <link rel="icon" type="image/png" href="/img/Logo-PTCC.png">
@@ -52,11 +53,13 @@
         }
     </style>
 </head>
+
 <body>
     <div class="container">
         <h1>404</h1>
         <p>Oops! The page you are looking for does not exist.</p>
-        <p><a href="{{ route('login') }}">Go back to the homepage</a></p>
+        <p><a href="/">Go back to the homepage</a></p>
     </div>
 </body>
+
 </html>

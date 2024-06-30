@@ -21,8 +21,8 @@ class UserController extends Controller
             "title" => "Data Lembaga",
             "tab_title" => "Data Personalia",
             "datas" => DB::table('tb_pendidik')
-                        ->orderBy('id') // Mengurutkan berdasarkan kolom 'id', yang mungkin merupakan kolom yang menunjukkan urutan data yang pertama dimasukkan
-                        ->get()
+                ->orderBy('id') // Mengurutkan berdasarkan kolom 'id', yang mungkin merupakan kolom yang menunjukkan urutan data yang pertama dimasukkan
+                ->get()
         ]);
     }
 
@@ -59,11 +59,11 @@ class UserController extends Controller
             'posisi'        => 'required',
             'tgl_masuk'     => 'required|date',
             'username'      => 'required|unique:tb_pendidik',
-            'password'      => ['required','min:6'],
+            'password'      => ['required', 'min:6'],
             'nik'           => 'required|numeric|digits:16|unique:tb_pendidik',
             'nm_ibu'        => 'nullable',
             'foto'          => ['mimes:jpeg,jpg,png,webp', 'max:5120'], // max:5120 artinya maksimum 2MB (5120 KB)
-        ]);        
+        ]);
 
         // Mengonversi semua data input menjadi huruf kecil
         $validateData['nm_lengkap'] = strtolower($validateData['nm_lengkap']);
@@ -78,20 +78,20 @@ class UserController extends Controller
         $validateData['nm_ibu'] = strtolower($validateData['nm_ibu']);
 
         $validateData['password'] = Hash::make($validateData['password']);
-        
+
         if ($request->file('foto')) {
             // Menyimpan file dengan nama acak di dalam direktori admin-images di dalam direktori public
             $validateData['foto'] = $request->file('foto')->store('admin-images', 'public');
             // $validateData['foto'] = $request->file('foto')->storeAs('admin-images', 'public');
-        }                      
-        
+        }
+
         User::create($validateData);
-        
+
         // Catat aktivitas dalam log
         // ActivityLogger::logActivity('create', 'Admin dengan nama '.ucwords($request->name), $request->file('foto'));
 
         // dd('Registrasi Berhasil'); //Cara cek berhasil atau tidaknya
-        return redirect('/user')->with('message', 'Data Berhasil Disimpan!');
+        return redirect('/admin/user')->with('message', 'Data Berhasil Disimpan!');
     }
 
     /**
@@ -100,17 +100,29 @@ class UserController extends Controller
     public function show(User $user)
     {
         $userData = User::select(
-            'tb_pendidik.nm_lengkap', 'tb_pendidik.gender', 'tb_pendidik.tmp_lahir',
-            'tb_pendidik.tgl_lahir', 'tb_pendidik.agama', 'tb_pendidik.status',
-            'tb_pendidik.alamat', 'tb_pendidik.pend_akhir', 'tb_pendidik.jurusan',
-            'tb_pendidik.email', 'tb_pendidik.no_hp', 'tb_pendidik.posisi',
-            'tb_pendidik.tgl_masuk', 'tb_pendidik.username', 'tb_pendidik.password',
-            'tb_pendidik.nik', 'tb_pendidik.nm_ibu', 'tb_pendidik.foto',
+            'tb_pendidik.nm_lengkap',
+            'tb_pendidik.gender',
+            'tb_pendidik.tmp_lahir',
+            'tb_pendidik.tgl_lahir',
+            'tb_pendidik.agama',
+            'tb_pendidik.status',
+            'tb_pendidik.alamat',
+            'tb_pendidik.pend_akhir',
+            'tb_pendidik.jurusan',
+            'tb_pendidik.email',
+            'tb_pendidik.no_hp',
+            'tb_pendidik.posisi',
+            'tb_pendidik.tgl_masuk',
+            'tb_pendidik.username',
+            'tb_pendidik.password',
+            'tb_pendidik.nik',
+            'tb_pendidik.nm_ibu',
+            'tb_pendidik.foto',
             'tb_hak_akses.hak_akses'
         )
-        ->join('tb_hak_akses', 'tb_pendidik.posisi', '=', 'tb_hak_akses.id')
-        ->where('tb_pendidik.email', $user->email)
-        ->first();
+            ->join('tb_hak_akses', 'tb_pendidik.posisi', '=', 'tb_hak_akses.id')
+            ->where('tb_pendidik.email', $user->email)
+            ->first();
 
         return view('dashboard.data-master.personalia.show', [
             "halaman" => "Profile Personalia",
@@ -153,7 +165,7 @@ class UserController extends Controller
             'no_hp'         => 'required|numeric',
             'posisi'        => 'required',
             'tgl_masuk'     => 'required|date',
-            'password'      => ['required','min:6'],
+            'password'      => ['required', 'min:6'],
             'nm_ibu'        => 'nullable',
         ];
 
@@ -169,7 +181,7 @@ class UserController extends Controller
 
         // Periksa apakah ada perubahan alamat email
         if ($request->email != $user->email) {
-            $rules['email'] = ['required', 'email:dns','unique:tb_pendidik'];
+            $rules['email'] = ['required', 'email:dns', 'unique:tb_pendidik'];
         }
 
         // Jika ada file yang diunggah, tambahkan aturan validasi untuk foto
@@ -197,7 +209,7 @@ class UserController extends Controller
         // Update data pengguna
         $user->update($validatedData);
 
-        return redirect('/user')->with('message', 'Data Berhasil Diupdate!');
+        return redirect('/admin/user')->with('message', 'Data Berhasil Diupdate!');
     }
 
     /**
@@ -206,7 +218,7 @@ class UserController extends Controller
     public function destroy(User $user)
     {
         // Periksa apakah pengguna ada
-        if($user) {
+        if ($user) {
             // Hapus foto jika ada
             if ($user->foto) {
                 // Menghapus foto dari storage
@@ -216,10 +228,10 @@ class UserController extends Controller
             $user->delete();
 
             // Redirect dengan pesan berhasil
-            return redirect('/user')->with('message', 'Data Berhasil Dihapus!');
+            return redirect('/admin/user')->with('message', 'Data Berhasil Dihapus!');
         } else {
             // Redirect dengan pesan error jika pengguna tidak ditemukan
-            return redirect('/user')->with('error', 'Data tidak ditemukan!');
+            return redirect('/admin/user')->with('error', 'Data tidak ditemukan!');
         }
     }
     public function gantipassword()
@@ -251,26 +263,6 @@ class UserController extends Controller
             'password' => Hash::make($request->newpassword)
         ]);
 
-        return redirect('/ganti-password')->with('message', 'Password berhasil Diperbarui!');
+        return redirect('/admin/ganti-password')->with('message', 'Password berhasil Diperbarui!');
     }
-    // public function updatepassword(Request $request)
-    // {
-    //     $request->validate([
-    //         'oldpassword' => ['required', 'min:6'],
-    //         'newpassword' => ['required', 'min:6', 'different:oldpassword'],
-    //         'verpassword' => ['required', 'same:newpassword'],
-    //     ]);
-
-    //     // Periksa apakah password lama cocok dengan password pengguna
-    //     if (!Hash::check($request->oldpassword, auth()->user()->password)) {
-    //         return back()->withErrors(['oldpassword' => 'Password lama tidak cocok!!'])->withInput();
-    //     }
-
-    //     // Update password pengguna
-    //     auth()->user()->update([
-    //         'password' => Hash::make($request->newpassword)
-    //     ]);
-
-    //     return redirect('/ganti-password')->with('message', 'Password berhasil Diperbarui!');
-    // }
 }

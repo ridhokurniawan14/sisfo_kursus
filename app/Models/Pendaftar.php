@@ -4,12 +4,15 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Spatie\Activitylog\LogOptions;
+use Spatie\Activitylog\Traits\LogsActivity;
 
 class Pendaftar extends Model
 {
-    use HasFactory;
+    use HasFactory, LogsActivity;
     protected $table = 'tb_pendaftar'; // Ganti 'nama_tabel_anda' dengan nama tabel yang sebenarnya
     protected $primaryKey = 'id';
+    protected static $logAttributes = ['no_induk', 'nm_lengkap'];
     /**
      * The attributes that are mass assignable.
      *
@@ -62,12 +65,12 @@ class Pendaftar extends Model
         'pek_wali',
         'alamat_wali',
         'hp_wali'
-    ];    
+    ];
 
     protected static function boot()
     {
         parent::boot();
-    
+
         // Menambahkan event listener untuk event 'saving'
         static::saving(function ($model) {
             foreach ($model->getAttributes() as $key => $value) {
@@ -77,5 +80,13 @@ class Pendaftar extends Model
                 }
             }
         });
-    }    
+    }
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+            ->logOnly(['no_induk', 'nm_lengkap']) // Atribut yang dilacak
+            ->useLogName('Peserta Didik') // Nama log opsional
+            ->logOnlyDirty()    // Hanya mencatat perubahan
+            ->dontSubmitEmptyLogs(); // Tidak mencatat jika tidak ada perubahan
+    }
 }

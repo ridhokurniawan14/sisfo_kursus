@@ -4,14 +4,30 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Spatie\Activitylog\LogOptions;
+use Spatie\Activitylog\Traits\LogsActivity;
 
 class Verification extends Model
 {
-    use HasFactory;
+    use HasFactory, LogsActivity;
 
     protected $table = 'tb_pendaftar_verifikasi'; // Use the correct table name
     protected $primaryKey = 'id';
     protected $appends = ['angsuran_count'];
+    protected static $logAttributes = [
+        'no_induk',
+        'pil_prog',
+        'angsuran1',
+        'angsuran2',
+        'angsuran3',
+        'angsuran4',
+        'angsuran5',
+        'biaya_kursus',
+        'biaya_daftar',
+        'discount',
+        'tot_biaya',
+        'kekurangan',
+    ];
 
     /**
      * The attributes that are mass assignable.
@@ -73,5 +89,26 @@ class Verification extends Model
             }
         }
         return $count;
+    }
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+            ->logOnly([
+                'no_induk',
+                'pil_prog',
+                'angsuran1',
+                'angsuran2',
+                'angsuran3',
+                'angsuran4',
+                'angsuran5',
+                'biaya_kursus',
+                'biaya_daftar',
+                'discount',
+                'tot_biaya',
+                'kekurangan',
+            ]) // Atribut yang dilacak
+            ->useLogName('Verifikasi Data') // Nama log opsional
+            ->logOnlyDirty()    // Hanya mencatat perubahan
+            ->dontSubmitEmptyLogs(); // Tidak mencatat jika tidak ada perubahan
     }
 }

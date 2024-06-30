@@ -11,7 +11,7 @@
                     <div class="card">
                         <div class="card-header d-flex align-items-center">
                             <h3 class="card-title">{{ $tab_title }}</h3>
-                            <a href="/pendaftaran/create" class="btn btn-primary ml-3 col-sm-2 float-right"><i
+                            <a href="/admin/pendaftaran/create" class="btn btn-primary ml-3 col-sm-2 float-right"><i
                                     class="fas fa-pen nav-icon mr-2"></i>Tambah Pendaftar</a>
                             {{-- Tombol Download --}}
                             <a href="{{ route('pendaftaran.export') }}" class="btn btn-info ml-3 col-sm-2 float-right"><i
@@ -95,13 +95,14 @@
                                                     </button>
                                                     <div class="dropdown-menu dropdown-menu-left btn-sm" role="menu">
                                                         <a class="dropdown-item"
-                                                            href="/pendaftaran/{{ $data->no_induk }}">Detail Data</a>
+                                                            href="/admin/pendaftaran/{{ $data->no_induk }}">Detail Data</a>
                                                         <div class="dropdown-divider"></div>
                                                         <a class="dropdown-item"
-                                                            href="/pendaftaran/verifikasi/{{ $data->no_induk }}/edit">Pembayaran</a>
+                                                            href="/admin/pendaftaran/verifikasi/{{ $data->no_induk }}/edit">Pembayaran</a>
                                                         <div class="dropdown-divider"></div>
                                                         <a class="dropdown-item"
-                                                            href="/pendaftaran/{{ $data->no_induk }}/edit">Edit Bio</a>
+                                                            href="/admin/pendaftaran/{{ $data->no_induk }}/edit">Edit
+                                                            Bio</a>
                                                         <a href="#" class="dropdown-item" data-toggle="modal"
                                                             data-target="#modal-delete{{ $data->no_induk }}">Hapus</a>
                                                     </div>

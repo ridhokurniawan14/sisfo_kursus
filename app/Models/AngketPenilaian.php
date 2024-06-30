@@ -4,12 +4,15 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Spatie\Activitylog\LogOptions;
+use Spatie\Activitylog\Traits\LogsActivity;
 
 class AngketPenilaian extends Model
 {
-    use HasFactory;
+    use HasFactory, LogsActivity;
     protected $table = 'tb_penilaian'; // Ganti 'nama_tabel_anda' dengan nama tabel yang sebenarnya
     protected $primaryKey = 'id';
+    protected static $logAttributes = ['no_induk'];
     /**
      * The attributes that are mass assignable.
      *
@@ -45,7 +48,7 @@ class AngketPenilaian extends Model
         'var12_tutor',
         'var13_tutor',
         'saran_tutor',
-    ];    
+    ];
 
     protected static function boot()
     {
@@ -58,5 +61,13 @@ class AngketPenilaian extends Model
             $angketPesertaDidikBaru->saran_tutor = strtolower($angketPesertaDidikBaru->saran_tutor);
             // Jangan melakukan konversi untuk kolom-kolom lain
         });
+    }
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+            ->logOnly(['no_induk']) // Atribut yang dilacak
+            ->useLogName('Angket Penilaian Kinerja') // Nama log opsional
+            ->logOnlyDirty()    // Hanya mencatat perubahan
+            ->dontSubmitEmptyLogs(); // Tidak mencatat jika tidak ada perubahan
     }
 }

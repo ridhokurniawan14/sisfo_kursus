@@ -18,8 +18,8 @@ class SaranaPrasaranaController extends Controller
             "title" => "Data Lembaga",
             "tab_title" => "Data Sarana Prasarana",
             "datas" => DB::table('tb_sarpras')
-                        ->orderBy('id') // Mengurutkan berdasarkan kolom 'id', yang mungkin merupakan kolom yang menunjukkan urutan data yang pertama dimasukkan
-                        ->get()
+                ->orderBy('id') // Mengurutkan berdasarkan kolom 'id', yang mungkin merupakan kolom yang menunjukkan urutan data yang pertama dimasukkan
+                ->get()
         ]);
     }
 
@@ -50,17 +50,9 @@ class SaranaPrasaranaController extends Controller
         ]);
 
         // Menyimpan data ke dalam database tanpa mengonversi huruf kecil secara eksplisit
-        $saranaPrasarana = SaranaPrasarana::create($validatedData);
+        SaranaPrasarana::create($validatedData);
 
-        // Catat aktivitas dalam log
-        // LogActivity::create([
-        //     'activity' => 'create',
-        //     'description' => 'Data Sarana Prasarana: ' . strtolower($validatedData['jenis']) . ' berhasil disimpan',
-        //     'additional_data' => '',
-        // ]);
-
-        // Redirect ke halaman '/sarana-prasarana' dengan pesan sukses
-        return redirect('/sarana-prasarana')->with('message', 'Data berhasil disimpan!');
+        return redirect('/admin/sarana-prasarana')->with('message', 'Data berhasil disimpan!');
     }
 
 
@@ -101,19 +93,11 @@ class SaranaPrasaranaController extends Controller
 
         // Mengisi instance model dengan data yang divalidasi
         $saranaPrasarana->fill($validatedData);
-        
+
         // Menyimpan perubahan ke dalam database
         $saranaPrasarana->save();
 
-        // Catat aktivitas dalam log
-        // LogActivity::create([
-        //     'activity' => 'update',
-        //     'description' => 'Data Sarana Prasarana: ' . strtolower($validatedData['jenis']) . ' berhasil diperbarui',
-        //     'additional_data' => '',
-        // ]);
-
-        // Redirect ke halaman '/sarana-prasarana' dengan pesan sukses
-        return redirect('sarana-prasarana')->with('message', 'Data berhasil Diperbarui!');
+        return redirect('/admin/sarana-prasarana')->with('message', 'Data berhasil Diperbarui!');
     }
 
 
@@ -124,9 +108,9 @@ class SaranaPrasaranaController extends Controller
     {
         if ($saranaPrasarana->exists()) {
             $saranaPrasarana->delete();
-            return redirect('sarana-prasarana')->with('message', 'Data Berhasil Dihapus!');
+            return redirect('/admin/sarana-prasarana')->with('message', 'Data Berhasil Dihapus!');
         } else {
-            return redirect('sarana-prasarana')->with('error', 'Data Tidak Ditemukan!');
+            return redirect('/admin/sarana-prasarana')->with('error', 'Data Tidak Ditemukan!');
         }
     }
 }

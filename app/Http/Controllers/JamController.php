@@ -18,8 +18,8 @@ class JamController extends Controller
             "title" => "Data Master",
             "tab_title" => "Jam",
             "datas" => DB::table('tb_jam')
-                        ->orderBy('id') // Mengurutkan berdasarkan kolom 'id', yang mungkin merupakan kolom yang menunjukkan urutan data yang pertama dimasukkan
-                        ->get()
+                ->orderBy('id') // Mengurutkan berdasarkan kolom 'id', yang mungkin merupakan kolom yang menunjukkan urutan data yang pertama dimasukkan
+                ->get()
         ]);
     }
 
@@ -39,7 +39,7 @@ class JamController extends Controller
         $validateData = $request->validate([
             'jam'  => ['required', 'unique:tb_jam'],
         ]);
-        
+
         // Mengonversi 'jam' menjadi huruf kecil sebelum disimpan
         $validateData['jam'] = strtolower($validateData['jam']);
 
@@ -48,7 +48,7 @@ class JamController extends Controller
         // Catat aktivitas dalam log
         // ActivityLogger::logActivity('create', 'Kategori Kode Surat Masuk dengan deskripsi '.ucwords($request->ket), '');
 
-        return redirect('/jam')->with('message', 'Data berhasil disimpan!');
+        return redirect('admin/jam')->with('message', 'Data berhasil disimpan!');
     }
 
     /**
@@ -69,8 +69,8 @@ class JamController extends Controller
             "title" => "Data Master",
             "tab_title" => "Jam",
             "datas" => DB::table('tb_jam')
-                        ->orderBy('id') // Mengurutkan berdasarkan kolom 'id', yang mungkin merupakan kolom yang menunjukkan urutan data yang pertama dimasukkan
-                        ->get(),
+                ->orderBy('id') // Mengurutkan berdasarkan kolom 'id', yang mungkin merupakan kolom yang menunjukkan urutan data yang pertama dimasukkan
+                ->get(),
             "cari" => $jam,
         ]);
     }
@@ -105,7 +105,7 @@ class JamController extends Controller
         // Catat aktivitas dalam log
         // ActivityLogger::logActivity('create', 'Kategori Kode Surat Masuk dengan deskripsi '.ucwords($request->ket), '');
 
-        return redirect('/jam')->with('message', 'Data berhasil diupdate!');
+        return redirect('admin/jam')->with('message', 'Data berhasil diupdate!');
     }
 
 
@@ -114,14 +114,14 @@ class JamController extends Controller
      */
     public function destroy(Jam $jam)
     {
-        if($jam) {
+        if ($jam) {
             $jam->delete();
             // Catat aktivitas dalam log
             // ActivityLogger::logActivity('delete', 'Kode Surat Masuk dengan kode '.ucwords($jam->kode).' -> '.ucwords($jam->ket), '');
 
-            return redirect('jam')->with('message', 'Data Berhasil Dihapus!');
+            return redirect('admin/jam')->with('message', 'Data Berhasil Dihapus!');
         } else {
-            return redirect('jam')->with('error', 'Data Tidak Ditemukan!');
+            return redirect('admin/jam')->with('error', 'Data Tidak Ditemukan!');
         }
     }
 }

@@ -19,8 +19,8 @@ class BerkasAkreditasiController extends Controller
             "title" => "Data Lembaga",
             "tab_title" => "Data Berkas Akreditasi",
             "datas" => DB::table('tb_berkas_akreditasi')
-                        ->orderByDesc('id') // Mengurutkan berdasarkan kolom 'id', yang mungkin merupakan kolom yang menunjukkan urutan data yang pertama dimasukkan
-                        ->get()
+                ->orderByDesc('id') // Mengurutkan berdasarkan kolom 'id', yang mungkin merupakan kolom yang menunjukkan urutan data yang pertama dimasukkan
+                ->get()
         ]);
     }
 
@@ -47,7 +47,7 @@ class BerkasAkreditasiController extends Controller
 
         BerkasAkreditasi::create($validatedData);
 
-        return redirect('/berkas-akreditasi')->with('message', 'Data berhasil disimpan!');
+        return redirect('/admin/berkas-akreditasi')->with('message', 'Data berhasil disimpan!');
     }
     /**
      * Display the specified resource.
@@ -67,8 +67,8 @@ class BerkasAkreditasiController extends Controller
             "title" => "Data Lembaga",
             "tab_title" => "Edit Berkas Akreditasi",
             "datas" => DB::table('tb_berkas_akreditasi')
-                        ->orderByDesc('id') // Mengurutkan berdasarkan kolom 'id', yang mungkin merupakan kolom yang menunjukkan urutan data yang pertama dimasukkan
-                        ->get(),
+                ->orderByDesc('id') // Mengurutkan berdasarkan kolom 'id', yang mungkin merupakan kolom yang menunjukkan urutan data yang pertama dimasukkan
+                ->get(),
             "cari" => $BerkasAkreditasi,
         ]);
     }
@@ -96,7 +96,7 @@ class BerkasAkreditasiController extends Controller
 
         $BerkasAkreditasi->update($validatedData);
 
-        return redirect('/berkas-akreditasi')->with('message', 'Data berhasil diperbarui!');
+        return redirect('/admin/berkas-akreditasi')->with('message', 'Data berhasil diperbarui!');
     }
 
     /**
@@ -115,10 +115,10 @@ class BerkasAkreditasiController extends Controller
             $berkasAkreditasi->delete();
 
             // Redirect dengan pesan berhasil
-            return redirect('/berkas-akreditasi')->with('message', 'Data berhasil dihapus!');
+            return redirect('/admin/berkas-akreditasi')->with('message', 'Data berhasil dihapus!');
         } else {
             // Redirect dengan pesan error jika berkas akreditasi tidak ditemukan
-            return redirect('/berkas-akreditasi')->with('error', 'Data tidak ditemukan!');
+            return redirect('/admin/berkas-akreditasi')->with('error', 'Data tidak ditemukan!');
         }
     }
 }

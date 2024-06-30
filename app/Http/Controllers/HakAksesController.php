@@ -18,8 +18,8 @@ class HakAksesController extends Controller
             "title" => "Data Master",
             "tab_title" => "Data Hak Akses",
             "datas" => DB::table('tb_hak_akses')
-                        ->orderBy('id') // Mengurutkan berdasarkan kolom 'id', yang mungkin merupakan kolom yang menunjukkan urutan data yang pertama dimasukkan
-                        ->get()
+                ->orderBy('id') // Mengurutkan berdasarkan kolom 'id', yang mungkin merupakan kolom yang menunjukkan urutan data yang pertama dimasukkan
+                ->get()
         ]);
     }
 
@@ -39,7 +39,7 @@ class HakAksesController extends Controller
         $validateData = $request->validate([
             'hak_akses'  => ['required', 'unique:tb_hak_akses'],
         ]);
-        
+
         // Mengonversi 'hak_akses' menjadi huruf kecil sebelum disimpan
         $validateData['hak_akses'] = strtolower($validateData['hak_akses']);
 
@@ -48,7 +48,7 @@ class HakAksesController extends Controller
         // Catat aktivitas dalam log
         // ActivityLogger::logActivity('create', 'Kategori Kode Surat Masuk dengan deskripsi '.ucwords($request->ket), '');
 
-        return redirect('/user-category')->with('message', 'Data berhasil disimpan!');
+        return redirect('/admin/user-category')->with('message', 'Data berhasil disimpan!');
     }
 
     /**
@@ -69,8 +69,8 @@ class HakAksesController extends Controller
             "title" => "Data Master",
             "tab_title" => "Data Hak Akses",
             "datas" => DB::table('tb_hak_akses')
-                        ->orderBy('id') // Mengurutkan berdasarkan kolom 'id', yang mungkin merupakan kolom yang menunjukkan urutan data yang pertama dimasukkan
-                        ->get(),
+                ->orderBy('id') // Mengurutkan berdasarkan kolom 'id', yang mungkin merupakan kolom yang menunjukkan urutan data yang pertama dimasukkan
+                ->get(),
             "cari" => $userCategory,
         ]);
     }
@@ -83,23 +83,23 @@ class HakAksesController extends Controller
         $validateData = $request->validate([
             'hak_akses'  => ['required', 'unique:tb_hak_akses'],
         ]);
-        
+
         // Mengonversi 'hak_akses' menjadi huruf kecil sebelum disimpan
         $validateData['hak_akses'] = strtolower($validateData['hak_akses']);
 
-        if($request->hak_akses != $userCategory->hak_akses) {
+        if ($request->hak_akses != $userCategory->hak_akses) {
             $rules['hak_akses'] = ['required', 'unique:tb_hak_akses'];
         }
 
         $validateData = $request->validate($rules);
-        
+
         // Perbarui data menggunakan instance model yang telah ditemukan
         $userCategory->update($validateData);
 
         // Catat aktivitas dalam log
         // ActivityLogger::logActivity('create', 'Kategori Kode Surat Masuk dengan deskripsi '.ucwords($request->ket), '');
 
-        return redirect('/user-category')->with('message', 'Data berhasil diupdate!');
+        return redirect('/admin/user-category')->with('message', 'Data berhasil diupdate!');
     }
 
     /**
@@ -107,14 +107,14 @@ class HakAksesController extends Controller
      */
     public function destroy(HakAkses $userCategory)
     {
-        if($userCategory) {
+        if ($userCategory) {
             $userCategory->delete();
             // Catat aktivitas dalam log
             // ActivityLogger::logActivity('delete', 'Kode Surat Masuk dengan kode '.ucwords($userCategory->kode).' -> '.ucwords($jam->ket), '');
 
-            return redirect('user-category')->with('message', 'Data Berhasil Dihapus!');
+            return redirect('/admin/user-category')->with('message', 'Data Berhasil Dihapus!');
         } else {
-            return redirect('user-category')->with('error', 'Data Tidak Ditemukan!');
+            return redirect('/admin/user-category')->with('error', 'Data Tidak Ditemukan!');
         }
     }
 }

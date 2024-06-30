@@ -2,8 +2,11 @@
 
 namespace App\Exceptions;
 
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Session\TokenMismatchException;
+use Illuminate\Support\Facades\Auth;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Throwable;
 
 class Handler extends ExceptionHandler
@@ -36,8 +39,12 @@ class Handler extends ExceptionHandler
     }
     public function render($request, Throwable $exception)
     {
-        if ($exception instanceof TokenMismatchException) {
-            return redirect()->route('login');
+        if ($exception instanceof ModelNotFoundException || $exception instanceof NotFoundHttpException) {
+            if ($request->is('admin/*')) {
+                return redirect()->route('login.admin');
+            } elseif ($request->is('siswa/*')) {
+                return redirect()->route('login.siswa');
+            }
         }
 
         return parent::render($request, $exception);

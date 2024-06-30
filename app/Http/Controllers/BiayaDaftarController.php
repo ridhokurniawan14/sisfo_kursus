@@ -19,8 +19,8 @@ class BiayaDaftarController extends Controller
             "title" => "Data Master",
             "tab_title" => "Biaya Pendaftaran",
             "datas" => DB::table('tb_biaya_pendaftaran')
-                        ->orderBy('id') // Mengurutkan berdasarkan kolom 'id', yang mungkin merupakan kolom yang menunjukkan urutan data yang pertama dimasukkan
-                        ->get(),
+                ->orderBy('id') // Mengurutkan berdasarkan kolom 'id', yang mungkin merupakan kolom yang menunjukkan urutan data yang pertama dimasukkan
+                ->get(),
         ]);
     }
 
@@ -54,7 +54,7 @@ class BiayaDaftarController extends Controller
         //     'data' => $biayaPendaftaran
         // ], 201);
         // Redirect dengan pesan sukses
-        return redirect('/biaya-pendaftaran')->with('message', 'Data berhasil disimpan!');
+        return redirect('/admin/biaya-pendaftaran')->with('message', 'Data berhasil disimpan!');
     }
 
     /**
@@ -70,8 +70,8 @@ class BiayaDaftarController extends Controller
     {
         $cari = BiayaDaftar::findOrFail($id);
         $datas = DB::table('tb_biaya_pendaftaran')
-                    ->orderBy('id')
-                    ->get();
+            ->orderBy('id')
+            ->get();
 
         return view('dashboard.data-master.biaya-pendaftaran.edit', [
             'halaman' => 'Edit Biaya Pendaftaran',
@@ -90,12 +90,12 @@ class BiayaDaftarController extends Controller
             'biaya_daftar' => 'required',
         ]);
 
-         // Menghapus tanda titik dari harga sebelum disimpan
+        // Menghapus tanda titik dari harga sebelum disimpan
         $validatedData['biaya_daftar'] = str_replace(['.', ','], '', $validatedData['biaya_daftar']);
 
         // Mencari data berdasarkan ID
         $biayaDaftar = BiayaDaftar::findOrFail($id);
-        
+
         // Mengupdate data
         $biayaDaftar->update([
             'biaya_daftar' => $validatedData['biaya_daftar'],
@@ -103,7 +103,7 @@ class BiayaDaftarController extends Controller
         ]);
 
         // Redirect setelah update
-        return redirect('/biaya-pendaftaran')->with('message', 'Data berhasil disimpan!');
+        return redirect('/admin/biaya-pendaftaran')->with('message', 'Data berhasil disimpan!');
         // return redirect()->route('biaya-pendaftaran.index')->with('success', 'Data berhasil diupdate');
     }
 

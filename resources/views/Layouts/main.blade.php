@@ -6,7 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <link rel="icon" type="image/png" href="/img/Logo-PTCC.png">
+    <link rel="icon" type="image/png"
+        href="{{ isset($profile->logo) && $profile->logo ? '/storage/' . $profile->logo : '/img/unknown.png' }}">
+
     <title> {{ $halaman }} - SIM</title>
 
     <link href="https://unpkg.com/cropperjs@1.5.12/dist/cropper.min.css" rel="stylesheet">
@@ -62,10 +64,10 @@
                             class="fas fa-bars"></i></a>
                 </li>
                 <li class="nav-item d-none d-sm-inline-block">
-                    <a href="/pendaftaran/create" class="nav-link">Pendaftaran</a>
+                    <a href="/admin/pendaftaran/create" class="nav-link">Pendaftaran</a>
                 </li>
                 <li class="nav-item d-none d-sm-inline-block">
-                    <a href="/pendaftaran/" class="nav-link">Data Peserta</a>
+                    <a href="/admin/pendaftaran/" class="nav-link">Data Peserta</a>
                 </li>
             </ul>
 
@@ -104,11 +106,12 @@
                         aria-expanded="false" class="nav-link dropdown-toggle">Selamat Datang,
                         {{ ucwords(auth()->user()->nm_lengkap) }}</a>
                     <ul aria-labelledby="dropdownSubMenu1" class="dropdown-menu dropdown-menu-right border-0 shadow">
-                        <li><a href="/ganti-password" class="dropdown-item"><i class="nav-icon fas fa-key"></i> Ganti
+                        <li><a href="/admin/ganti-password" class="dropdown-item"><i class="nav-icon fas fa-key"></i>
+                                Ganti
                                 Password </a></li>
                         <li class="dropdown-divider"></li>
                         <li>
-                            <form action="/logout" method="POST">
+                            <form action="/admin/logout" method="POST">
                                 @csrf
                                 <button type="submit" class="dropdown-item"><i
                                         class="nav-icon fas fa-sign-out-alt"></i> Logout</button>
@@ -118,7 +121,7 @@
                 </li>
                 {{-- @else
         <li class="nav-item d-none d-sm-inline-block">
-          <a href="/login" class="nav-link">Login</a>
+          <a href="/admin/login" class="nav-link">Login</a>
         </li>      
       @endauth --}}
 
@@ -130,8 +133,8 @@
         <aside class="main-sidebar sidebar-dark-primary elevation-4">
             <!-- Brand Logo -->
             <a href="#" class="brand-link">
-                <img src="/img/Logo-PTCC.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3"
-                    style="opacity: .8">
+                <img src="{{ isset($profile->logo) && $profile->logo ? '/storage/' . $profile->logo : '/img/unknown.png' }}"
+                    alt="Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
                 <span class="brand-text font-weight-light" style="font-size: 11.5pt;">Sistem Informasi
                     Manajemen</span>
             </a>
@@ -175,7 +178,8 @@
                with font-awesome or any other icon font library -->
                         <li class="nav-header">GENERAL NAVIGATION</li>
                         <li class="nav-item">
-                            <a href="/dashboard" class="nav-link {{ Request::is('dashboard') ? 'active' : '' }}">
+                            <a href="/admin/dashboard"
+                                class="nav-link {{ Request::is('admin/dashboard*') ? 'active' : '' }}">
                                 <i class="nav-icon fas fa-tachometer-alt"></i>
                                 <p>
                                     Dashboard
@@ -183,57 +187,58 @@
                             </a>
                         </li>
                         <li
-                            class="nav-item {{ Request::is('jam*', 'profil-lembaga*', 'biaya-pendaftaran*', 'program-pilihan*', 'program-paket*', 'user-category*', 'data-rekening*') ? 'menu-open' : '' }}">
+                            class="nav-item {{ Request::is('admin/jam*', 'admin/profil-lembaga*', 'admin/biaya-pendaftaran*', 'admin/program-pilihan*', 'admin/program-paket*', 'admin/user-category*', 'admin/data-rekening*') ? 'menu-open' : '' }}">
                             <a href="#"
-                                class="nav-link {{ Request::is('jam*', 'profil-lembaga*', 'biaya-pendaftaran*', 'program-pilihan*', 'program-paket*', 'user-category*', 'data-rekening*') ? 'active' : '' }}">
+                                class="nav-link {{ Request::is('admin/jam*', 'admin/profil-lembaga*', 'admin/biaya-pendaftaran*', 'admin/program-pilihan*', 'admin/program-paket*', 'admin/user-category*', 'admin/data-rekening*') ? 'active' : '' }}">
                                 <i class="nav-icon fas fa-database"></i>
                                 <p>Data Master <i class="right fas fa-angle-left"></i></p>
                             </a>
                             <ul class="nav nav-treeview">
                                 <li class="nav-item">
-                                    <a href="/profil-lembaga"
-                                        class="nav-link {{ Request::is('profil-lembaga*') ? 'active' : '' }}">
+                                    <a href="/admin/profil-lembaga"
+                                        class="nav-link {{ Request::is('admin/profil-lembaga*') ? 'active' : '' }}">
                                         <i class="far fa-id-card nav-icon"></i>
                                         <p>Profil Lembaga</p>
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="/jam" class="nav-link {{ Request::is('jam*') ? 'active' : '' }}">
+                                    <a href="/admin/jam"
+                                        class="nav-link {{ Request::is('admin/jam*') ? 'active' : '' }}">
                                         <i class="far fa-clock nav-icon"></i>
                                         <p>Jam</p>
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="/biaya-pendaftaran"
-                                        class="nav-link {{ Request::is('biaya-pendaftaran*') ? 'active' : '' }}">
+                                    <a href="/admin/biaya-pendaftaran"
+                                        class="nav-link {{ Request::is('admin/biaya-pendaftaran*') ? 'active' : '' }}">
                                         <i class="fas fa-dollar-sign nav-icon"></i>
                                         <p>Biaya Pendaftaran</p>
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="/data-rekening"
-                                        class="nav-link {{ Request::is('data-rekening*') ? 'active' : '' }}">
+                                    <a href="/admin/data-rekening"
+                                        class="nav-link {{ Request::is('admin/data-rekening*') ? 'active' : '' }}">
                                         <i class="fas fa-credit-card nav-icon"></i>
                                         <p>Data Rekening</p>
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="/program-pilihan"
-                                        class="nav-link {{ Request::is('program-pilihan*') ? 'active' : '' }}">
+                                    <a href="/admin/program-pilihan"
+                                        class="nav-link {{ Request::is('admin/program-pilihan*') ? 'active' : '' }}">
                                         <i class="fa fa-tag nav-icon"></i>
                                         <p>Program Pilihan</p>
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="/program-paket"
-                                        class="nav-link {{ Request::is('program-paket*') ? 'active' : '' }}">
+                                    <a href="/admin/program-paket"
+                                        class="nav-link {{ Request::is('admin/program-paket*') ? 'active' : '' }}">
                                         <i class="fa fa-tags nav-icon"></i>
                                         <p>Program Paket</p>
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="/user-category"
-                                        class="nav-link {{ Request::segment(1) == 'user-category' ? 'active' : '' }}">
+                                    <a href="/admin/user-category"
+                                        class="nav-link {{ Request::is('admin/user-category*') ? 'active' : '' }}">
                                         <i class="fa fa-key nav-icon"></i>
                                         <p>Hak Akses</p>
                                     </a>
@@ -242,14 +247,14 @@
                         </li>
                         <li class="nav-header">REPORT</li>
                         @php
-                            $isActive = in_array(Request::segment(1), [
-                                'user',
-                                'sarana-prasarana',
-                                'berkas-akreditasi',
-                                'angket-peserta-didik-baru',
-                                'angket-penilaian',
-                                'pengumuman',
-                            ]);
+                            $isActive =
+                                ((Request::is('admin/user') || Request::is('admin/user/*')) &&
+                                    !Request::is('admin/user-category*')) ||
+                                Request::is('admin/sarana-prasarana*') ||
+                                Request::is('admin/berkas-akreditasi*') ||
+                                Request::is('admin/angket-peserta-didik-baru*') ||
+                                Request::is('admin/angket-penilaian*') ||
+                                Request::is('admin/pengumuman*');
                         @endphp
                         <li class="nav-item {{ $isActive ? 'menu-open' : '' }}">
                             <a href="#" class="nav-link {{ $isActive ? 'active' : '' }}">
@@ -258,43 +263,45 @@
                             </a>
                             <ul class="nav nav-treeview">
                                 <li class="nav-item">
-                                    <a href="/user"
-                                        class="nav-link {{ Request::segment(1) == 'user' ? 'active' : '' }}">
+                                    <a href="/admin/user"
+                                        class="nav-link {{ Request::is('admin/user') || (Request::is('admin/user/*') && !Request::is('admin/user-category*'))
+                                            ? 'active'
+                                            : '' }}">
                                         <i class="far fa-user nav-icon"></i>
                                         <p>Data Personalia</p>
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="/sarana-prasarana"
-                                        class="nav-link {{ Request::is('sarana-prasarana*') ? 'active' : '' }}">
+                                    <a href="/admin/sarana-prasarana"
+                                        class="nav-link {{ Request::is('admin/sarana-prasarana*') ? 'active' : '' }}">
                                         <i class="far fa-building nav-icon"></i>
                                         <p>Sarana dan Prasarana</p>
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="/berkas-akreditasi"
-                                        class="nav-link {{ Request::is('berkas-akreditasi*') ? 'active' : '' }}">
+                                    <a href="/admin/berkas-akreditasi"
+                                        class="nav-link {{ Request::is('admin/berkas-akreditasi*') ? 'active' : '' }}">
                                         <i class="far fa-file-alt nav-icon"></i>
                                         <p>Berkas Akreditasi</p>
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="/angket-peserta-didik-baru"
-                                        class="nav-link {{ Request::is('angket-peserta-didik-baru*') ? 'active' : '' }}">
+                                    <a href="/admin/angket-peserta-didik-baru"
+                                        class="nav-link {{ Request::is('admin/angket-peserta-didik-baru*') ? 'active' : '' }}">
                                         <i class="far fa-edit nav-icon"></i>
                                         <p>Data Angket Peserta Didik</p>
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="/angket-penilaian"
-                                        class="nav-link {{ Request::is('angket-penilaian*') ? 'active' : '' }}">
+                                    <a href="/admin/angket-penilaian"
+                                        class="nav-link {{ Request::is('admin/angket-penilaian*') ? 'active' : '' }}">
                                         <i class="far fa-edit nav-icon"></i>
                                         <p>Data Angket Penilaian Kinerja</p>
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="/pengumuman"
-                                        class="nav-link {{ Request::is('pengumuman*') ? 'active' : '' }}">
+                                    <a href="/admin/pengumuman"
+                                        class="nav-link {{ Request::is('admin/pengumuman*') ? 'active' : '' }}">
                                         <i class="nav-icon fas fa-bullhorn"></i>
                                         <p>Pengumuman</p>
                                     </a>
@@ -302,31 +309,32 @@
                             </ul>
                         </li>
                         <li class="nav-item">
-                            <a href="/pendaftar-online"
-                                class="nav-link {{ Request::is('pendaftar-online*') ? 'active' : '' }}">
+                            <a href="/admin/pendaftar-online"
+                                class="nav-link {{ Request::is('admin/pendaftar-online*') ? 'active' : '' }}">
                                 <i class="nav-icon fas fa-user-check"></i>
                                 <p>Pendaftar Online</p>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="/pendaftaran"
-                                class="nav-link {{ Request::is('pendaftaran*', 'pendaftaran/verifikasi/*') ? 'active' : '' }}">
+                            <a href="/admin/pendaftaran"
+                                class="nav-link {{ Request::is('admin/pendaftaran*', 'pendaftaran/verifikasi/*') ? 'active' : '' }}">
                                 <i class="nav-icon fas fa-users"></i>
                                 <p>Data Peserta Didik</p>
                             </a>
                         </li>
                         <li class="nav-header">INFORMATION</li>
                         <li class="nav-item">
-                            <a href="/information"
-                                class="nav-link {{ Request::is('information*') ? 'active' : '' }}">
+                            <a href="/admin/information"
+                                class="nav-link {{ Request::is('admin/information*') ? 'active' : '' }}">
                                 <i class="nav-icon fas fa-info-circle"></i>
                                 <p>Information</p>
                                 <span class="right badge badge-warning">PENTING!!</span>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="/log" class="nav-link">
-                                <i class="nav-icon fas fa-history"></i>
+                            <a href="/admin/logs" class="nav-link {{ Request::is('admin/logs*') ? 'active' : '' }}">
+                                <i class="nav-icon
+                                fas fa-history"></i>
                                 <p>Log Activity</p>
                             </a>
                         </li>
@@ -561,6 +569,17 @@
                 "searching": false,
             }).buttons().container().appendTo('#datapesertadidik_wrapper .col-md-6:eq(0)');
         });
+
+        function formatRupiah(input) {
+            // Menghilangkan semua karakter kecuali angka
+            var angka = input.value.replace(/[^0-9]/g, '');
+
+            // Memisahkan angka menjadi grup-grup dengan titik setiap tiga digit
+            var formattedAngka = angka.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+
+            // Memasukkan angka yang telah diformat kembali ke input
+            input.value = formattedAngka;
+        }
 
         function toggleProgram(value) {
             if (value === "pilihan") {

@@ -19,8 +19,8 @@ class ProgramPilihanController extends Controller
             "title" => "Data Master",
             "tab_title" => "Data Program Pilihan",
             "datas" => DB::table('tb_pilihan')
-                        ->orderBy('id') // Mengurutkan berdasarkan kolom 'id', yang mungkin merupakan kolom yang menunjukkan urutan data yang pertama dimasukkan
-                        ->get()
+                ->orderBy('id') // Mengurutkan berdasarkan kolom 'id', yang mungkin merupakan kolom yang menunjukkan urutan data yang pertama dimasukkan
+                ->get()
         ]);
     }
 
@@ -41,7 +41,7 @@ class ProgramPilihanController extends Controller
             'program'  => ['required', 'unique:tb_pilihan'],
             'harga'  => ['required'],
         ]);
-        
+
         // Mengonversi 'program' menjadi huruf kecil sebelum disimpan
         $validateData['program'] = strtolower($validateData['program']);
 
@@ -53,7 +53,7 @@ class ProgramPilihanController extends Controller
         // Catat aktivitas dalam log
         // ActivityLogger::logActivity('create', 'Kategori Kode Surat Masuk dengan deskripsi '.ucwords($request->ket), '');
 
-        return redirect('/program-pilihan')->with('message', 'Data berhasil disimpan!');
+        return redirect('/admin/program-pilihan')->with('message', 'Data berhasil disimpan!');
     }
 
     /**
@@ -74,8 +74,8 @@ class ProgramPilihanController extends Controller
             "title" => "Data Master",
             "tab_title" => "Data Program Pilihan",
             "datas" => DB::table('tb_pilihan')
-                        ->orderBy('id') // Mengurutkan berdasarkan kolom 'id', yang mungkin merupakan kolom yang menunjukkan urutan data yang pertama dimasukkan
-                        ->get(),
+                ->orderBy('id') // Mengurutkan berdasarkan kolom 'id', yang mungkin merupakan kolom yang menunjukkan urutan data yang pertama dimasukkan
+                ->get(),
             "cari" => $programPilihan,
         ]);
     }
@@ -89,20 +89,20 @@ class ProgramPilihanController extends Controller
             'program' => ['required', Rule::unique('tb_pilihan')->ignore($programPilihan->id)],
             'harga' => ['required'],
         ]);
-    
+
         // Mengonversi 'program' menjadi huruf kecil sebelum disimpan
         $validatedData['program'] = strtolower($validatedData['program']);
-    
+
         // Menghapus tanda titik dari harga sebelum disimpan
         $validatedData['harga'] = str_replace('.', '', $request->harga);
-    
+
         // Simpan data jika validasi berhasil
         $programPilihan->update($validatedData);
-        
+
         // Catat aktivitas dalam log
         // ActivityLogger::logActivity('create', 'Kategori Kode Surat Masuk dengan deskripsi '.ucwords($request->ket), '');
-    
-        return redirect('/program-pilihan')->with('message', 'Data berhasil diupdate!');
+
+        return redirect('/admin/program-pilihan')->with('message', 'Data berhasil diupdate!');
     }
 
     /**
@@ -110,14 +110,14 @@ class ProgramPilihanController extends Controller
      */
     public function destroy(ProgramPilihan $programPilihan)
     {
-        if($programPilihan) {
+        if ($programPilihan) {
             $programPilihan->delete();
             // Catat aktivitas dalam log
             // ActivityLogger::logActivity('delete', 'Kode Surat Masuk dengan kode '.ucwords($jam->kode).' -> '.ucwords($jam->ket), '');
 
-            return redirect('program-pilihan')->with('message', 'Data Berhasil Dihapus!');
+            return redirect('/admin/program-pilihan')->with('message', 'Data Berhasil Dihapus!');
         } else {
-            return redirect('program-pilihan')->with('error', 'Data Tidak Ditemukan!');
+            return redirect('/admin/program-pilihan')->with('error', 'Data Tidak Ditemukan!');
         }
     }
 }

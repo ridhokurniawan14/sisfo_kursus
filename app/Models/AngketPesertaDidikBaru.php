@@ -4,12 +4,15 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Spatie\Activitylog\LogOptions;
+use Spatie\Activitylog\Traits\LogsActivity;
 
 class AngketPesertaDidikBaru extends Model
 {
-    use HasFactory;
+    use HasFactory, LogsActivity;
     protected $table = 'tb_angket'; // Ganti 'nama_tabel_anda' dengan nama tabel yang sebenarnya
     protected $primaryKey = 'id';
+    protected static $logAttributes = ['no_induk', 'Nama'];
     /**
      * The attributes that are mass assignable.
      *
@@ -43,5 +46,13 @@ class AngketPesertaDidikBaru extends Model
             $angketPesertaDidikBaru->Nama = strtolower($angketPesertaDidikBaru->Nama);
             // Anda dapat melanjutkan dengan konversi untuk kolom lain jika perlu
         });
+    }
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+            ->logOnly(['no_induk', 'Nama']) // Atribut yang dilacak
+            ->useLogName('Angket Peserta') // Nama log opsional
+            ->logOnlyDirty()    // Hanya mencatat perubahan
+            ->dontSubmitEmptyLogs(); // Tidak mencatat jika tidak ada perubahan
     }
 }

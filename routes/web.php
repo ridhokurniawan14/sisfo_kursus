@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ActivityController;
 use App\Http\Controllers\AngketPenilaianController;
 use App\Http\Controllers\AngketPesertaDidikBaruController;
 use App\Http\Controllers\BerkasAkreditasiController;
@@ -10,6 +11,7 @@ use App\Http\Controllers\HakAksesController;
 use App\Http\Controllers\InformationController;
 use App\Http\Controllers\JamController;
 use App\Http\Controllers\LoginController;
+use App\Http\Controllers\LoginSiswaController;
 use App\Http\Controllers\PendaftarController;
 use App\Http\Controllers\PendaftarOnlineController;
 use App\Http\Controllers\PengumumanController;
@@ -33,19 +35,21 @@ use Illuminate\Support\Facades\Route;
 |
 */
 // HALAMAN AWAL
-// Route::get('/', function () {
-//     return view('/Login');
-// });
-Route::get('/', [LoginController::class, 'index'])->name('login')->middleware('guest');
+Route::get('/', function () {
+    return redirect('https://lkpptcc.id/');
+});
+// Route::get('/', [LoginController::class, 'index'])->name('login')->middleware('guest');
 
-// HALAMAN LOGIN
-// Define login route
-Route::get('/login', [LoginController::class, 'index'])->name('login')->middleware('guest');
-Route::post('/login', [LoginController::class, 'authenticate'])->name('login');
-Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
-Route::get('/logout', [LoginController::class, 'logout'])->name('logout');
-
-Route::middleware('auth')->group(function () {
+// HALAMAN LOGIN ADMIN
+Route::prefix('admin')->group(function () {
+    // Define login route Siswa
+    Route::get('/login', [LoginController::class, 'index'])->name('login.admin')->middleware('guest');
+    Route::post('/login', [LoginController::class, 'authenticate'])->name('login.admin');
+    Route::post('/logout', [LoginController::class, 'logout'])->name('logout.admin');
+    // Route::get('/logout', [LoginController::class, 'logout'])->name('logout.admin');
+});
+// HALAMAN ADMIN
+Route::middleware('auth:admin')->prefix('admin')->group(function () {
     // HALAMAN DASHBOARD
     Route::resource('dashboard', DashboardController::class);
     // HALAMAN JAM
@@ -71,6 +75,9 @@ Route::middleware('auth')->group(function () {
     Route::resource('pengumuman', PengumumanController::class);
     // HALAMAN PROFIL LEMBAGA
     Route::resource('profil-lembaga', ProfilLembagaController::class);
+    Route::get('/api/kabupaten/{provinceId}', [ProfilLembagaController::class, 'getKabupaten']);
+    Route::get('/api/kecamatan/{regencyId}', [ProfilLembagaController::class, 'getKecamatan']);
+    Route::get('/api/kelurahan/{districtId}', [ProfilLembagaController::class, 'getKelurahan']);
     // HALAMAN BERKAS PENDUKUNG
     Route::resource('berkas-akreditasi', BerkasAkreditasiController::class);
     // HALAMAN DATA ANGKET PESERTA DIDIK BARU
@@ -95,7 +102,6 @@ Route::middleware('auth')->group(function () {
     Route::post('pendaftaran/verifikasi/{no_induk}/save', [PendaftarController::class, 'SaveVerifikasi'])->name('pendaftaran.SaveVerifikasi');
     Route::put('pendaftaran/verifikasi/{no_induk}/update', [PendaftarController::class, 'UpdateVerifikasi'])->name('pendaftaran.UpdateVerifikasi');
     // NILAI
-    // Route::get('/nilai/{no_induk}', [KursusController::class, 'showForm'])->name('show-nilai-form');
     Route::post('/nilai/{no_induk}', [PendaftarController::class, 'saveNilai'])->name('save-nilai');
     Route::post('/nilai/updateAll', [PendaftarController::class, 'updateAllNilai'])->name('nilai.updateAll');
     // SERTIFIKAT
@@ -104,6 +110,17 @@ Route::middleware('auth')->group(function () {
     // HALAMAN PHOTO PESERTA DIDIK
     Route::resource('photostudent', PhotoStudentController::class);
     Route::put('/photostudent/update/{no_induk}', [PhotoStudentController::class, 'update'])->name('photostudent.update');
+    // HALAMAN LOG ACTIVITY
+    Route::resource('logs', ActivityController::class);
 });
 // VALIDASI SERTIFIKAT
 Route::get('/validate-certificate/{hash}', [SertifikatController::class, 'validateCertificate'])->name('validate.certificate')->middleware('guest');
+
+// HALAMAN LOGIN SISWA
+Route::prefix('siswa')->group(function () {
+    // Define login route Siswa
+    Route::get('/login', [LoginSiswaController::class, 'index'])->name('login.siswa')->middleware('guest');
+    Route::post('/login', [LoginSiswaController::class, 'authenticate'])->name('login.siswa');
+    Route::post('/logout', [LoginSiswaController::class, 'logout'])->name('logout.siswa');
+    Route::get('/logout', [LoginSiswaController::class, 'logout'])->name('logout.siswa');
+});

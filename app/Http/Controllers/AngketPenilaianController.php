@@ -21,12 +21,15 @@ class AngketPenilaianController extends Controller
             "title" => "Data Lembaga",
             "tab_title" => "Data Angket Penilaian Kinerja",
             "datas" => DB::table('tb_penilaian as p')
-                        ->select('p.*', 'pd.nm_lengkap',
-                                DB::raw('ROUND((p.var1 + p.var2 + p.var3 + p.var4 + p.var5 + p.var6 + p.var7 + p.var8 + p.var9 + p.var10 + p.var11 + p.var12) / 12, 2) as rata_rata_var'),
-                                DB::raw('ROUND((p.var1_tutor + p.var2_tutor + p.var3_tutor + p.var4_tutor + p.var5_tutor + p.var6_tutor + p.var7_tutor + p.var8_tutor + p.var9_tutor + p.var10_tutor + p.var11_tutor + p.var12_tutor + p.var13_tutor) / 13, 2) as rata_rata_var_tutor'))
-                        ->join('tb_pendaftar as pd', 'p.no_induk', '=', 'pd.no_induk')
-                        ->orderByDesc('p.id')
-                        ->get(),        
+                ->select(
+                    'p.*',
+                    'pd.nm_lengkap',
+                    DB::raw('ROUND((p.var1 + p.var2 + p.var3 + p.var4 + p.var5 + p.var6 + p.var7 + p.var8 + p.var9 + p.var10 + p.var11 + p.var12) / 12, 2) as rata_rata_var'),
+                    DB::raw('ROUND((p.var1_tutor + p.var2_tutor + p.var3_tutor + p.var4_tutor + p.var5_tutor + p.var6_tutor + p.var7_tutor + p.var8_tutor + p.var9_tutor + p.var10_tutor + p.var11_tutor + p.var12_tutor + p.var13_tutor) / 13, 2) as rata_rata_var_tutor')
+                )
+                ->join('tb_pendaftar as pd', 'p.no_induk', '=', 'pd.no_induk')
+                ->orderByDesc('p.id')
+                ->get(),
         ]);
     }
     public function exportExcel($type)
@@ -91,9 +94,9 @@ class AngketPenilaianController extends Controller
     {
         if ($angketPenilaian->exists()) {
             $angketPenilaian->delete();
-            return redirect('angket-penilaian')->with('message', 'Data Berhasil Dihapus!');
+            return redirect('/admin/angket-penilaian')->with('message', 'Data Berhasil Dihapus!');
         } else {
-            return redirect('angket-penilaian')->with('error', 'Data Tidak Ditemukan!');
+            return redirect('/admin/angket-penilaian')->with('error', 'Data Tidak Ditemukan!');
         }
     }
 }
