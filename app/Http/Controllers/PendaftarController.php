@@ -46,10 +46,18 @@ class PendaftarController extends Controller
             "datas" => $datas
         ]);
     }
-    public function export()
+    public function export(Request $request)
     {
+        $year = $request->input('year');
         $date = date('d M Y');
-        return Excel::download(new DataPendaftarExport, 'Data Pendaftar (' . $date . ').xlsx');
+
+        if ($year) {
+            $fileName = 'Data Pendaftar ' . $year . ' (' . $date . ').xlsx';
+        } else {
+            $fileName = 'Semua Data Pendaftar (' . $date . ').xlsx';
+        }
+
+        return Excel::download(new DataPendaftarExport($year), $fileName);
     }
 
     /**

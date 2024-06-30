@@ -24,7 +24,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach ($activities as $activity)
+                                    @foreach ($activities as $index => $activity)
                                         <tr data-widget="expandable-table" aria-expanded="false">
                                             <td style="text-align: center">{{ $loop->iteration }}</td>
                                             <td>{{ !empty($activity->causer_id) ? explode(' ', trim(ucwords($activity->nm_lengkap)))[0] : 'Unknown' }}
@@ -81,6 +81,10 @@
                                     @endforeach
                                 </tbody>
                             </table>
+                            <div class="mt-3">
+                                <!-- Menampilkan pagination links -->
+                                {{ $activities->links() }}
+                            </div>
                         </div>
                         <!-- /.card-body -->
                     </div>

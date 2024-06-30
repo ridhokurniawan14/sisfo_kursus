@@ -8,90 +8,106 @@ use Maatwebsite\Excel\Concerns\WithHeadings;
 
 class DataPendaftarExport implements FromCollection, WithHeadings
 {
-    /**
-    * @return \Illuminate\Support\Collection
-    */
+    protected $year;
+
+    public function __construct($year = null)
+    {
+        $this->year = $year;
+    }
+
     public function collection()
     {
-        return DB::table('tb_pendaftar')
-                    ->join('tb_pendaftar_verifikasi', 'tb_pendaftar.no_induk', '=', 'tb_pendaftar_verifikasi.no_induk')
-                    ->orderByDesc('tb_pendaftar.id')
-                    ->select('tb_pendaftar.*', 'tb_pendaftar_verifikasi.*') // Pilih kolom yang ingin Anda sertakan
-                    ->get();
+        $query = DB::table('tb_pendaftar')
+            ->join('tb_pendaftar_verifikasi', 'tb_pendaftar.no_induk', '=', 'tb_pendaftar_verifikasi.no_induk')
+            ->orderByDesc('tb_pendaftar.id')
+            ->select('tb_pendaftar.*', 'tb_pendaftar_verifikasi.*');
+
+        if ($this->year) {
+            $query->whereYear('tb_pendaftar.tgl_masuk', $this->year);
+        }
+
+        return $query->get();
     }
+
     public function headings(): array
     {
         return [
-            'id',
-            'no_induk',
-            'nm_lengkap',
-            'tmp_lahir',
-            'tgl_lahir',
-            'gender',
-            'nisn',
-            'nik',
-            'agama',
-            'kewarganegaraan',
-            'pend_akhir',
-            'email',
-            'no_hp',
-            'status_pekerjaan',
-            'tgl_masuk',
-            'password',
-            'alamat',
-            'rt',
-            'rw',
-            'kel',
-            'kec',
-            'kd_pos',
-            'kab',
-            'provinsi',
-            'jns_tinggal',
-            'nm_ayah',
-            'nik_ayah',
-            'tgl_ayah',
-            'pend_ayah',
-            'pek_ayah',
-            'nm_ibu',
-            'nik_ibu',
-            'tgl_ibu',
-            'pend_ibu',
-            'pek_ibu',
-            'alamat_ortu',
-            'hp_ortu',
-            'telepon_ortu',
-            'anak_ke',
-            'nm_wali',
-            'nik_wali',
-            'tgl_wali',
-            'pend_wali',
-            'pek_wali',
-            'alamat_wali',
-            'hp_wali',
-            'kd_jam',
-            'pil_prog',
-            'kd_paket',
-            'kd_tambahan',
-            'kd_pilihan1',
-            'kd_pilihan2',
-            'kd_pilihan3',
-            'kd_pilihan4',
-            'kd_pilihan5',
-            'kd_pilihan6',
-            'biaya_kursus',
-            'discount',
-            'tot_biaya',
-            'kekurangan',
-            'angsuran1',
-            'angsuran2',
-            'tgl_angsuran2',
-            'angsuran3',
-            'tgl_angsuran3',
-            'angsuran4',
-            'tgl_angsuran4',
-            'angsuran5',
-            'tgl_angsuran5',
-            'ket',
+            'ID',
+            'No. Induk',
+            'Nama Lengkap',
+            'Tempat Lahir',
+            'Tgl. Lahir',
+            'Jenis Kelamin',
+            'NISN',
+            'NIK',
+            'Agama',
+            'Kewarganegaraan',
+            'Pendidikan Akhir',
+            'Email',
+            'HP',
+            'Status Pekerjaan',
+            'Tgl. Daftar',
+            'Password',
+            'Alamat',
+            'RT',
+            'RW',
+            'Kelurahan',
+            'Kecamatan',
+            'Kode Pos',
+            'Kabupaten',
+            'Provinsi',
+            'Jenis Tinggal',
+            'Nama Ayah',
+            'NIK Ayah',
+            'Tgl. Lahir Ayah',
+            'Pendidikan Ayah',
+            'Pekerjaan Ayah',
+            'Nama Ibu',
+            'NIK Ibu',
+            'Tgl. Lahir Ibu',
+            'Pendidikan Ibu',
+            'Pekerjaan Ibu',
+            'Alamat Orang Tua',
+            'HP Orang tua',
+            'Telepon Orang tua',
+            'Anak ke',
+            'Nama Wali',
+            'NIK Wali',
+            'Tanggal Wali',
+            'Pendidikan Wali',
+            'Pekerjaan Wali',
+            'Alamat Wali',
+            'HP Wali',
+            'Dibuat',
+            'Diperbarui',
+            'Kode Jam',
+            'Pilihan Program',
+            'Kode Paket',
+            'Kode Tambahan',
+            'Kode Tambahan 2',
+            'Kode Tambahan 3',
+            'Kode Tambahan 4',
+            'Kode Pilihan 1',
+            'Kode Pilihan 2',
+            'Kode Pilihan 3',
+            'Kode Pilihan 4',
+            'Kode Pilihan 5',
+            'Kode Pilihan 6',
+            'Biaya Kursus',
+            'Biaya Daftar',
+            'Discount',
+            'Total Biaya',
+            'Kekurangan',
+            'Angsuran 1',
+            'Angsuran 2',
+            'Tgl. Angsuran 2',
+            'Angsuran 3',
+            'Tgl. Angsuran 3',
+            'Angsuran 4',
+            'Tgl. Angsuran 4',
+            'Angsuran 5',
+            'Tgl. Angsuran 5',
+            'Keterangan',
         ];
     }
 }

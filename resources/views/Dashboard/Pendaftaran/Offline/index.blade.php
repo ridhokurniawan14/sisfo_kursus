@@ -13,9 +13,25 @@
                             <h3 class="card-title">{{ $tab_title }}</h3>
                             <a href="/admin/pendaftaran/create" class="btn btn-primary ml-3 col-sm-2 float-right"><i
                                     class="fas fa-pen nav-icon mr-2"></i>Tambah Pendaftar</a>
-                            {{-- Tombol Download --}}
-                            <a href="{{ route('pendaftaran.export') }}" class="btn btn-info ml-3 col-sm-2 float-right"><i
-                                    class="fas fa-download nav-icon mr-2"></i>Download Data</a>
+                            {{-- Tombol Download dengan Dropdown --}}
+                            <div class="dropdown float-right ml-0 col-sm-2">
+                                <button class="btn btn-info dropdown-toggle" type="button" id="dropdownMenuButton"
+                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <i class="fas fa-download nav-icon mr-2"></i>Download Data
+                                </button>
+                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                    @php
+                                        $currentYear = now()->year;
+                                    @endphp
+                                    @for ($i = 0; $i < 3; $i++)
+                                        <a class="dropdown-item"
+                                            href="{{ route('pendaftaran.export', ['year' => $currentYear - $i]) }}">{{ $currentYear - $i }}</a>
+                                    @endfor
+                                    <div class="dropdown-divider"></div>
+                                    <a class="dropdown-item" href="{{ route('pendaftaran.export') }}">Semua
+                                        Data</a>
+                                </div>
+                            </div>
                         </div>
                         <!-- /.card-header -->
                         <div class="card-body">
