@@ -267,7 +267,7 @@
                                         class="nav-link {{ Request::is('admin/user') || (Request::is('admin/user/*') && !Request::is('admin/user-category*'))
                                             ? 'active'
                                             : '' }}">
-                                        <i class="far fa-user nav-icon"></i>
+                                        <i class="fas fa-chalkboard-teacher"></i>
                                         <p>Data Personalia</p>
                                     </a>
                                 </li>
@@ -415,7 +415,7 @@
     <!-- Select2 -->
     <script src="/plugins/select2/js/select2.full.min.js"></script>
     <!-- ChartJS -->
-    <script src="/plugins/chart.js/Chart.min.js"></script>
+    {{-- <script src="/plugins/chart.js/Chart.min.js"></script> --}}
     <!-- Sparkline -->
     <script src="/plugins/sparklines/sparkline.js"></script>
     <!-- JQVMap -->
@@ -436,7 +436,7 @@
     <script src="/js/adminlte.js"></script>
     <!-- Toastr -->
     <script src="/plugins/toastr/toastr.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js"></script>
+    {{-- <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js"></script> --}}
     <script src="https://unpkg.com/cropperjs@1.5.12/dist/cropper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js"></script>
