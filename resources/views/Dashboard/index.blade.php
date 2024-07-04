@@ -79,7 +79,7 @@
                     <div class="card">
                         <div class="card-header border-0">
                             <div class="d-flex justify-content-between">
-                                <h3 class="card-title text-bold">Grafik Pendaftar Tahun {{ date('Y') }}</h3>
+                                <h3 class="card-title text-bold">Grafik Pendaftar</h3>
                                 <div class="card-tools">
                                     <button type="button" class="btn btn-tool" data-card-widget="collapse">
                                         <i class="fas fa-minus"></i>
@@ -92,30 +92,50 @@
                         </div>
                         <div class="card-body">
                             <div class="d-flex">
-                                <p class="d-flex flex-column">
-                                    <span class="text-bold text-lg">{{ $countStudentThisYear }}</span>
-                                    <span>Total Peserta Tahun Ini</span>
-                                </p>
-                                <p class="ml-auto d-flex flex-column text-right">
-                                    <span class="text-success">
-                                        {{ $registrantsThisMonth }}
-                                    </span>
-                                    <span class="text-muted">Bulan Ini</span>
-                                </p>
+                                <ul class="nav nav-tabs" id="year-tabs" role="tablist">
+                                    @foreach (array_keys($registrantsData) as $year)
+                                        <li class="nav-item">
+                                            <a class="nav-link {{ $year == date('Y') ? 'active' : '' }}"
+                                                id="tab-{{ $year }}" data-toggle="tab"
+                                                href="#content-{{ $year }}" role="tab">{{ $year }}</a>
+                                        </li>
+                                    @endforeach
+                                </ul>
                             </div>
-                            <div class="position-relative mb-4">
-                                <canvas id="registrants-chart" height="200"></canvas>
-                            </div>
-                            <div class="d-flex flex-row justify-content-end">
-                                <span class="mr-2">
-                                    <i class="fas fa-square text-primary"></i> Laki-laki
-                                </span>
-                                <span>
-                                    <i class="fas fa-square text-yellow"></i> Perempuan
-                                </span>
+                            <div class="tab-content">
+                                @foreach ($registrantsData as $year => $monthlyData)
+                                    <div class="tab-pane fade {{ $year == date('Y') ? 'show active' : '' }}"
+                                        id="content-{{ $year }}" role="tabpanel">
+                                        <div class="d-flex">
+                                            <p class="d-flex flex-column">
+                                                <span
+                                                    class="text-bold text-lg">{{ array_sum($monthlyData['male']) + array_sum($monthlyData['female']) }}</span>
+                                                <span>Total Peserta Tahun {{ $year }}</span>
+                                            </p>
+                                            <p class="ml-auto d-flex flex-column text-right">
+                                                <span class="text-success">
+                                                    {{ $monthlyData['male'][date('n') - 1] + $monthlyData['female'][date('n') - 1] }}
+                                                </span>
+                                                <span class="text-muted">Bulan Ini</span>
+                                            </p>
+                                        </div>
+                                        <div class="position-relative mb-4">
+                                            <canvas id="registrants-chart-{{ $year }}" height="200"></canvas>
+                                        </div>
+                                        <div class="d-flex flex-row justify-content-end">
+                                            <span class="mr-2">
+                                                <i class="fas fa-square text-primary"></i> Laki-laki
+                                            </span>
+                                            <span>
+                                                <i class="fas fa-square text-yellow"></i> Perempuan
+                                            </span>
+                                        </div>
+                                    </div>
+                                @endforeach
                             </div>
                         </div>
                     </div>
+
 
                     <!-- /.card -->
 
@@ -145,15 +165,19 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr>
-                                            <td><a href="pages/examples/invoice.html">OR9842</a></td>
-                                            <td>Call of Duty IV</td>
-                                            <td><span class="badge badge-success">Shipped</span></td>
-                                            <td>
-                                                <div class="sparkbar" data-color="#00a65a" data-height="20">
-                                                    90,80,90,-70,61,-83,63</div>
-                                            </td>
-                                        </tr>
+                                        @foreach ($newStudent as $newStudents)
+                                            <tr>
+                                                <td><a
+                                                        href="/admin/pendaftaran/{{ $newStudents->no_induk }}">{{ $newStudents->no_induk }}</a>
+                                                </td>
+                                                <td>{{ ucwords($newStudents->nm_lengkap) }}</td>
+                                                <td><span
+                                                        class="badge badge-{{ $newStudents->pil_prog == 'paket' ? 'success' : 'info' }}">{{ strtoupper($newStudents->pil_prog) }}</span>
+                                                </td>
+                                                <td>{{ \Carbon\Carbon::parse($newStudents->tgl_masuk)->isoFormat('D MMMM YYYY') }}
+                                                </td>
+                                            </tr>
+                                        @endforeach
                                     </tbody>
                                 </table>
                             </div>
@@ -161,8 +185,10 @@
                         </div>
                         <!-- /.card-body -->
                         <div class="card-footer clearfix">
-                            <a href="javascript:void(0)" class="btn btn-sm btn-info float-left">Place New Order</a>
-                            <a href="javascript:void(0)" class="btn btn-sm btn-secondary float-right">View All Orders</a>
+                            <a href="{{ route('pendaftaran.create') }}" class="btn btn-sm btn-primary float-left"><i
+                                    class="fas fa-plus mr-1"></i>Add New</a>
+                            <a href="{{ route('pendaftaran.index') }}" class="btn btn-sm btn-secondary float-right"><i
+                                    class="fas fa-eye mr-1"></i>View All Student</a>
                         </div>
                         <!-- /.card-footer -->
                     </div>
@@ -244,7 +270,7 @@
                     </div>
                     <div class="card">
                         <div class="card-header">
-                            <h3 class="card-title text-bold">Peserta Baru belum isi Angket</h3>
+                            <h3 class="card-title text-bold">Peserta belum isi Angket</h3>
                         </div>
                         <!-- /.card-header -->
                         <div class="card-body p-0">
@@ -257,11 +283,29 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr>
-                                        <td>1.</td>
-                                        <td>Update software</td>
-                                        <td><span class="badge bg-danger">55%</span></td>
-                                    </tr>
+                                    @foreach ($nullNewFormStudent as $nullNewFormStudents)
+                                        <tr>
+                                            <td>{{ $loop->iteration }}</td>
+                                            <td>{{ ucwords($nullNewFormStudents->nm_lengkap) }}</td>
+                                            <td>
+                                                @if (!empty($nullNewFormStudents->no_hp))
+                                                    <a target="_blank"
+                                                        href="https://wa.me/+62{{ $nullNewFormStudents->no_hp }}"><span
+                                                            class="badge bg-success">
+                                                            <i class="fab fa-whatsapp mr-1"></i>
+                                                            {{ $nullNewFormStudents->no_hp }}</span>
+                                                    </a>
+                                                @else
+                                                    <a
+                                                        href="/admin/pendaftaran/{{ $nullNewFormStudents->no_induk }}/edit"><span
+                                                            class="badge bg-warning">
+                                                            <i class="fas fa-pen mr-1"></i>
+                                                            Masukkan No. HP</span>
+                                                    </a>
+                                                @endif
+                                            </td>
+                                        </tr>
+                                    @endforeach
                                 </tbody>
                             </table>
                         </div>
@@ -269,7 +313,7 @@
                     </div>
                     <div class="card">
                         <div class="card-header">
-                            <h3 class="card-title text-bold">Peserta belum isi Angket Penilaian</h3>
+                            <h3 class="card-title text-bold">Alumni belum isi Angket Penilaian</h3>
                         </div>
                         <!-- /.card-header -->
                         <div class="card-body p-0">
@@ -353,51 +397,49 @@
         });
     </script>
 
-    {{-- Grafik Batang Pendaftar 3 tahun terakhir --}}
+    {{-- Grafik Batang Pendaftar 5 tahun terakhir --}}
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            var ctx = document.getElementById('registrants-chart').getContext('2d');
+            var allData = @json($registrantsData);
 
-            // Menggabungkan data laki-laki dan perempuan untuk mendapatkan nilai maksimum
-            var maxValue = Math.max(...@json(array_merge($monthlyData['male'], $monthlyData['female'])));
+            Object.keys(allData).forEach(function(year) {
+                var ctx = document.getElementById('registrants-chart-' + year).getContext('2d');
 
-            // Tambahkan beberapa ruang kosong di atas nilai tertinggi
-            var maxY = Math.ceil(maxValue * 1.2); // Menggunakan faktor 1.2 untuk menambah ruang kosong 20%
-            console.log('maxValue:', maxValue);
-            console.log('maxY:', maxY);
+                var maxValue = Math.max(...allData[year]['male'], ...allData[year]['female']);
+                var maxY = Math.ceil(maxValue * 1.2);
 
-            var chart = new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agust',
-                        'Sept', 'Okt', 'Nov', 'Des'
-                    ],
-                    datasets: [{
-                            label: 'Laki-laki',
-                            backgroundColor: 'rgba(20, 90, 227, 0.2)', // Warna biru dop
-                            borderColor: 'rgba(20, 90, 227, 1)',
-                            borderWidth: 1,
-                            data: @json($monthlyData['male'])
-                        },
-                        {
-                            label: 'Perempuan',
-                            backgroundColor: 'rgba(255, 193, 7, 0.2)', // Warna kuning dop
-                            borderColor: 'rgba(255, 193, 7, 1)',
-                            borderWidth: 1,
-                            data: @json($monthlyData['female'])
-                        }
-                    ]
-
-                },
-                options: {
-                    responsive: true,
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            suggestedMax: maxY // Menggunakan suggestedMax untuk memberi ruang ekstra
+                new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agust', 'Sept',
+                            'Okt', 'Nov', 'Des'
+                        ],
+                        datasets: [{
+                                label: 'Laki-laki',
+                                backgroundColor: 'rgba(20, 90, 227, 0.2)',
+                                borderColor: 'rgba(20, 90, 227, 1)',
+                                borderWidth: 1,
+                                data: allData[year]['male']
+                            },
+                            {
+                                label: 'Perempuan',
+                                backgroundColor: 'rgba(255, 193, 7, 0.2)',
+                                borderColor: 'rgba(255, 193, 7, 1)',
+                                borderWidth: 1,
+                                data: allData[year]['female']
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                suggestedMax: maxY
+                            }
                         }
                     }
-                }
+                });
             });
         });
     </script>

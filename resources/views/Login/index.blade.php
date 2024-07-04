@@ -127,6 +127,17 @@
             });
         </script>
     @endif
+    @if ($messages = Session::get('info'))
+        <script>
+            toastr.options = {
+                "progressBar": true,
+                "closeButton": true
+            }
+            toastr.info('{{ $messages }}', 'Information', {
+                timeOut: 5000
+            });
+        </script>
+    @endif
 </body>
 
 </html>
