@@ -282,10 +282,11 @@
                             </tr>
                         </table>
                         </p>
-                        <img style="position:relative; right:210px; top:80px; width:20%; height:auto;"
-                            src="{{ asset('storage/' . $data->qrcode) }}" alt="QR Code"><br><i
-                            style="position:relative; font-size:14px; right:210px; top:66px;">Scan to
-                            Check</i>
+                        <div style="position: relative;">
+                            <img style="position: absolute; right: 450px; top: 170px; width: 20%; height: auto;"
+                                src="{{ asset('storage/' . $data->qrcode) }}" alt="QR Code">
+                            <i style="position: absolute; font-size: 14px; right: 467px; top: 285px;">Scan to Check</i>
+                        </div>
                     </td>
                     <td style="font-family:Tahoma, Geneva, sans-serif;" width="384" align="left"
                         valign="top">

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\AngketPenilaian;
 use App\Models\Pendaftar;
 use App\Models\ProgramPaket;
 use App\Models\ProgramPilihan;
@@ -145,7 +146,29 @@ class DashboardController extends Controller
             ->select('p.no_induk', 'p.nm_lengkap', 'p.no_hp')
             ->get();
 
-        // $nullNewFormStudent = $nullNewForm->paginate(5);
+        // Mengambil semua data dari tabel tb_penilaian
+        $penilaians = AngketPenilaian::all();
+
+        // Menghitung rata-rata nilai 'Tutor'
+        $tutorAverage = $penilaians->avg(function ($penilaian) {
+            return (
+                $penilaian->var1_tutor + $penilaian->var2_tutor + $penilaian->var3_tutor +
+                $penilaian->var4_tutor + $penilaian->var5_tutor + $penilaian->var6_tutor +
+                $penilaian->var7_tutor + $penilaian->var8_tutor + $penilaian->var9_tutor +
+                $penilaian->var10_tutor + $penilaian->var11_tutor + $penilaian->var12_tutor +
+                $penilaian->var13_tutor
+            ) / 13;
+        });
+
+        // Menghitung rata-rata nilai 'Administrasi'
+        $administrasiAverage = $penilaians->avg(function ($penilaian) {
+            return (
+                $penilaian->var1 + $penilaian->var2 + $penilaian->var3 +
+                $penilaian->var4 + $penilaian->var5 + $penilaian->var6 +
+                $penilaian->var7 + $penilaian->var8 + $penilaian->var9 +
+                $penilaian->var10 + $penilaian->var11 + $penilaian->var12
+            ) / 12;
+        });
 
         return view('dashboard.index', [
             "halaman" => "Dashboard",
@@ -165,6 +188,16 @@ class DashboardController extends Controller
             "popularProgramData" => $programData,
             "registrantsData" => $allRegistrants,
             "popularPrograms" => $popularPrograms,
+            "tutorAverage" => $tutorAverage,
+            "administrasiAverage" => $administrasiAverage,
         ]);
+    }
+    private function getStarRating($average)
+    {
+        $fullStars = floor($average);
+        $halfStar = ($average - $fullStars) >= 0.5 ? 1 : 0;
+        $emptyStars = 5 - $fullStars - $halfStar;
+
+        return compact('fullStars', 'halfStar', 'emptyStars');
     }
 }

@@ -2,35 +2,14 @@
 
 @section('container')
     <style>
-        .rating {
-            display: inline-block;
-            unicode-bidi: bidi-override;
-            direction: rtl;
+        .star-rating {
+            color: gold;
+            text-shadow: 1px 1px 2px black;
         }
 
-        .rating input {
-            display: none;
-        }
-
-        .rating label {
-            display: inline-block;
-            padding: 5px;
-            font-size: 24px;
-            color: #ffa500;
-            cursor: pointer;
-        }
-
-        .rating label:before {
-            content: '★';
-        }
-
-        .rating input:checked~label {
-            color: #f7d419;
-        }
-
-        .rating label:hover,
-        .rating label:hover~label {
-            color: #ffa500;
+        .star-rating-outline {
+            color: gold;
+            text-shadow: 1px 1px 2px black, 0 0 3px black;
         }
     </style>
     <section class="content">
@@ -124,22 +103,39 @@
                             <div class="row">
                                 <div class="col-sm-6 col-12">
                                     <div class="description-block border-right">
-                                        <h4 class="">4,6</h4>
+                                        <h4 class="">{{ number_format($tutorAverage, 1, ',', '.') }}</h4>
+                                        <div>
+                                            @for ($i = 1; $i <= floor($tutorAverage); $i++)
+                                                <i class="fa fa-star star-rating"></i>
+                                            @endfor
+                                            @if ($tutorAverage - floor($tutorAverage) >= 0.5)
+                                                <i class="fa fa-star-half-alt star-rating"></i>
+                                            @endif
+                                            @for ($i = ceil($tutorAverage); $i < 5; $i++)
+                                                <i class="fa fa-star-o star-rating-outline"></i>
+                                            @endfor
+                                        </div>
                                         <span class="description-text">Tutor</span>
                                     </div>
-                                    <!-- /.description-block -->
                                 </div>
-                                <!-- /.col -->
                                 <div class="col-sm-6 col-12">
                                     <div class="description-block border-right">
-                                        <h4>4,9</h4>
+                                        <h4>{{ number_format($administrasiAverage, 1, ',', '.') }}</h4>
+                                        <div>
+                                            @for ($i = 1; $i <= floor($administrasiAverage); $i++)
+                                                <i class="fa fa-star star-rating"></i>
+                                            @endfor
+                                            @if ($administrasiAverage - floor($administrasiAverage) >= 0.5)
+                                                <i class="fa fa-star-half-alt star-rating"></i>
+                                            @endif
+                                            @for ($i = ceil($administrasiAverage); $i < 5; $i++)
+                                                <i class="fa fa-star-o star-rating-outline"></i>
+                                            @endfor
+                                        </div>
                                         <span class="description-text">Administrasi</span>
                                     </div>
-                                    <!-- /.description-block -->
                                 </div>
-                                <!-- /.col -->
                             </div>
-                            <!-- /.row -->
                         </div>
                         <!-- /.card-footer -->
                     </div>
