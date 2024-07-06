@@ -58,13 +58,89 @@ class DashboardController extends Controller
             $programData[] = $program->total;
         }
 
-        $totalRegistrantsThisYear = array_sum($monthlyData['male']) + array_sum($monthlyData['female']);
-        $registrantsThisMonth = $monthlyData['male'][$currentMonth - 1] + $monthlyData['female'][$currentMonth - 1];
+        // $totalRegistrantsThisYear = array_sum($monthlyData['male']) + array_sum($monthlyData['female']);
+        // $registrantsThisMonth = $monthlyData['male'][$currentMonth - 1] + $monthlyData['female'][$currentMonth - 1];
+
+        // Mengambil data dari tb_pendaftar_verifikasi dan menghitung jumlah peserta untuk setiap program
+        $programCounts = DB::table('tb_pendaftar_verifikasi')
+            ->select('kd_pilihan1 as kd_pilihan')
+            ->whereNotNull('kd_pilihan1')->where('kd_pilihan1', '!=', 0)
+            ->unionAll(
+                DB::table('tb_pendaftar_verifikasi')
+                    ->select('kd_pilihan2 as kd_pilihan')
+                    ->whereNotNull('kd_pilihan2')->where('kd_pilihan2', '!=', 0)
+            )
+            ->unionAll(
+                DB::table('tb_pendaftar_verifikasi')
+                    ->select('kd_pilihan3 as kd_pilihan')
+                    ->whereNotNull('kd_pilihan3')->where('kd_pilihan3', '!=', 0)
+            )
+            ->unionAll(
+                DB::table('tb_pendaftar_verifikasi')
+                    ->select('kd_pilihan4 as kd_pilihan')
+                    ->whereNotNull('kd_pilihan4')->where('kd_pilihan4', '!=', 0)
+            )
+            ->unionAll(
+                DB::table('tb_pendaftar_verifikasi')
+                    ->select('kd_pilihan5 as kd_pilihan')
+                    ->whereNotNull('kd_pilihan5')->where('kd_pilihan5', '!=', 0)
+            )
+            ->unionAll(
+                DB::table('tb_pendaftar_verifikasi')
+                    ->select('kd_pilihan6 as kd_pilihan')
+                    ->whereNotNull('kd_pilihan6')->where('kd_pilihan6', '!=', 0)
+            )
+            ->unionAll(
+                DB::table('tb_pendaftar_verifikasi')
+                    ->select('kd_tambahan as kd_pilihan')
+                    ->whereNotNull('kd_tambahan')->where('kd_tambahan', '!=', 0)
+            )
+            ->unionAll(
+                DB::table('tb_pendaftar_verifikasi')
+                    ->select('kd_tambahan2 as kd_pilihan')
+                    ->whereNotNull('kd_tambahan2')->where('kd_tambahan2', '!=', 0)
+            )
+            ->unionAll(
+                DB::table('tb_pendaftar_verifikasi')
+                    ->select('kd_tambahan3 as kd_pilihan')
+                    ->whereNotNull('kd_tambahan3')->where('kd_tambahan3', '!=', 0)
+            )
+            ->unionAll(
+                DB::table('tb_pendaftar_verifikasi')
+                    ->select('kd_tambahan4 as kd_pilihan')
+                    ->whereNotNull('kd_tambahan4')->where('kd_tambahan4', '!=', 0)
+            )
+            ->get()
+            ->groupBy('kd_pilihan')
+            ->map(function ($row) {
+                return $row->count();
+            });
+
+        // Mengambil data program dari tb_pilihan dan mengurutkan berdasarkan jumlah peserta
+        $popularPrograms = $programCounts->map(function ($count, $kd_pilihan) {
+            $program = ProgramPilihan::find($kd_pilihan);
+            return [
+                'program' => $program ? $program->program : 'Unknown',
+                'count' => $count
+            ];
+        })->sortByDesc('count')->values();
 
         $nullNewFormStudent = DB::table('tb_pendaftar as p')
             ->leftJoin('tb_angket as a', 'p.no_induk', '=', 'a.no_induk')
             ->orderByDesc('p.no_induk')
             ->whereNull('a.no_induk')
+            ->take(5)
+            ->select('p.no_induk', 'p.nm_lengkap', 'p.no_hp')
+            ->get();
+
+        $nullSurveyForm = DB::table('tb_pendaftar as p')
+            ->leftJoin('tb_penilaian as tp', 'p.no_induk', '=', 'tp.no_induk')
+            ->leftJoin('tb_sertifikat as s', 'p.no_induk', '=', 's.no_induk')
+            ->where(function ($query) {
+                $query->WhereNull('tp.no_induk');
+            })
+            ->whereNotNull('s.no_induk')
+            ->orderBy('p.no_induk', 'desc')
             ->take(5)
             ->select('p.no_induk', 'p.nm_lengkap', 'p.no_hp')
             ->get();
@@ -81,12 +157,14 @@ class DashboardController extends Controller
                 ->take(5)
                 ->get(),
             'nullNewFormStudent' => $nullNewFormStudent,
+            'nullSurveyForms' => $nullSurveyForm,
             "countUser" => User::count(),
             "countProgramPilihan" => ProgramPilihan::count(),
             "countProgramPaket" => ProgramPaket::count(),
             "popularProgramLabels" => $programLabels,
             "popularProgramData" => $programData,
             "registrantsData" => $allRegistrants,
+            "popularPrograms" => $popularPrograms,
         ]);
     }
 }

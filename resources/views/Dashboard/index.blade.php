@@ -1,6 +1,38 @@
 @extends('layouts.main')
 
 @section('container')
+    <style>
+        .rating {
+            display: inline-block;
+            unicode-bidi: bidi-override;
+            direction: rtl;
+        }
+
+        .rating input {
+            display: none;
+        }
+
+        .rating label {
+            display: inline-block;
+            padding: 5px;
+            font-size: 24px;
+            color: #ffa500;
+            cursor: pointer;
+        }
+
+        .rating label:before {
+            content: '★';
+        }
+
+        .rating input:checked~label {
+            color: #f7d419;
+        }
+
+        .rating label:hover,
+        .rating label:hover~label {
+            color: #ffa500;
+        }
+    </style>
     <section class="content">
         <div class="container-fluid">
             <!-- Small boxes (Stat box) -->
@@ -71,6 +103,50 @@
                 <!-- ./col -->
             </div>
             <!-- /.row -->
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="card-title">Skor Kinerja</h5>
+
+                            <div class="card-tools">
+                                <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                    <i class="fas fa-minus"></i>
+                                </button>
+                                <button type="button" class="btn btn-tool" data-card-widget="remove">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <!-- /.card-header -->
+                        <!-- ./card-body -->
+                        <div class="card-footer">
+                            <div class="row">
+                                <div class="col-sm-6 col-12">
+                                    <div class="description-block border-right">
+                                        <h4 class="">4,6</h4>
+                                        <span class="description-text">Tutor</span>
+                                    </div>
+                                    <!-- /.description-block -->
+                                </div>
+                                <!-- /.col -->
+                                <div class="col-sm-6 col-12">
+                                    <div class="description-block border-right">
+                                        <h4>4,9</h4>
+                                        <span class="description-text">Administrasi</span>
+                                    </div>
+                                    <!-- /.description-block -->
+                                </div>
+                                <!-- /.col -->
+                            </div>
+                            <!-- /.row -->
+                        </div>
+                        <!-- /.card-footer -->
+                    </div>
+                    <!-- /.card -->
+                </div>
+                <!-- /.col -->
+            </div>
             <!-- Main row -->
             <div class="row">
                 <!-- Left col -->
@@ -188,7 +264,8 @@
                             <a href="{{ route('pendaftaran.create') }}" class="btn btn-sm btn-primary float-left"><i
                                     class="fas fa-plus mr-1"></i>Add New</a>
                             <a href="{{ route('pendaftaran.index') }}" class="btn btn-sm btn-secondary float-right"><i
-                                    class="fas fa-eye mr-1"></i>View All Student</a>
+                                    class="fas fa-eye mr-1"></i>View All
+                                Student</a>
                         </div>
                         <!-- /.card-footer -->
                     </div>
@@ -254,15 +331,17 @@
                                     <tr>
                                         <th>No</th>
                                         <th>Program</th>
-                                        <th>Pendaftar</th>
+                                        <th>Peserta</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr>
-                                        <td>1</td>
-                                        <td>Microsoft Word</td>
-                                        <td><span class="badge badge-success">140</span></td>
-                                    </tr>
+                                    @foreach ($popularPrograms as $index => $program)
+                                        <tr>
+                                            <td>{{ $loop->iteration }}</td>
+                                            <td>{{ ucwords($program['program']) }}</td>
+                                            <td><span class="badge badge-success">{{ $program['count'] }}</span></td>
+                                        </tr>
+                                    @endforeach
                                 </tbody>
                             </table>
                         </div>
@@ -271,6 +350,14 @@
                     <div class="card">
                         <div class="card-header">
                             <h3 class="card-title text-bold">Peserta belum isi Angket</h3>
+                            <div class="card-tools">
+                                <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                    <i class="fas fa-minus"></i>
+                                </button>
+                                <button type="button" class="btn btn-tool" data-card-widget="remove">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </div>
                         </div>
                         <!-- /.card-header -->
                         <div class="card-body p-0">
@@ -290,7 +377,7 @@
                                             <td>
                                                 @if (!empty($nullNewFormStudents->no_hp))
                                                     <a target="_blank"
-                                                        href="https://wa.me/+62{{ $nullNewFormStudents->no_hp }}"><span
+                                                        href="https://wa.me/+62{{ $nullNewFormStudents->no_hp }}?text=Hai%20{{ ucwords($nullNewFormStudents->nm_lengkap) }},%20Kami%20dari%20LKP%20PTCC.%20Ada%20yg%20perlu%20Kami%20sampaikan%20terkait%20pengisian%20angket%20peserta%20didik%20baru,%20mohon%20membuka%20link.%20sis.lkpptcc.id,%20masukkan%20nomor%20induk%20dan%20password%20ya%20Kak,%20setelah%20itu%20silahkan%20mengisi%20angketnya.%20Terima%20Kasih.%20:-)"><span
                                                             class="badge bg-success">
                                                             <i class="fab fa-whatsapp mr-1"></i>
                                                             {{ $nullNewFormStudents->no_hp }}</span>
@@ -313,7 +400,15 @@
                     </div>
                     <div class="card">
                         <div class="card-header">
-                            <h3 class="card-title text-bold">Alumni belum isi Angket Penilaian</h3>
+                            <h3 class="card-title text-bold">Alumni belum isi Survey Penilaian</h3>
+                            <div class="card-tools">
+                                <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                    <i class="fas fa-minus"></i>
+                                </button>
+                                <button type="button" class="btn btn-tool" data-card-widget="remove">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </div>
                         </div>
                         <!-- /.card-header -->
                         <div class="card-body p-0">
@@ -326,11 +421,28 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr>
-                                        <td>1.</td>
-                                        <td>Update software</td>
-                                        <td><span class="badge bg-danger">55%</span></td>
-                                    </tr>
+                                    @foreach ($nullSurveyForms as $nullSurveyForm)
+                                        <tr>
+                                            <td>{{ $loop->iteration }}</td>
+                                            <td>{{ ucwords($nullSurveyForm->nm_lengkap) }}</td>
+                                            <td>
+                                                @if (!empty($nullSurveyForm->no_hp))
+                                                    <a target="_blank"
+                                                        href="https://wa.me/+62{{ $nullSurveyForm->no_hp }}?text=Hai%20{{ ucwords($nullSurveyForm->nm_lengkap) }},%20Kami%20dari%20LKP%20PTCC.%20Ada%20yg%20perlu%20Kami%20sampaikan%20terkait%20pengisian%20survey%20penilaian%20kinerja,%20mohon%20membuka%20link.%20sis.lkpptcc.id,%20masukkan%20nomor%20induk%20dan%20password%20ya%20Kak,%20setelah%20itu%20silahkan%20mengisi%20surveynya.%20Terima%20Kasih.%20:-)"><span
+                                                            class="badge bg-success">
+                                                            <i class="fab fa-whatsapp mr-1"></i>
+                                                            {{ $nullSurveyForm->no_hp }}</span>
+                                                    </a>
+                                                @else
+                                                    <a href="/admin/pendaftaran/{{ $nullSurveyForm->no_induk }}/edit"><span
+                                                            class="badge bg-warning">
+                                                            <i class="fas fa-pen mr-1"></i>
+                                                            Masukkan No. HP</span>
+                                                    </a>
+                                                @endif
+                                            </td>
+                                        </tr>
+                                    @endforeach
                                 </tbody>
                             </table>
                         </div>

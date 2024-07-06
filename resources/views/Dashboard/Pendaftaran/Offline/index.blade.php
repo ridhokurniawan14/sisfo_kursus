@@ -99,7 +99,9 @@
                                                     <a href="https://wa.me/{{ $data->no_hp }}?text=Hai%20{{ ucwords($data->nm_lengkap) }}, Kami dari LKP PTCC.+Ada+yang+perlu+Kami+sampaikan+terkait+.......&type=phone_number&app_absent=0"
                                                         target="_blank">{{ $data->no_hp }}</a>
                                                 @else
-                                                    <span class="right badge badge-warning">MOHON DIISI‼️</span>
+                                                    <a href="/admin/pendaftaran/{{ $data->no_induk }}"><span
+                                                            class="right badge badge-warning">MOHON
+                                                            DIISI‼️</span></a>
                                                 @endif
                                             </td>
                                             <td>
