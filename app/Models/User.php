@@ -109,4 +109,15 @@ class User extends Authenticatable
             ->logOnlyDirty()    // Hanya mencatat perubahan
             ->dontSubmitEmptyLogs(); // Tidak mencatat jika tidak ada perubahan
     }
+    // Relasi ke HakAkses
+    public function hakAkses()
+    {
+        return $this->belongsTo(HakAkses::class, 'posisi', 'id');
+    }
+
+    // Method untuk cek SuperAdmin
+    public function isSuperAdmin()
+    {
+        return $this->hakAkses && $this->hakAkses->hak_akses === 'superadmin';
+    }
 }

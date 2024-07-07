@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\Models\PendaftarOnline;
 use Illuminate\Pagination\Paginator;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
@@ -40,9 +41,19 @@ class AppServiceProvider extends ServiceProvider
                 ->select('tb_pendaftar.no_induk', 'tb_pendaftar.nm_lengkap', 'tb_pendaftar.gender', 'tb_pendaftar.no_hp')
                 ->get();
 
+            $user = Auth::user();
+            if ($user) {
+                // Debugging untuk memastikan user yang login dan hak akses
+                // dump($user->hakAkses ? $user->hakAkses->hak_akses : 'No Hak Akses');
+                $isSuperAdmin = $user->isSuperAdmin();
+            } else {
+                $isSuperAdmin = false;
+            }
+
             $view->with([
                 'notifications' => $notifications,
                 'notificationsVerification' => $notificationsVerification,
+                'isSuperAdmin' => $isSuperAdmin,
             ]);
         });
     }
