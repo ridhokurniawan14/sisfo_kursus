@@ -66,6 +66,7 @@ class Pendaftar extends Model
         'alamat_wali',
         'hp_wali'
     ];
+    protected $encryptable = ['no_induk']; // Atribut yang ingin Anda enkripsi
 
     protected static function boot()
     {

@@ -72,60 +72,9 @@
             </ul>
 
             <!-- Right navbar links -->
-            <ul class="navbar-nav ml-auto">
-                <!-- Notifications Dropdown Menu -->
-                <li class="nav-item dropdown">
-                    <a class="nav-link" data-toggle="dropdown" href="#">
-                        <i class="far fa-bell"></i>
-                        <span class="badge badge-warning navbar-badge">15</span>
-                    </a>
-                    <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
-                        <span class="dropdown-item dropdown-header">15 Notifications</span>
-                        <div class="dropdown-divider"></div>
-                        <a href="#" class="dropdown-item">
-                            <i class="fas fa-envelope mr-2"></i> 4 new messages
-                            <span class="float-right text-muted text-sm">3 mins</span>
-                        </a>
-                        <div class="dropdown-divider"></div>
-                        <a href="#" class="dropdown-item">
-                            <i class="fas fa-users mr-2"></i> 8 friend requests
-                            <span class="float-right text-muted text-sm">12 hours</span>
-                        </a>
-                        <div class="dropdown-divider"></div>
-                        <a href="#" class="dropdown-item">
-                            <i class="fas fa-file mr-2"></i> 3 new reports
-                            <span class="float-right text-muted text-sm">2 days</span>
-                        </a>
-                        <div class="dropdown-divider"></div>
-                        <a href="#" class="dropdown-item dropdown-footer">See All Notifications</a>
-                    </div>
-                </li>
-                {{-- @auth --}}
-                <li class="nav-item dropdown">
-                    <a id="dropdownSubMenu1" href="#" data-toggle="dropdown" aria-haspopup="true"
-                        aria-expanded="false" class="nav-link dropdown-toggle">Selamat Datang,
-                        {{ ucwords(auth()->user()->nm_lengkap) }}</a>
-                    <ul aria-labelledby="dropdownSubMenu1" class="dropdown-menu dropdown-menu-right border-0 shadow">
-                        <li><a href="/admin/ganti-password" class="dropdown-item"><i class="nav-icon fas fa-key"></i>
-                                Ganti
-                                Password </a></li>
-                        <li class="dropdown-divider"></li>
-                        <li>
-                            <form action="/admin/logout" method="POST">
-                                @csrf
-                                <button type="submit" class="dropdown-item"><i
-                                        class="nav-icon fas fa-sign-out-alt"></i> Logout</button>
-                            </form>
-                        </li>
-                    </ul>
-                </li>
-                {{-- @else
-        <li class="nav-item d-none d-sm-inline-block">
-          <a href="/admin/login" class="nav-link">Login</a>
-        </li>      
-      @endauth --}}
-
-            </ul>
+            <!-- isi notif -->
+            @include('layouts.notification', ['notifications' => $notifications])
+            <!-- penutup notif -->
         </nav>
         <!-- /.navbar -->
 
