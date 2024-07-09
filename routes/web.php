@@ -5,13 +5,18 @@ use App\Http\Controllers\AngketPenilaianController;
 use App\Http\Controllers\AngketPesertaDidikBaruController;
 use App\Http\Controllers\BerkasAkreditasiController;
 use App\Http\Controllers\BiayaDaftarController;
+use App\Http\Controllers\ContactController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\DashboardSiswaController;
 use App\Http\Controllers\DataRekeningController;
 use App\Http\Controllers\HakAksesController;
 use App\Http\Controllers\InformationController;
 use App\Http\Controllers\JamController;
+use App\Http\Controllers\JamSiswaController;
+use App\Http\Controllers\KuesionerController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\LoginSiswaController;
+use App\Http\Controllers\NilaiController;
 use App\Http\Controllers\PendaftarController;
 use App\Http\Controllers\PendaftarOnlineController;
 use App\Http\Controllers\PengumumanController;
@@ -21,6 +26,7 @@ use App\Http\Controllers\ProgramPaketController;
 use App\Http\Controllers\ProgramPilihanController;
 use App\Http\Controllers\SaranaPrasaranaController;
 use App\Http\Controllers\SertifikatController;
+use App\Http\Controllers\SiswaController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -46,7 +52,10 @@ Route::prefix('admin')->group(function () {
     Route::get('/login', [LoginController::class, 'index'])->name('login.admin')->middleware('guest');
     Route::post('/login', [LoginController::class, 'authenticate'])->name('login.admin');
     Route::post('/logout', [LoginController::class, 'logout'])->name('logout.admin');
-    // Route::get('/logout', [LoginController::class, 'logout'])->name('logout.admin');
+    // Tambahkan rute GET untuk logout yang mengarahkan ke halaman login
+    Route::get('/logout', function () {
+        return redirect('/admin/login');
+    })->name('logout.admin.get');
 });
 // HALAMAN ADMIN
 Route::middleware('auth:admin')->prefix('admin')->group(function () {
@@ -101,6 +110,7 @@ Route::middleware('auth:admin')->prefix('admin')->group(function () {
     Route::get('pendaftaran/verifikasi/{no_induk}/edit', [PendaftarController::class, 'editVerifikasi'])->name('pendaftaran.editVerifikasi');
     Route::post('pendaftaran/verifikasi/{no_induk}/save', [PendaftarController::class, 'SaveVerifikasi'])->name('pendaftaran.SaveVerifikasi');
     Route::put('pendaftaran/verifikasi/{no_induk}/update', [PendaftarController::class, 'UpdateVerifikasi'])->name('pendaftaran.UpdateVerifikasi');
+    Route::put('pendaftaran/{no_induk}/update-password', [PendaftarController::class, 'updatePassword'])->name('pendaftaran.updatePassword');
     // NILAI
     Route::post('/nilai/{no_induk}', [PendaftarController::class, 'saveNilai'])->name('save-nilai');
     Route::post('/nilai/updateAll', [PendaftarController::class, 'updateAllNilai'])->name('nilai.updateAll');
@@ -123,4 +133,21 @@ Route::prefix('siswa')->group(function () {
     Route::post('/login', [LoginSiswaController::class, 'authenticate'])->name('login.siswa');
     Route::post('/logout', [LoginSiswaController::class, 'logout'])->name('logout.siswa');
     Route::get('/logout', [LoginSiswaController::class, 'logout'])->name('logout.siswa');
+});
+// HALAMAN SISWA
+Route::middleware('auth:siswa')->prefix('siswa')->group(function () {
+    // HALAMAN DASHBOARD
+    Route::resource('dashboard', DashboardSiswaController::class);
+    // HALAMAN GANTI PASSWORD
+    Route::resource('ganti-password', SiswaController::class);
+    // HALAMAN KUESIONER
+    Route::resource('kuesioner', KuesionerController::class);
+    // HALAMAN NILAI
+    Route::resource('nilai', NilaiController::class);
+    // HALAMAN JAM
+    Route::resource('jam', JamSiswaController::class);
+    // HALAMAN JAM
+    Route::resource('contact', ContactController::class);
+    // HALAMAN LOG ACTIVITY
+    Route::resource('logs', ActivityController::class);
 });

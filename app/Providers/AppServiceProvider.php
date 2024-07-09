@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Models\PendaftarOnline;
+use App\Models\User;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -42,12 +43,11 @@ class AppServiceProvider extends ServiceProvider
                 ->get();
 
             $user = Auth::user();
-            if ($user) {
-                // Debugging untuk memastikan user yang login dan hak akses
-                // dump($user->hakAkses ? $user->hakAkses->hak_akses : 'No Hak Akses');
+            $isSuperAdmin = false;
+
+            // Cek apakah pengguna yang login adalah instance dari User
+            if ($user instanceof User) {
                 $isSuperAdmin = $user->isSuperAdmin();
-            } else {
-                $isSuperAdmin = false;
             }
 
             $view->with([

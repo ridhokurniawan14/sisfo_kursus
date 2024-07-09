@@ -36,4 +36,14 @@ class RedirectIfTokenExpired
         // Implementasi logika untuk memeriksa apakah token sudah kadaluarsa
         return false;
     }
+    protected function isAuthenticated($request)
+    {
+        // Periksa apakah pengguna terautentikasi sebagai admin atau siswa
+        if ($request->is('admin/*')) {
+            return Auth::guard('admin')->check();
+        } elseif ($request->is('siswa/*')) {
+            return Auth::guard('siswa')->check();
+        }
+        return Auth::check();
+    }
 }

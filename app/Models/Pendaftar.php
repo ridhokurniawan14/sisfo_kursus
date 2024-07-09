@@ -2,17 +2,19 @@
 
 namespace App\Models;
 
+use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\Activitylog\LogOptions;
 use Spatie\Activitylog\Traits\LogsActivity;
 
-class Pendaftar extends Model
+class Pendaftar extends Authenticatable
 {
     use HasFactory, LogsActivity;
     protected $table = 'tb_pendaftar'; // Ganti 'nama_tabel_anda' dengan nama tabel yang sebenarnya
     protected $primaryKey = 'id';
     protected static $logAttributes = ['no_induk', 'nm_lengkap'];
+    protected $guard = 'siswa';
     /**
      * The attributes that are mass assignable.
      *

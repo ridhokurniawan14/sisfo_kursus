@@ -115,6 +115,10 @@
                                                         <a class="dropdown-item"
                                                             href="/admin/pendaftaran/{{ $data->no_induk }}">Detail Data</a>
                                                         <div class="dropdown-divider"></div>
+                                                        <a class="dropdown-item" href="#" data-toggle="modal"
+                                                            data-target="#modal-edit-password{{ $data->no_induk }}">Edit
+                                                            Password</a>
+                                                        <div class="dropdown-divider"></div>
                                                         <a class="dropdown-item"
                                                             href="/admin/pendaftaran/verifikasi/{{ $data->no_induk }}/edit">Pembayaran</a>
                                                         <div class="dropdown-divider"></div>
@@ -123,6 +127,70 @@
                                                             Bio</a>
                                                         <a href="#" class="dropdown-item" data-toggle="modal"
                                                             data-target="#modal-delete{{ $data->no_induk }}">Hapus</a>
+                                                    </div>
+                                                </div>
+
+                                                <!-- Modal Edit Password -->
+                                                <div class="modal fade" id="modal-edit-password{{ $data->no_induk }}"
+                                                    tabindex="-1" role="dialog"
+                                                    aria-labelledby="modalEditPasswordLabel{{ $data->no_induk }}"
+                                                    aria-hidden="true">
+                                                    <div class="modal-dialog" role="document">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <h5 class="modal-title"
+                                                                    id="modalEditPasswordLabel{{ $data->no_induk }}">Edit
+                                                                    Password</h5>
+                                                                <button type="button" class="close" data-dismiss="modal"
+                                                                    aria-label="Close">
+                                                                    <span aria-hidden="true">&times;</span>
+                                                                </button>
+                                                            </div>
+                                                            <form
+                                                                action="{{ route('pendaftaran.updatePassword', $data->no_induk) }}"
+                                                                method="POST">
+                                                                @csrf
+                                                                @method('PUT')
+                                                                <div class="modal-body">
+                                                                    <div class="form-group">
+                                                                        <label for="password">Password Baru</label>
+                                                                        <div class="input-group">
+                                                                            <input type="password" class="form-control"
+                                                                                id="password" name="password" required>
+                                                                            <div class="input-group-append">
+                                                                                <button type="button"
+                                                                                    class="btn btn-outline-secondary toggle-password"
+                                                                                    toggle="#password">
+                                                                                    <i class="fa fa-eye"></i>
+                                                                                </button>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="form-group">
+                                                                        <label for="password_confirmation">Konfirmasi
+                                                                            Password Baru</label>
+                                                                        <div class="input-group">
+                                                                            <input type="password" class="form-control"
+                                                                                id="password_confirmation"
+                                                                                name="password_confirmation" required>
+                                                                            <div class="input-group-append">
+                                                                                <button type="button"
+                                                                                    class="btn btn-outline-secondary toggle-password"
+                                                                                    toggle="#password_confirmation">
+                                                                                    <i class="fa fa-eye"></i>
+                                                                                </button>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="modal-footer">
+                                                                    <button type="button" class="btn btn-secondary"
+                                                                        data-dismiss="modal">Batal</button>
+                                                                    <button type="submit" class="btn btn-primary">Simpan
+                                                                        Perubahan</button>
+                                                                </div>
+                                                            </form>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </td>
@@ -188,3 +256,20 @@
     </section>
     <!-- /.content -->
 @endsection
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const togglePasswordButtons = document.querySelectorAll('.toggle-password');
+        togglePasswordButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const input = document.querySelector(button.getAttribute('toggle'));
+                if (input.getAttribute('type') === 'password') {
+                    input.setAttribute('type', 'text');
+                    button.innerHTML = '<i class="fa fa-eye-slash"></i>';
+                } else {
+                    input.setAttribute('type', 'password');
+                    button.innerHTML = '<i class="fa fa-eye"></i>';
+                }
+            });
+        });
+    });
+</script>

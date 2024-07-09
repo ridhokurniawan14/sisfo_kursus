@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-    <title>{{ $halaman }} - SIM</title>
+    <title>{{ $halaman }} - SIS</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!--===============================================================================================-->
@@ -35,20 +35,22 @@
     <div class="limiter">
         <div class="container-login100">
             <div class="wrap-login100">
-                <form action="/login" method="POST" class="login100-form validate-form">
+                <form action="{{ route('login.siswa') }}" method="POST" class="login100-form validate-form">
                     @csrf
                     <span class="login100-form-title p-b-20">
-                        <img src="/img/Logo-PTCC.webp" width="25%">
+                        <img src="{{ isset($profile->logo) && $profile->logo ? '/storage/' . $profile->logo : '/img/unknownb.png' }}"
+                            alt="Logo" class="brand-image img-circle elevation-3" style="opacity: .8"
+                            width="40%">
                     </span>
                     <span class="login100-form-title p-b-30">
                         <h4>Sistem Informasi Siswa</h4>
                     </span>
 
-                    <div class="wrap-input100 validate-input" data-validate = "Valid email is: a@b.c">
-                        <input autofocus autocomplete="off" class="input100 @error('email') is-invalid @enderror"
-                            value="{{ old('email') }}" type="email" name="email">
-                        <span class="focus-input100" data-placeholder="Email"></span>
-                        @error('email')
+                    <div class="wrap-input100 validate-input" data-validate = "Valid no_induk is: a@b.c">
+                        <input autofocus autocomplete="off" class="input100 @error('no_induk') is-invalid @enderror"
+                            value="{{ old('no_induk') }}" type="no_induk" name="no_induk">
+                        <span class="focus-input100" data-placeholder="No. Induk"></span>
+                        @error('no_induk')
                             <div class="invalid-feedback">
                                 {{ $message }}
                             </div>
@@ -121,6 +123,17 @@
                 "closeButton": true
             };
             toastr.error('{{ session('error') }}', 'Failed!', {
+                timeOut: 5000
+            });
+        </script>
+    @endif
+    @if ($messages = Session::get('info'))
+        <script>
+            toastr.options = {
+                "progressBar": true,
+                "closeButton": true
+            }
+            toastr.info('{{ $messages }}', 'Information', {
                 timeOut: 5000
             });
         </script>

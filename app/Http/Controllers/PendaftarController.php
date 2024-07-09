@@ -655,7 +655,18 @@ class PendaftarController extends Controller
             return redirect()->back()->withErrors(['error' => 'Terjadi kesalahan saat memperbarui data: ' . $e->getMessage()]);
         }
     }
+    public function updatePassword(Request $request, $no_induk)
+    {
+        $request->validate([
+            'password' => 'required|confirmed|min:4',
+        ]);
 
+        $pendaftar = Pendaftar::where('no_induk', $no_induk)->first();
+        $pendaftar->password = bcrypt($request->password);
+        $pendaftar->save();
+
+        return redirect()->back()->with('message', 'Password berhasil diperbarui.');
+    }
 
     /**
      * Remove the specified resource from storage.

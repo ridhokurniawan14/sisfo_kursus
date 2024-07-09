@@ -47,7 +47,7 @@ return [
 
         'siswa' => [
             'driver' => 'session',
-            'provider' => 'siswas',
+            'provider' => 'pendaftar',
         ],
     ],
 
@@ -74,9 +74,9 @@ return [
             'model' => App\Models\User::class,
         ],
 
-        'siswas' => [
+        'pendaftar' => [
             'driver' => 'eloquent',
-            'model' => App\Models\Siswa::class,
+            'model' => App\Models\Pendaftar::class,
         ],
 
         // 'users' => [
