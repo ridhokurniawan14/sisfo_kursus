@@ -26,7 +26,7 @@ class ContactController extends Controller
      */
     public function create()
     {
-        //
+        abort(404);
     }
 
     /**
@@ -34,7 +34,7 @@ class ContactController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        abort(404);
     }
 
     /**
@@ -42,7 +42,7 @@ class ContactController extends Controller
      */
     public function show(string $id)
     {
-        //
+        abort(404);
     }
 
     /**
@@ -50,7 +50,7 @@ class ContactController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        abort(404);
     }
 
     /**
@@ -58,7 +58,7 @@ class ContactController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        abort(404);
     }
 
     /**
@@ -66,6 +66,6 @@ class ContactController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        abort(404);
     }
 }

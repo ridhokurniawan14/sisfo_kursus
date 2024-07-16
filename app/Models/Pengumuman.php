@@ -61,4 +61,9 @@ class Pengumuman extends Model
             ->logOnlyDirty()    // Hanya mencatat perubahan
             ->dontSubmitEmptyLogs(); // Tidak mencatat jika tidak ada perubahan
     }
+    // Dalam model Pengumuman.php
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'created_by', 'nm_lengkap');
+    }
 }

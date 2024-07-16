@@ -1,7 +1,6 @@
 @extends('layouts.main')
 
 @section('container')
-    {{-- <meta name="csrf-token" content="{{ csrf_token() }}"> --}}
     <style>
         .profile-photo-hover-text {
             position: absolute;
@@ -1046,7 +1045,9 @@
                                                                         class="text-danger">*</span></label>
                                                                 <select class="form-control" id="kategori_sertifikat"
                                                                     name="kategori" {{ $isReadOnly ? 'disabled' : '' }}>
-                                                                    <option value="">Pilih Kategori Sertifikat
+                                                                    <option value="" disabled selected>
+                                                                        Pilih Kategori
+                                                                        Sertifikat
                                                                     </option>
                                                                     <option value="umum"
                                                                         {{ $isReadOnly && $sertifikatData->kategori == 'umum' ? 'selected' : '' }}>

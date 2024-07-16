@@ -33,7 +33,7 @@
         <nav class="main-header navbar navbar-expand-md navbar-light navbar-white">
             <div class="container">
                 <a href="#" class="navbar-brand">
-                    <img src="{{ isset($profile->logo) && $profile->logo ? '/storage/' . $profile->logo : '/img/unknown.png' }}"
+                    <img src="{{ isset($profile->logo) && $profile->logo ? '/storage/' . $profile->logo : '/img/unknownb.png' }}"
                         alt="Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
                     <span class="brand-text font-weight-light">Sistem Informasi Siswa</span>
                 </a>
@@ -52,7 +52,7 @@
                                 class="nav-link {{ Request::is('siswa/dashboard*') ? 'active' : '' }}">Dashboard</a>
                         </li>
                         <li
-                            class="nav-item dropdown {{ Request::is('siswa/kuesioner*', 'siswa/nilai*') ? 'active' : '' }}">
+                            class="nav-item dropdown {{ Request::is('siswa/kuesioner*', 'siswa/nilai*', 'siswa/keuangan*') ? 'active' : '' }}">
                             <a id="dropdownSubMenu1" href="#" data-toggle="dropdown" aria-haspopup="true"
                                 aria-expanded="false" class="nav-link dropdown-toggle">Akademik</a>
                             <ul aria-labelledby="dropdownSubMenu1" class="dropdown-menu border-0 shadow">
@@ -61,6 +61,9 @@
                                     </a></li>
                                 <li><a href="{{ route('kuesioner.index') }}"
                                         class="dropdown-item {{ Request::is('siswa/kuesioner*') ? 'active' : '' }}">Kuesioner</a>
+                                </li>
+                                <li><a href="{{ route('keuangan.index') }}"
+                                        class="dropdown-item {{ Request::is('siswa/keuangan*') ? 'active' : '' }}">Keuangan</a>
                                 </li>
                                 <!-- End Level two -->
                             </ul>
@@ -80,14 +83,18 @@
                 <ul class="order-1 order-md-3 navbar-nav navbar-no-expand ml-auto">
                     <li class="nav-item dropdown">
                         <a id="dropdownSubMenu1" href="#" data-toggle="dropdown" aria-haspopup="true"
-                            aria-expanded="false" class="nav-link dropdown-toggle">Selamat Datang,
+                            aria-expanded="false"
+                            class="nav-link dropdown-toggle {{ Request::is('siswa/profile*', 'siswa/ganti-password*') ? 'active' : '' }}">Selamat
+                            Datang,
                             {{ ucwords(auth()->user()->nm_lengkap) }}</a>
                         <ul aria-labelledby="dropdownSubMenu1"
                             class="dropdown-menu dropdown-menu-right border-0 shadow">
-                            <li><a href="{{ route('ganti-password.index') }}" class="dropdown-item"><i
+                            <li><a href="{{ route('profileSiswa.profile') }}"
+                                    class="dropdown-item {{ Request::is('siswa/profile*') ? 'active' : '' }}"><i
                                         class="nav-icon fas fa-user"></i>
                                     Profile </a></li>
-                            <li><a href="{{ route('ganti-password.index') }}" class="dropdown-item"><i
+                            <li><a href="{{ route('ganti-password.index') }}"
+                                    class="dropdown-item {{ Request::is('siswa/ganti-password*') ? 'active' : '' }}"><i
                                         class="nav-icon fas fa-key"></i>
                                     Ganti Password </a></li>
                             <li class="dropdown-divider"></li>

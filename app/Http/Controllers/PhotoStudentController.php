@@ -38,7 +38,7 @@ class PhotoStudentController extends Controller
 
             $file = $request->file('foto');
             $path = $file->store('foto-student', 'public'); // Pastikan 'public' adalah disk yang benar
-            
+
             // Ambil nilai no_induk dari request
             $no_induk = $request->input('no_induk');
 
@@ -60,7 +60,6 @@ class PhotoStudentController extends Controller
     public function show(PhotoStudent $photoStudent)
     {
         abort(404);
-
     }
 
     /**
@@ -100,8 +99,6 @@ class PhotoStudentController extends Controller
             return response()->json(['error' => 'Tidak ada file yang diupload.'], 500);
         }
     }
-
-
     /**
      * Remove the specified resource from storage.
      */
@@ -109,7 +106,7 @@ class PhotoStudentController extends Controller
     {
         $photo = PhotoStudent::where('no_induk', $no_induk)->firstOrFail();
         $filePath = public_path('storage/foto-student/' . $photo->judul_foto);
-        
+
         if (file_exists($filePath)) {
             unlink($filePath);
         }

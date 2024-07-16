@@ -2,16 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Nilai;
+use App\Models\DataRekening;
 use App\Models\Pendaftar;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
-class NilaiController extends Controller
+class KeuanganController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
         $student = Pendaftar::select('p.no_induk', 'p.*', 'pv.*', 'f.*', 'j.*')
@@ -19,12 +16,9 @@ class NilaiController extends Controller
             ->join('tb_pendaftar_verifikasi as pv', 'p.no_induk', '=', 'pv.no_induk')
             ->leftJoin('tb_foto as f', 'p.no_induk', '=', 'f.no_induk')
             ->leftJoin('tb_jam as j', 'pv.kd_jam', '=', 'j.id')
-            ->where('p.id', auth()->user()->id)
+            ->where('p.no_induk', auth()->user()->no_induk)
             ->first();
 
-        if (!$student) {
-            abort(404); // Menampilkan halaman 404 jika data tidak ditemukan
-        }
         $programs = [];
         $kd_programs = [];
 
@@ -75,89 +69,38 @@ class NilaiController extends Controller
                 }
             }
         }
-        // Fetch existing scores
-        $existing_scores = Nilai::where('no_induk', auth()->user()->no_induk)->get()->keyBy('kd_program');
+        // Ambil data angsuran dan tanggal angsuran
+        $installments = [];
 
-        // Process the predikat for each existing score
-        foreach ($existing_scores as $score) {
-            $score->predikat = $this->getPredikat($score->nilai);
+        // Angsuran pertama menggunakan tgl_masuk
+        if ($student->angsuran1) {
+            $installments[] = [
+                'angsuran' => $student->angsuran1,
+                'tanggal' => $student->tgl_masuk,
+                'keterangan' => $student->angsuran1 == $student->tot_biaya ? 'Pelunasan' : 'Angsuran 1',
+            ];
         }
-
-        return view('siswa.nilai.index', [
-            "halaman" => "Nilai",
-            "title" => "Nilai",
-            "tab_title" => "Detail Nilai",
+        // Angsuran berikutnya menggunakan tgl_angsuran2, tgl_angsuran3, tgl_angsuran4, tgl_angsuran5
+        for ($i = 2; $i <= 5; $i++) {
+            $installment_field = 'angsuran' . $i;
+            $date_field = 'tgl_angsuran' . $i;
+            if ($student->$installment_field && $student->$date_field) {
+                $installments[] = [
+                    'angsuran' => $student->$installment_field,
+                    'tanggal' => $student->$date_field,
+                    'keterangan' => 'Angsuran ' . $i,
+                ];
+            }
+        }
+        return view('siswa.keuangan.index', [
+            "halaman" => "Keuangan",
+            "title" => "Keuangan",
+            "tab_title" => "Detail Keuangan",
             "data" => $student,
             "programs" => $programs,
             "kd_programs" => $kd_programs,
-            "existing_scores" => $existing_scores,
+            "installments" => $installments,
+            "rekenings" => DataRekening::orderBy('id')->get(),
         ]);
-    }
-    private function getPredikat($nilai)
-    {
-        if ($nilai >= 90 && $nilai <= 100) {
-            return ['predikat' => 'A', 'bg' => 'bg-success'];
-        } elseif ($nilai >= 85 && $nilai <= 89) {
-            return ['predikat' => 'B+', 'bg' => 'bg-primary'];
-        } elseif ($nilai >= 80 && $nilai <= 84) {
-            return ['predikat' => 'B', 'bg' => 'bg-primary'];
-        } elseif ($nilai >= 75 && $nilai <= 79) {
-            return ['predikat' => 'B-', 'bg' => 'bg-primary'];
-        } elseif ($nilai >= 70 && $nilai <= 74) {
-            return ['predikat' => 'C+', 'bg' => 'bg-warning'];
-        } elseif ($nilai >= 65 && $nilai <= 69) {
-            return ['predikat' => 'C', 'bg' => 'bg-warning'];
-        } elseif ($nilai >= 60 && $nilai <= 64) {
-            return ['predikat' => 'C-', 'bg' => 'bg-warning'];
-        } else {
-            return ['predikat' => 'BELUM DINILAI', 'bg' => 'bg-secondary'];
-        }
-    }
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        abort(404);
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        abort(404);
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        abort(404);
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        abort(404);
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        abort(404);
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        abort(404);
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Pendaftar;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
@@ -16,6 +17,27 @@ class SiswaController extends Controller
             "halaman" => "Ganti Password",
             "title" => "Siswa",
             "tab_title" => "Ganti Password"
+        ]);
+    }
+    public function profile()
+    {
+        $student = Pendaftar::select('p.no_induk', 'p.*', 'pv.*', 'f.*', 'j.*')
+            ->from('tb_pendaftar as p')
+            ->join('tb_pendaftar_verifikasi as pv', 'p.no_induk', '=', 'pv.no_induk')
+            ->leftJoin('tb_foto as f', 'p.no_induk', '=', 'f.no_induk')
+            ->leftJoin('tb_jam as j', 'pv.kd_jam', '=', 'j.id')
+            ->where('p.no_induk', auth()->user()->no_induk)
+            ->first();
+
+        if (!$student) {
+            abort(404); // Menampilkan halaman 404 jika data tidak ditemukan
+        }
+
+        return view('siswa.profile.index', [
+            "halaman" => "Profile",
+            "title" => "Profile",
+            "tab_title" => "Detail Profile",
+            "data" => $student,
         ]);
     }
 
@@ -40,7 +62,7 @@ class SiswaController extends Controller
      */
     public function show(string $id)
     {
-        //
+        abort(404);
     }
 
     /**

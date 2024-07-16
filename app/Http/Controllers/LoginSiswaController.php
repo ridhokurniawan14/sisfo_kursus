@@ -45,6 +45,15 @@ class LoginSiswaController extends Controller
                 ])
                 ->log('Success');
 
+            $checkDataAngket = Pendaftar::leftJoin('tb_angket as a', 'tb_pendaftar.no_induk', '=', 'a.no_induk')
+                ->leftJoin('tb_sertifikat as s', 'tb_pendaftar.no_induk', '=', 's.no_induk')
+                ->leftJoin('tb_penilaian as p', 'tb_pendaftar.no_induk', '=', 'p.no_induk')
+                ->where('tb_pendaftar.no_induk', $noInduk)
+                ->first();
+
+            if ($checkDataAngket->jawab1 == null) {
+                return redirect()->route('kuesioner.index')->with('info', 'Mohon Mengisi Kuesioner ✏️');
+            }
             return redirect()->intended('/siswa/dashboard')->with('info', 'Selamat Datang, Sehat Selalu 😊');
         }
 

@@ -13,6 +13,7 @@ use App\Http\Controllers\HakAksesController;
 use App\Http\Controllers\InformationController;
 use App\Http\Controllers\JamController;
 use App\Http\Controllers\JamSiswaController;
+use App\Http\Controllers\KeuanganController;
 use App\Http\Controllers\KuesionerController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\LoginSiswaController;
@@ -138,16 +139,19 @@ Route::prefix('siswa')->group(function () {
 Route::middleware('auth:siswa')->prefix('siswa')->group(function () {
     // HALAMAN DASHBOARD
     Route::resource('dashboard', DashboardSiswaController::class);
+    // HALAMAN PROFIL SISWA
+    Route::get('profile', [SiswaController::class, 'profile'])->name('profileSiswa.profile');
     // HALAMAN GANTI PASSWORD
     Route::resource('ganti-password', SiswaController::class);
     // HALAMAN KUESIONER
     Route::resource('kuesioner', KuesionerController::class);
+    Route::post('kuesioner/store-penilaian', [KuesionerController::class, 'storePenilaian'])->name('kuesioner.storePenilaian');
+    // HALAMAN KEUANGAN
+    Route::resource('keuangan', KeuanganController::class);
     // HALAMAN NILAI
     Route::resource('nilai', NilaiController::class);
     // HALAMAN JAM
     Route::resource('jam', JamSiswaController::class);
     // HALAMAN JAM
     Route::resource('contact', ContactController::class);
-    // HALAMAN LOG ACTIVITY
-    Route::resource('logs', ActivityController::class);
 });
