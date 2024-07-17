@@ -14,31 +14,31 @@ class TelescopeServiceProvider extends TelescopeApplicationServiceProvider
      */
     public function register(): void
     {
-        // Telescope::night();
-
-        $this->hideSensitiveRequestDetails();
-
-        $isLocal = $this->app->environment('local');
-
-        Telescope::filter(function (IncomingEntry $entry) use ($isLocal) {
-            return $isLocal ||
-                   $entry->isReportableException() ||
-                   $entry->isFailedRequest() ||
-                   $entry->isFailedJob() ||
-                   $entry->isScheduledTask() ||
-                   $entry->hasMonitoredTag();
-        });
+        if ($this->app->environment('local', 'staging')) {
+            $this->registerTelescope();
+        }
     }
 
     /**
      * Prevent sensitive request details from being logged by Telescope.
      */
-    protected function hideSensitiveRequestDetails(): void
+    protected function registerTelescope()
     {
-        if ($this->app->environment('local')) {
-            return;
-        }
+        $this->hideSensitiveRequestDetails();
 
+        Telescope::filter(function ($entry) {
+            if ($this->app->isLocal()) {
+                return true;
+            }
+
+            return $entry->isReportableException() ||
+                $entry->isFailedRequest() ||
+                $entry->isScheduledTask() ||
+                $entry->hasMonitoredTag();
+        });
+    }
+    protected function hideSensitiveRequestDetails()
+    {
         Telescope::hideRequestParameters(['_token']);
 
         Telescope::hideRequestHeaders([
@@ -46,6 +46,18 @@ class TelescopeServiceProvider extends TelescopeApplicationServiceProvider
             'x-csrf-token',
             'x-xsrf-token',
         ]);
+    }
+
+    /**
+     * Bootstrap any application services.
+     *
+     * @return void
+     */
+    public function boot()
+    {
+        if ($this->app->environment('local', 'staging')) {
+            Telescope::night();
+        }
     }
 
     /**

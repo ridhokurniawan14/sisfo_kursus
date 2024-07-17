@@ -15,6 +15,7 @@ return [
     | and convenient way to enable or disable Telescope data storage.
     |
     */
+    'enabled' => env('APP_ENV') !== 'production',
 
     'enabled' => env('TELESCOPE_ENABLED', true),
 
