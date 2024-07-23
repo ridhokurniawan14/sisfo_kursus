@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,34 +12,45 @@
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
-            size: A4; /* Menentukan ukuran halaman A4 */
+            size: A4;
+            /* Menentukan ukuran halaman A4 */
         }
+
         @page {
-            size: A4; /* Menentukan ukuran halaman A4 */
-            margin: 3mm 10mm; /* Atur margin kertas A4 */
+            size: A4;
+            /* Menentukan ukuran halaman A4 */
+            margin: 3mm 10mm;
+            /* Atur margin kertas A4 */
         }
+
         .container {
             width: 100%;
         }
+
         h2 {
             text-align: center;
             position: relative;
         }
+
         table {
             width: 100%;
             /* border-collapse: collapse; */
         }
-        th, td {
+
+        th,
+        td {
             padding: 1px;
             /* border-bottom: 1px solid #ddd; */
         }
+
         th {
             text-align: left;
         }
     </style>
-    
-    
+
+
 </head>
+
 <body>
     <div class="container">
         <h2 style="text-align: center;">FORMULIR PENDAFTARAN</h2>
@@ -54,9 +66,9 @@
             <tr>
                 <th>3. Jenis Kelamin </th>
                 <td>
-                    @if($data->gender == 'L')
+                    @if (strtoupper($data->gender) == 'L')
                         Laki-Laki
-                    @elseif($data->gender == 'P')
+                    @elseif(strtoupper($data->gender) == 'P')
                         Perempuan
                     @else
                         Tidak Valid
@@ -65,7 +77,8 @@
             </tr>
             <tr>
                 <th>4. Tempat, Tgl. Lahir </th>
-                <td>{{ ucwords($data->tmp_lahir) }}, {{ \Carbon\Carbon::parse($data->tgl_lahir)->isoFormat('DD MMMM YYYY') }}</td>
+                <td>{{ ucwords($data->tmp_lahir) }},
+                    {{ \Carbon\Carbon::parse($data->tgl_lahir)->isoFormat('DD MMMM YYYY') }}</td>
             </tr>
             <tr>
                 <th>5. Agama </th>
@@ -112,7 +125,8 @@
                 <td>
                     <table>
                         <tr>
-                            <td colspan="2">1. .............................................................&nbsp;(isi program pilihan)</td>
+                            <td colspan="2">1. .............................................................&nbsp;(isi
+                                program pilihan)</td>
                         </tr>
                         <tr>
                             <td>2. Paket I (2 bulan)</td>
@@ -127,14 +141,15 @@
                         </tr>
                     </table>
                 </td>
-            </tr>             
+            </tr>
             <tr>
                 <th>16. Pilih Jadwal Kursus</th>
                 <td>
                     <table>
                         <tr>
                             <th>- Pagi</th>
-                            <td colspan="2">a. 07.30 - 09.00 WIB <br>b. 09.00 - 10.30 WIB <br>c. 10.30 - 12.00 WIB</td>
+                            <td colspan="2">a. 07.30 - 09.00 WIB <br>b. 09.00 - 10.30 WIB <br>c. 10.30 - 12.00 WIB
+                            </td>
                         </tr>
                         <tr>
                             <th>- Siang</th>
@@ -149,11 +164,13 @@
                 </td>
             </tr>
             <tr>
-                <th style="width: 250px;">17. Darimana Anda tahu PTCC?</th><td>{{ ucwords($data->info_dari) }}</td>
+                <th style="width: 250px;">17. Darimana Anda tahu PTCC?</th>
+                <td>{{ ucwords($data->info_dari) }}</td>
             </tr>
             <tr>
                 <th></th>
-                <td style="text-align: center">Banyuwangi, {{ date("d F Y") }}<br>Calon Peserta, <br><br><br><br><b>{{ ucwords($data->nm_lengkap) }}</b></td>
+                <td style="text-align: center">Banyuwangi, {{ date('d F Y') }}<br>Calon Peserta,
+                    <br><br><br><br><b>{{ ucwords($data->nm_lengkap) }}</b></td>
             </tr>
         </table>
 
@@ -189,4 +206,5 @@
         </table>
     </div>
 </body>
+
 </html>

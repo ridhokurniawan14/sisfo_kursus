@@ -6,6 +6,7 @@ use App\Http\Controllers\AngketPesertaDidikBaruController;
 use App\Http\Controllers\BerkasAkreditasiController;
 use App\Http\Controllers\BiayaDaftarController;
 use App\Http\Controllers\ContactController;
+use App\Http\Controllers\DaftarOnlineController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DashboardSiswaController;
 use App\Http\Controllers\DataRekeningController;
@@ -45,8 +46,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return redirect('https://lkpptcc.id/');
 });
-// Route::get('/', [LoginController::class, 'index'])->name('login')->middleware('guest');
-
+Route::resource('daftar-online', DaftarOnlineController::class)->middleware('guest');
 // HALAMAN LOGIN ADMIN
 Route::prefix('admin')->group(function () {
     // Define login route Siswa
@@ -151,7 +151,7 @@ Route::middleware('auth:siswa')->prefix('siswa')->group(function () {
     // HALAMAN NILAI
     Route::resource('nilai', NilaiController::class);
     // HALAMAN JAM
-    Route::resource('jam', JamSiswaController::class);
+    Route::resource('jamsiswa', JamSiswaController::class);
     // HALAMAN JAM
     Route::resource('contact', ContactController::class);
 });

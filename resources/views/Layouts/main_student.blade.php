@@ -69,7 +69,7 @@
                             </ul>
                         </li>
                         <li class="nav-item">
-                            <a href="{{ route('jam.index') }}"
+                            <a href="{{ route('jamsiswa.index') }}"
                                 class="nav-link {{ Request::is('siswa/jam*') ? 'active' : '' }}">Jam Kursus</a>
                         </li>
                         <li class="nav-item">
