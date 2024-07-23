@@ -378,7 +378,7 @@
         <div id="successToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true"
             data-delay="100000">
             <div class="toast-header">
-                <strong class="mr-auto">Pendaftaran</strong>
+                <strong class="mr-auto">Notification</strong>
                 <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>

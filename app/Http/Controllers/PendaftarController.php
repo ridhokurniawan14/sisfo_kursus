@@ -32,8 +32,8 @@ class PendaftarController extends Controller
         if ($request->has('search')) {
             $search = $request->input('search');
             $query->where(function ($q) use ($search) {
-                $q->where('tb_pendaftar.no_induk', 'like', "%{$search}%")
-                    ->orWhere('tb_pendaftar.nm_lengkap', 'like', "%{$search}%");
+                $q->whereRaw('LOWER(tb_pendaftar.no_induk) LIKE ?', ["%" . strtolower($search) . "%"])
+                    ->orWhereRaw('LOWER(tb_pendaftar.nm_lengkap) LIKE ?', ["%" . strtolower($search) . "%"]);
             });
         }
 
