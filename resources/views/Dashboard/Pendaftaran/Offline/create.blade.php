@@ -166,8 +166,8 @@
                                                             Agama</option>
                                                         <option value="Islam"
                                                             {{ old('agama') == 'Islam' ? 'selected' : '' }}>Islam</option>
-                                                        <option value="Kristen/Katolik"
-                                                            {{ old('agama') == 'Kristen/Katolik' ? 'selected' : '' }}>
+                                                        <option value="Kristen"
+                                                            {{ old('agama') == 'Kristen' ? 'selected' : '' }}>
                                                             Kristen/Katolik</option>
                                                         <option value="Hindu"
                                                             {{ old('agama') == 'Hindu' ? 'selected' : '' }}>Hindu</option>
