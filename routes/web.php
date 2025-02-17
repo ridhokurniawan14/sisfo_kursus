@@ -43,9 +43,9 @@ use Illuminate\Support\Facades\Route;
 |
 */
 // HALAMAN AWAL
-Route::get('/', function () {
-    return redirect('https://lkpptcc.id/');
-});
+// Route::get('/', function () {
+//     return redirect('https://lkpptcc.id/');
+// });
 Route::resource('daftar-online', DaftarOnlineController::class)->middleware('guest');
 // HALAMAN LOGIN ADMIN
 Route::prefix('admin')->group(function () {
