@@ -109,6 +109,13 @@
                 <div class="container mt-5">
                     <form action="{{ route('daftar-online.store') }}" method="POST">
                         @csrf
+ <input type="hidden" name="program" value="{{ $program }}">
+    <input type="hidden" name="harga" value="{{ $harga }}">
+
+    <div>
+        <h2>{{ $program }}</h2>
+        <p>Harga: Rp {{ number_format($harga, 0, ',', '.') }}</p>
+    </div>
                         <div id="step1">
                             <div class="row">
                                 <!-- Full Name -->

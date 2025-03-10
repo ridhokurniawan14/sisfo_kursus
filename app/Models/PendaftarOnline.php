@@ -30,6 +30,8 @@ class PendaftarOnline extends Model
         'info_dari',
         'no_induk',
         'tgl_daftar',
+        'program',
+        'harga',
     ];
     /**
      * The attributes that are mass assignable.
@@ -55,6 +57,8 @@ class PendaftarOnline extends Model
         'info_dari',
         'no_induk',
         'tgl_daftar',
+        'program',
+        'harga',
     ];
     protected static function boot()
     {
@@ -89,6 +93,8 @@ class PendaftarOnline extends Model
                 'info_dari',
                 'no_induk',
                 'tgl_daftar',
+                'program',
+                'harga',
             ]) // Atribut yang dilacak
             ->useLogName('Pendaftar Online') // Nama log opsional
             ->logOnlyDirty()    // Hanya mencatat perubahan

@@ -10,11 +10,13 @@ class DaftarOnlineController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
         return view('daftar-online.index', [
             "halaman" => "Pendaftaran Online",
-            "judul" => "Pendaftaran Online"
+            "judul" => "Pendaftaran Online",
+            "program" => $request->query('program'),
+            "harga" => $request->query('harga')
         ]);
     }
 
@@ -48,6 +50,8 @@ class DaftarOnlineController extends Controller
             'pek_ortu' => 'required|string|max:50',
             'alamat_ortu' => 'required|string|max:255',
             'info_dari' => 'required|string|max:50',
+            'program' => 'required|string|max:255',
+            'harga' => 'required|numeric',
         ]);
 
         // Tambahkan nilai default untuk no_induk dan tgl_daftar
