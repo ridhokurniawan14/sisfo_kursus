@@ -17,12 +17,12 @@
         .page {
             margin: 0 auto;
             max-width: 1200px;
-            /* page-break-after: always; */
+            page-break-after: always;
             /* Memisahkan setiap halaman */
         }
 
         .page:last-child {
-            page-break-after: always;
+            page-break-after: avoid;
             /* Hindari pemisahan setelah halaman terakhir */
         }
 
@@ -123,7 +123,7 @@
 </head>
 
 <body>
-    <div class="page">
+    <div class="page"> <!-- atur height sesuai kebutuhan -->
         <table align="center" border="0">
             <tr>
                 <td align="center" bgcolor="#FFFFFF">
@@ -137,7 +137,6 @@
                             <td align="center">
                                 <p><b class="sertifikat_komputer">SERTIFIKAT KOMPUTER</b><br>
                                     <strong class="nomor">No. {{ $data->merger_certificate }}</strong><br>
-                                    <br>
                             </td>
                         </tr>
                     </table>
@@ -145,83 +144,79 @@
                     <table style="font-family:'Trebuchet MS';font-size:16,5px;	line-height:20px;" width="1036"
                         border="0">
                         <tr>
-                            <td width="47">&nbsp;</td>
-                            <td width="213"><strong>Diberikan kepada</strong></td>
-                            <td width="19"><strong>:</strong></td>
-                            <td width="739"><strong class="namaser">{{ strtoupper($data->nm_lengkap) }}</strong>
+                            <td width="47" colspan="4">
+                                <center><strong
+                                        style="font-size:16px; font-weight:700; text-shadow: 0 0 1px black;"><i>Diberikan
+                                            Kepada:</i></strong><br>
+                                    <strong class="namaser"
+                                        style="font-size:30px; font-weight:700; text-shadow: 0 0 1px black; margin-top:10px; display:inline-block;">
+                                        {{ strtoupper($data->nm_lengkap) }}
+                                    </strong>
+                                    <p>
+                                </center>
                             </td>
                         </tr>
-                        <tr>
-                            <td>&nbsp;</td>
-                            <td><strong>Tempat dan Tanggal Lahir</strong></td>
-                            <td><strong> : </strong></td>
-                            <td><strong>{{ ucwords($data->tmp_lahir) . ', ' . \Carbon\Carbon::parse($data->tgl_lahir)->isoFormat('D MMMM YYYY') }}</strong>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>&nbsp;</td>
-                            <td><strong>Nomor Induk Peserta</strong></td>
-                            <td><strong>:</strong></td>
-                            <td><strong>{{ $data->no_induk }}</strong></td>
-                        </tr>
-                        <tr>
-                            <td height="22">&nbsp;</td>
-                            <td><strong>Program Keahlian</strong></td>
-                            <td><strong>: </strong></td>
-                            <td><strong>Komputer</strong></td>
-                        </tr>
-                        <tr>
-                            <td>&nbsp;</td>
-                            <td valign="top"><strong>Status </strong></td>
-                            <td valign="top"><strong>: </strong></td>
-                            <td valign="top"><strong>TERAKREDITASI, Berdasarkan Keputusan Badan
-                                    Akreditasi Nasional - Pendidikan Non <br>
-                                    Formal,
-                                    No : 016/K.1/SK/AKR/BAN-PNF/2015, tgl. 8 Desember 2015</strong>
-                                <br>
-                                <br>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>&nbsp;</td>
-                            <td colspan="3" valign="top" style="font-size: 16px; text-align: justify">Sertifikat
-                                ini diberikan setelah yang
-                                bersangkutan &quot;<strong>LULUS</strong>&quot; dalam menempuh Ujian
-                                Komputer yang diselenggarakan pada tanggal : <br>
-                                {{ \Carbon\Carbon::parse($data->tgl_ujian)->isoFormat('D MMMM YYYY') }} di Banyuwangi,
-                                dengan Daftar Nilai Mata Ujian
-                                dibalik ini. <br>
-                                <br>
-                                Pemegang Sertifikat ini telah memenuhi syarat Olah Komputer sesuai
-                                keahliannya.
-                            </td>
-                        </tr>
-                    </table>
-                    <table border="0" style="padding: 0%">
-                        <tr style="font-size:15px">
-                            <td width="611">
-                                <i><b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                        {{ $data->kd_paket >= 3 ? 'CLCP (Computer Literate Certified Professional)' : '' }}
-                                    </b></i>
-                            </td>
-                            <td width="409" style="vertical-align: top; text-align: center; padding-top: 0;">
-                                <br>Banyuwangi,
-                                {{ \Carbon\Carbon::parse($data->tgl_pembuatan)->isoFormat('D MMMM YYYY') }}
-                                <br>
-                                Direktur,<br><br><br><br>
-                                <p><strong style="font-size: 16px" class="arial"><u>SUNARTO, S.Pd, S.Kom</u></strong>
-                                </p>
-                                </p>
-                                <p>&nbsp;</p>
-                            </td>
-                        </tr>
-                    </table>
-
+                </td>
+            </tr>
+            <tr style="font-size:16px;">
+                <td width="47">&nbsp;</td>
+                <td width="400"></td>
+                <td width="340"><strong style="font-size:16px;">Tempat dan Tanggal Lahir</strong></td>
+                <td width="739">
+                    <strong>:
+                        {{ ucwords($data->tmp_lahir) . ', ' . \Carbon\Carbon::parse($data->tgl_lahir)->isoFormat('D MMMM YYYY') }}</strong>
+                </td>
+            </tr>
+            <tr style="font-size:16px;">
+                <td>&nbsp;</td>
+                <td></td>
+                <td><strong>Nomor Induk Peserta</strong></td>
+                <td><strong>: {{ $data->no_induk }}</strong></td>
+            </tr>
+            <tr style="font-size:16px;">
+                <td height="22">&nbsp;</td>
+                <td></td>
+                <td><strong>Program Keahlian</strong></td>
+                <td><strong>: Komputer</strong></td>
+            </tr>
+            <tr>
+                <td>&nbsp;</td>
+                <td valign="top"><strong>&nbsp; </strong></td>
+                <td valign="top"><strong>&nbsp; </strong></td>
+                <td valign="top"><strong>&nbsp;</strong>
+                </td>
+            </tr>
+            <tr>
+                <td>&nbsp;</td>
+                <td colspan="3" valign="top" style="font-size: 16px; text-align: justify">Sertifikat
+                    ini diberikan setelah yang
+                    bersangkutan &quot;<strong>LULUS</strong>&quot; dalam menempuh Ujian
+                    Komputer yang diselenggarakan pada tanggal : <br>
+                    {{ \Carbon\Carbon::parse($data->tgl_ujian)->isoFormat('D MMMM YYYY') }} di Banyuwangi,
+                    dengan Daftar Nilai Mata Ujian
+                    dibalik ini. <br>
+                    <br>
+                    Pemegang Sertifikat ini telah memenuhi syarat Olah Komputer sesuai
+                    keahliannya.
                 </td>
             </tr>
         </table>
-    </div>
-    <div class="page">
+        <div style="position: relative; width: 100%; height: 180px; margin-top: 14px;">
+            <!-- Gambar background footer -->
+            <img src='data:image/png;base64,{{ base64_encode(file_get_contents(public_path('img/footer.png'))) }}'
+                style="position: absolute; bottom: 0; left: 0; width: 100%; z-index: 0;" />
+
+            <!-- Teks tanda tangan -->
+            <div style="position: relative; z-index: 1; text-align: center; padding-top: 3px; font-size:16px;"
+                class="arial">
+                <p>Banyuwangi, {{ \Carbon\Carbon::parse($data->tgl_pembuatan)->isoFormat('D MMMM YYYY') }}
+                    <br>Direktur,
+                </p>
+                <br><br>
+                <p><strong><u>SUNARTO, S.Pd., S.Kom.</u></strong></p>
+            </div>
+        </div>
+
         <p>&nbsp;</p>
         <p>&nbsp;</p>
         <center>
@@ -284,8 +279,9 @@
                         </p>
                         <div style="position: relative;">
                             <img style="position: absolute; right: 450px; top: 170px; width: 20%; height: auto;"
-                                src="{{ asset('storage/' . $data->qrcode) }}" alt="QR Code">
-                            <i style="position: absolute; font-size: 14px; right: 467px; top: 285px;">Scan to Check</i>
+                                src="{{ custom_storage_path($data->qrcode) }}" alt="QR Code">
+                            <i style="position: absolute; font-size: 14px; right: 467px; top: 285px;">Scan to
+                                Check</i>
                         </div>
                     </td>
                     <td style="font-family:Tahoma, Geneva, sans-serif;" width="384" align="left"
