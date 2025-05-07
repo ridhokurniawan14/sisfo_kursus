@@ -33,6 +33,7 @@ use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\KatalogController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\MidtransController;
 
 
 /*
@@ -51,11 +52,20 @@ Route::get('/', function () {
     return "Hello, Laravel!";
 });
 Route::get('/katalog', [KatalogController::class, 'katalog']);
-Route::get('/shop-single', [ProductController::class, 'product']);
 Route::get('/katalog', [KatalogController::class, 'pilihan']);
 Route::get('/katalog', [KatalogController::class, 'paket']);
+Route::get('/payment/success/{order_id}', function ($order_id) {
+    return redirect('/katalog')->with('success', 'Pembayaran berhasil!');
+})->name('payment.success');
 
+
+// Route::get('/shop-single', [ProductController::class, 'product']);
+Route::post('/midtrans/notification', [MidtransController::class, 'handleNotification']);
 Route::resource('daftar-online', DaftarOnlineController::class)->middleware('guest');
+
+
+
+
 // HALAMAN LOGIN ADMIN
 Route::prefix('admin')->group(function () {
     // Define login route Siswa

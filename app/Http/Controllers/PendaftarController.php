@@ -24,11 +24,45 @@ class PendaftarController extends Controller
      */
     public function index(Request $request)
     {
-        $query = DB::table('tb_pendaftar')
-            ->join('tb_pendaftar_verifikasi', 'tb_pendaftar.no_induk', '=', 'tb_pendaftar_verifikasi.no_induk')
-            ->orderByDesc('tb_pendaftar.id')
-            ->select('tb_pendaftar.no_induk', 'nm_lengkap', 'gender', 'tb_pendaftar_verifikasi.pil_prog', 'tb_pendaftar_verifikasi.biaya_kursus', 'tb_pendaftar_verifikasi.biaya_daftar', 'tb_pendaftar_verifikasi.kekurangan', 'no_hp'); // Pilih kolom yang ingin Anda ambil
+        // Ambil data verifikasi terbaru per no_induk
+        $latestVerifikasi = DB::table('tb_pendaftar_verifikasi as a')
+            ->select('a.*')
+            ->join(DB::raw('(SELECT no_induk, MAX(id) AS max_id FROM tb_pendaftar_verifikasi GROUP BY no_induk) as b'), function ($join) {
+                $join->on('a.no_induk', '=', 'b.no_induk')
+                    ->on('a.id', '=', 'b.max_id');
+            });
 
+        // Ambil data pendaftar terbaru per no_induk
+        $latestPendaftar = DB::table('tb_pendaftar as a')
+            ->select('a.*')
+            ->join(DB::raw('(SELECT no_induk, MAX(id) AS max_id FROM tb_pendaftar GROUP BY no_induk) as b'), function ($join) {
+                $join->on('a.no_induk', '=', 'b.no_induk')
+                    ->on('a.id', '=', 'b.max_id');
+            });
+
+        // Join data terbaru dari kedua tabel
+        $query = DB::table(DB::raw("({$latestPendaftar->toSql()}) as tb_pendaftar"))
+            ->mergeBindings($latestPendaftar)
+            ->joinSub($latestVerifikasi, 'verifikasi', function ($join) {
+                $join->on('tb_pendaftar.no_induk', '=', 'verifikasi.no_induk');
+            })
+            ->select(
+                'tb_pendaftar.id as pendaftar_id',
+                'tb_pendaftar.no_induk',
+                'tb_pendaftar.nm_lengkap',
+                'tb_pendaftar.gender',
+                'verifikasi.id as verifikasi_id',
+                'verifikasi.pil_prog',
+                'verifikasi.biaya_kursus',
+                'verifikasi.biaya_daftar',
+                'verifikasi.kekurangan',
+                'tb_pendaftar.no_hp'
+            )
+            ->whereNotNull('verifikasi.pil_prog')
+            ->whereNotNull('verifikasi.biaya_kursus')
+            ->orderByDesc('tb_pendaftar.id');
+
+        // Pencarian jika ada
         if ($request->has('search')) {
             $search = $request->input('search');
             $query->where(function ($q) use ($search) {
@@ -46,6 +80,11 @@ class PendaftarController extends Controller
             "datas" => $datas
         ]);
     }
+
+
+
+
+
     public function export(Request $request)
     {
         $year = $request->input('year');

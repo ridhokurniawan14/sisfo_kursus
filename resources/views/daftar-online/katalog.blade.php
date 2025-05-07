@@ -25,6 +25,7 @@
 
 
   <body>
+    
     <!-- Start Top Nav -->
 <nav class="navbar navbar-expand-lg bg-dark navbar-light d-none d-lg-block" id="templatemo_nav_top">
     <div class="container text-light">
@@ -57,6 +58,16 @@
     </div>
 </nav>
 <!-- Close Top Nav -->
+
+{{-- @if(session('success'))
+    <div class="alert alert-success">
+        {{ session('success') }} 
+        @if(session('invoice'))
+            <br>
+            <a href="{{ session('invoice') }}" class="btn btn-primary" download>Unduh Bukti Pembayaran</a>
+        @endif
+    </div>
+@endif --}}
 
 
   <!-- Header -->
@@ -311,6 +322,12 @@
 <!-- Categories Start -->
 <div class="container-xxl py-5 category">
     <div class="container">
+      @if(session('success'))
+    <div class="alert alert-success">
+        {{ session('success') }}
+    </div>
+@endif
+
         <div class="text-center wow fadeInUp" data-wow-delay="0.1s">
             <h6 class="section-title bg-white text-center text-primary px-3">Categories</h6>
             <h1 class="mb-5">PROGRAM PAKET</h1>
@@ -324,7 +341,7 @@
 @foreach ($datas as $index => $data)
     <div class="col-12 col-md-3 mb-4 d-flex justify-content-center">
         <div class="card h-100" style="max-width: 300px; width: 100%;">
-            <a href="{{ url('/daftar-online?program=' . urlencode($data->program_pilihan) . '&harga=' . $data->harga) }}">
+            <a href="{{ url('/daftar-online?program=' . urlencode($data->program_pilihan) . '&harga=' . $data->harga.'&code='.$data->id.'&pil_prog='.'paket') }}">
 
                 @php
                     $image = $images[$index % count($images)];
@@ -375,7 +392,7 @@
     @foreach ($programs as $index => $program)
     <div class="col-12 col-md-4 mb-4">
         <div class="card h-100">
-         <a href="{{ url('/daftar-online?program=' . urlencode($program->program) . '&harga=' . $program->harga) }}">
+         <a href="{{ url('/daftar-online?program=' . urlencode($program->program) . '&harga=' . $program->harga.'&pilihan='.$data->id.'&pil_prog='.'piihan') }}">
 
                 {{-- @php
                     // Gambar tetap statis sesuai urutan
@@ -385,7 +402,7 @@
                 <img src="{{ asset('assets/img/' . $image) }}" class="card-img-top" alt="{{ $program->program }}"> --}}
             </a>
             <div class="card-body">
-               <a href="{{ url('/daftar-online?program=' . urlencode($program->program) . '&harga=' . $program->harga) }}" class="h2 text-decoration-none text-dark">
+               <a href="{{ url('/daftar-online?program=' . urlencode($program->program) . '&harga=' . $program->harga.'&pilihan='.$data->id.'&pil_prog='.'pilihan') }}" class="h2 text-decoration-none text-dark">
 
                     {{ ucwords($program->program) }}
                 </a>
@@ -571,6 +588,9 @@
 <script src="{{ asset('assets/js/templatemo.js') }}"></script>
 <script src="{{ asset('assets/js/custom.js') }}"></script>
 <!-- End Script -->
+
+
+
 
   </body>
 </html>

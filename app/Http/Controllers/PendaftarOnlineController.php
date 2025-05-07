@@ -22,11 +22,13 @@ class PendaftarOnlineController extends Controller
             "title" => "Pendaftar Online",
             "tab_title" => "Data Pendaftar",
             "datas" => DB::table('tb_ppdb')
-                ->orderByDesc('id') // Mengurutkan berdasarkan kolom 'id', yang mungkin merupakan kolom yang menunjukkan urutan data yang pertama dimasukkan
-                ->where('no_induk', 'n')
+
+                ->where('status', 'unpaid') // Tambahkan filter unpaid
+                ->orderByDesc('id')
                 ->get()
         ]);
     }
+
 
     /**
      * Show the form for creating a new resource.
@@ -55,6 +57,7 @@ class PendaftarOnlineController extends Controller
      */
     public function store(Request $request, $id): RedirectResponse
     {
+
         // Validasi data input
         $validatedData = $request->validate([
             'no_induk' => 'required|unique:tb_pendaftar,no_induk',

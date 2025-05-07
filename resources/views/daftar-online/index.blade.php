@@ -109,13 +109,27 @@
                 <div class="container mt-5">
                     <form action="{{ route('daftar-online.store') }}" method="POST">
                         @csrf
- <input type="hidden" name="program" value="{{ $program }}">
-    <input type="hidden" name="harga" value="{{ $harga }}">
+                        <input type="hidden" name="program" value="{{ $program }}">
+                        <input type="hidden" name="harga" value="{{ $harga }}">
+                        <input type="hidden" name="id_program" value="{{ $id_program }}">
+                        <input type="hidden" name="pil_program" value="{{ $pil_program }}">
+                        <input type="hidden" name="id_pilihan" value="{{ $id_pilihan }}">
 
-    <div>
-        <h2>{{ $program }}</h2>
-        <p>Harga: Rp {{ number_format($harga, 0, ',', '.') }}</p>
-    </div>
+                        <div>
+                            <h2>{{ $program }}</h2>
+                            <p>Harga: Rp {{ number_format($harga, 0, ',', '.') }}</p>
+                        </div>
+
+
+
+                        @if ($biayaPendaftaran)
+                            <h3>Biaya Pendaftaran: Rp {{ number_format($biayaPendaftaran->biaya_daftar, 0, ',', '.') }}
+                            </h3>
+                            <input type="hidden" name="biaya_daftar" value="{{ $biayaPendaftaran->biaya_daftar }}">
+                        @else
+                            <h3>Biaya Pendaftaran: Belum ditentukan</h3>
+                        @endif
+
                         <div id="step1">
                             <div class="row">
                                 <!-- Full Name -->

@@ -13,6 +13,17 @@ return [
     | a conventional file to locate the various service credentials.
     |
     */
+    'midtrans' => [
+        'merchant_id'  => env('MIDTRANS_MERCHANT_ID'),
+        'server_key'   => env('MIDTRANS_SERVER_KEY'),
+        'client_key'   => env('MIDTRANS_CLIENT_KEY'),
+        'is_production' => env('MIDTRANS_IS_PRODUCTION', false),
+        'success_redirect' => env('MIDTRANS_SUCCESS_REDIRECT', '/katalog'),
+        'failed_redirect' => env('MIDTRANS_FAILED_REDIRECT', '/payment/failed'),
+    ],
+
+
+
 
     'mailgun' => [
         'domain' => env('MAILGUN_DOMAIN'),
